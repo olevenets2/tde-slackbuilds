@@ -1,0 +1,19 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|'
+# on the right side marks the last column you can put a character in.  You must
+# make exactly 11 lines for the formatting to be correct.  It's also
+# customary to leave one space after the ':'.
+
+       |-----handy-ruler------------------------------------------------------|
+tdebase: tdebase (The Trinity Desktop base)
+tdebase:
+tdebase: tdebase is the second mandatory package (besides tdelibs) for the
+tdebase: Trinity Desktop Environment. Here we have various applications and
+tdebase: infrastructure files and libraries.
+tdebase:
+tdebase:
+tdebase:
+tdebase:
+tdebase:
+tdebase: Home: https://www.trinitydesktop.org/index.php
