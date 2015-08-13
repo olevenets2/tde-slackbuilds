@@ -157,6 +157,7 @@ cd build-${PRGNAM}
     -DWITH_KONQSIDEBAR="ON" \
     -DWITH_MTP="ON" \
     -DBUILD_ALL="ON" \
+    -DWITH_XINE="ON" \
     ..
   make || exit 1
   make DESTDIR=$PKG install || exit 1
