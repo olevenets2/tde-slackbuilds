@@ -1,15 +1,15 @@
-As of right now, this is the minimal base. I will do the rest up later. This is 2 days worth of fighting 
-with my computer =/
+This isn't complete but it runs well =D 
+I may wait for the next release before compiling the rest of the apps.
 
 3rdparty-deps are required with how I have these built. You can view the very short list in the folder 
-and get them from SBo for now.
+and get them from SBo for now. Well krb5 you can probably do without. Maybe avahi as well if you feel 
+like editing the build scripts.
 
-The build order is listed in each foler. Build the 3rdparty-deps first, then Deps, then the Core. 
+The build order is listed in each folder. Build the 3rdparty-deps first, then Deps, then the Core. 
 
 I'm running Slackware Current. So these are untested on Stable. 
 
-I'm not running KDE 4, don't know if this will screw with anything or not from it. Not going to test it either 
-because I don't care about KDE 4
+I'm not running KDE 4, don't know if this will screw with anything or not from it.
 
 # One more thing thats pretty important: 
 
