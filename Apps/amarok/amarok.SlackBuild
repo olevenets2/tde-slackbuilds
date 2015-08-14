@@ -158,6 +158,9 @@ cd build-${PRGNAM}
     -DWITH_MTP="ON" \
     -DBUILD_ALL="ON" \
     -DWITH_XINE="ON" \
+    -DWITH_YAUAP="ON" \
+    -DWITH_NJB="ON" \
+    -Wno-dev \
     ..
   make || exit 1
   make DESTDIR=$PKG install || exit 1
