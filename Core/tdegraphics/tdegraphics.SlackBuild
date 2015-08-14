@@ -152,13 +152,14 @@ cd build-${PRGNAM}
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DSYSCONF_INSTALL_DIR=/etc \
     -DLIB_SUFFIX=${LIBDIRSUFFIX} \
-    -Wno-dev \
+    -DWITH_T1LIB="ON" \
     -DWITH_TIFF="ON" \
     -DWITH_OPENEXR="ON" \
     -DWITH_PDF="ON" \
     -DBUILD_ALL="ON" \
     -DBUILD_TDEFILE_PLUGINS="OFF" \
     -DBUILD_KUICKSHOW="OFF" \
+    -Wno-dev \
     ..
   make || exit 1
   make DESTDIR=$PKG install || exit 1
