@@ -172,6 +172,7 @@ cd build-${PRGNAM}
     -DWITH_ARTS="ON" \
     -DWITH_TDEHWLIB="ON" \
     -DWITH_UPOWER="ON" \
+    -DWITH_PCRE="ON" \
     -DBUILD_ALL="ON" \
     -Wno-dev \
     ..
