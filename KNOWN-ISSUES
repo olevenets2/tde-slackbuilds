@@ -1,0 +1,4 @@
+1. After the first time you reboot after using TDE, you should open xwmconfig and reselect it. Your computer might freeze
+otherwise =[
+2. I briefly tried tdm and it wouldn't start any desktop environment. I mainly use runlevel 3 so I won't be looking into
+this =[
