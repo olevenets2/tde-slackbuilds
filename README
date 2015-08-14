@@ -11,23 +11,4 @@ I'm running Slackware Current. So these are untested on Stable.
 
 I'm not running KDE 4, don't know if this will screw with anything or not from it.
 
-###############################################################
-Pretty sure this is fixed, going to see now.
-
-# One more thing thats pretty important: 
-
-I had to symlink the header files from /usr/include/freetype2 to /usr/include
-then create a folder in /usr/include called config and then symlink the contents of 
-/usr/include/freetype2/config to it.
-
-This was to get tqt3 to compile. Please help me get around this in the tqt3 SlackBuild if you know how
-There should be someway I can point to the correct directory or export it or something but I don't
-know how.
-
-# Heres what I did.
-
-ln -sv /usr/include/freetype2/*.h /usr/include
-
-mkdir -v /usr/include/config
-
-ln -sv /usr/include/freetype2/config/*.h /usr/include/config
+freetype issue I was having has been fixed, Thank you AlienBob!
