@@ -158,6 +158,7 @@ cd build-${PRGNAM}
     -DBUILD_KOPETE_PROTOCOL_GADU="OFF" \
     -DBUILD_KOPETE_PROTOCOL_MEANWHILE="OFF" \
     -DBUILD_ALL="ON" \
+    -Wno-dev \
     ..
   make || exit 1
   make DESTDIR=$PKG install || exit 1
