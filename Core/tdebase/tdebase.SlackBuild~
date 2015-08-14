@@ -173,7 +173,6 @@ cd build-${PRGNAM}
     -DWITH_TDEHWLIB="ON" \
     -DWITH_UPOWER="ON" \
     -DBUILD_ALL="ON" \
-    -Wno-dev \
     ..
   make || exit 1
   make DESTDIR=$PKG install || exit 1

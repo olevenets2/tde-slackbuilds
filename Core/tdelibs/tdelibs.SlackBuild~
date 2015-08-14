@@ -22,16 +22,17 @@
 #   OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 #   SUCH DAMAGE.
 
-PRGNAM=tdebase
+PRGNAM=tdelibs
 VERSION=${VERSION:-R14.0.0}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_tde}
 
-DOCS="AUTHORS COPYING* README*"
+DOCS="AUTHORS COPYING* README* TODO"
 
 # Where do we look for sources?
 SRCDIR=$(cd $(dirname $0); pwd)
 
+# Place to build (TMP) package (PKG) and output (OUTPUT) the program:
 TMP=${TMP:-/tmp/build}
 PKG=$TMP/package-$PRGNAM
 OUTPUT=${OUTPUT:-/tmp}
@@ -94,11 +95,11 @@ _UMASK_=$(umask)
 umask 0022
 
 # Create working directories:
-mkdir -p $OUTPUT      
+mkdir -p $OUTPUT       
 mkdir -p $TMP/tmp-$PRGNAM 
 mkdir -p $PKG             
-rm -rf $PKG/*            
-rm -rf $TMP/tmp-$PRGNAM/*
+rm -rf $PKG/*         
+rm -rf $TMP/tmp-$PRGNAM/* 
 rm -rf $OUTPUT/{checkout,configure,make,install,error,makepkg,patch}-$PRGNAM.log
 
 # Source file availability:
@@ -139,7 +140,7 @@ cd ${PRGNAM}
 chown -R root:root .
 chmod -R u+w,go+r-w,a+rX-st .
 
-echo Building ...
+# On Slackware current this wasn't building with CUPS support:
 mkdir -p build-${PRGNAM}
 cd build-${PRGNAM}
   cmake \
@@ -149,31 +150,14 @@ cd build-${PRGNAM}
     -DCMAKE_CXX_FLAGS_RELEASE:STRING="$SLKCFLAGS" \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DMAN_INSTALL_DIR=/usr/man \
     -DSYSCONF_INSTALL_DIR=/etc \
     -DLIB_SUFFIX=${LIBDIRSUFFIX} \
-    -DWITH_OPENEXR="ON" \
-    -DWITH_XCOMPOSITE="ON" \
-    -DWITH_XCURSOR="ON" \
-    -DWITH_SUDO_TDESU_BACKEND="ON" \
-    -DWITH_SUDO_KONSOLE_SUPER_USER_COMMAND="ON" \
-    -DWITH_PAM="OFF" \
-    -DWITH_SHADOW="ON" \
-    -DWITH_XFIXES="ON" \
-    -DWITH_XRANDR="ON" \
-    -DWITH_XRENDER="ON" \
-    -DWITH_OPENGL="ON" \
-    -DWITH_XSCREENSAVER="ON" \
-    -DWITH_XTEST="ON" \
-    -DWITH_LIBART="ON" \
-    -DWITH_LIBUSB="ON" \
-    -DWITH_XDMCP="ON" \
-    -DWITH_XINERAMA="ON" \
-    -DWITH_ARTS="ON" \
-    -DWITH_TDEHWLIB="ON" \
-    -DWITH_UPOWER="ON" \
-    -DBUILD_ALL="ON" \
-    -Wno-dev \
+    -DCMAKE_SKIP_RPATH="OFF" \
+    -DWITH_CUPS=OFF \
+    -DWITH_SUDO_TDESU_BACKEND=ON \
+    -DWITH_ASPELL=ON \
+    -DWITH_AVAHI=ON \
+    -DWITH_LIBART=ON \
     ..
   make || exit 1
   make DESTDIR=$PKG install || exit 1
@@ -210,15 +194,11 @@ find $PKG/usr/doc -type f -exec chmod 644 {} \;
 find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
   | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
 
-# Add xinitrc:
-mkdir -p $PKG/etc/X11/xinit
-cat $SRCDIR/xinitrc.tde > $PKG/etc/X11/xinit/xinitrc.tde
-
 mkdir -p $PKG/install
 cat $SRCDIR/slack-desc > $PKG/install/slack-desc
 
 cd $PKG
-makepkg --linkadd y --chown n $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz}
+makepkg --linkadd y --chown n $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} 
 cd $OUTPUT
 md5sum ${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} > ${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz}.md5
 cd -

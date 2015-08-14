@@ -158,6 +158,7 @@ cd build-${PRGNAM}
     -DWITH_ASPELL=ON \
     -DWITH_AVAHI=ON \
     -DWITH_LIBART=ON \
+    -Wno-dev \
     ..
   make || exit 1
   make DESTDIR=$PKG install || exit 1
