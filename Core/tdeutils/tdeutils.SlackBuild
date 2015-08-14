@@ -156,7 +156,9 @@ cd build-${PRGNAM}
     -DWITH_DPMS="ON" \
     -DWITH_XSCREENSAVER="ON" \
     -DWITH_SENSORS="ON" \
+    -DWITH_SNMP="ON" \
     -DBUILD_ALL="ON" \
+    -Wno-dev \
     ..
   make || exit 1
   make DESTDIR=$PKG install || exit 1
