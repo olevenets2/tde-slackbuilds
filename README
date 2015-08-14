@@ -11,6 +11,9 @@ I'm running Slackware Current. So these are untested on Stable.
 
 I'm not running KDE 4, don't know if this will screw with anything or not from it.
 
+###############################################################
+Pretty sure this is fixed, going to see now.
+
 # One more thing thats pretty important: 
 
 I had to symlink the header files from /usr/include/freetype2 to /usr/include
