@@ -154,6 +154,7 @@ cd build-${PRGNAM}
     -DWITH_ARTS="ON" \
     -DBUILD_ALL="ON" \
     -DBUILD_ICEWM_THEMES="OFF" \
+    -Wno-dev \
     ..
   make || exit 1
   make DESTDIR=$PKG install || exit 1
