@@ -26,6 +26,7 @@ PRGNAM=libart-lgpl
 VERSION=${VERSION:-R14.0.0}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_tde}
+PKGNAME=libart_lgpl
 
 DOCS="AUTHORS ChangeLog* COPYING NEWS README*"
 
@@ -148,17 +149,17 @@ CFLAGS="$SLKCFLAGS" \
 ./configure \
   --prefix=/usr \
   --libdir=/usr/lib${LIBDIRSUFFIX} \
-  --docdir=/usr/doc/$PRGNAM-$VERSION \
+  --docdir=/usr/doc/$PKGNAME-$VERSION \
   --disable-static \
   --build=$ARCH-slackware-linux \
 
 make || exit 1
 make DESTDIR=$PKG install || exit 1
 
-mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a $DOCS $PKG/usr/doc/$PRGNAM-$VERSION || true
-cat $SRCDIR/$(basename $0) > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
-chown -R root:root $PKG/usr/doc/$PRGNAM-$VERSION
+mkdir -p $PKG/usr/doc/$PKGNAME-$VERSION
+cp -a $DOCS $PKG/usr/doc/$PKGNAME-$VERSION || true
+cat $SRCDIR/$(basename $0) > $PKG/usr/doc/$PKGNAME-$VERSION/$PKGNAME.SlackBuild
+chown -R root:root $PKG/usr/doc/$PKGNAME-$VERSION
 find $PKG/usr/doc -type f -exec chmod 644 {} \;
 
 find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
@@ -168,7 +169,7 @@ mkdir -p $PKG/install
 cat $SRCDIR/slack-desc > $PKG/install/slack-desc
 
 cd $PKG
-makepkg --linkadd y --chown n $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz}
+makepkg --linkadd y --chown n $OUTPUT/${PKGNAME}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz}
 cd $OUTPUT
 md5sum ${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} > ${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz}.md5
 cd -
