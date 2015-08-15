@@ -40,7 +40,7 @@ for dir in \
   Deps/dbus-tqt \
   Deps/dbus-1-tqt \
   Deps/tqca-tls \
-  Deps/libart-lgpl \
+  Deps/libart_lgpl \
   Deps/avahi-tqt \
   ; do
   # Get the package name
