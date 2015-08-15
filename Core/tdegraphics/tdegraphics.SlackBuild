@@ -142,6 +142,7 @@ cd ${PRGNAM}
 chown -R root:root .
 chmod -R u+w,go+r-w,a+rX-st .
 
+# PDF isn't working right so turning off
 mkdir -p build-${PRGNAM}
 cd build-${PRGNAM}
   cmake \
@@ -155,7 +156,7 @@ cd build-${PRGNAM}
     -DWITH_T1LIB="ON" \
     -DWITH_TIFF="ON" \
     -DWITH_OPENEXR="ON" \
-    -DWITH_PDF="ON" \
+    -DWITH_PDF="OFF" \
     -DBUILD_ALL="ON" \
     -DBUILD_TDEFILE_PLUGINS="OFF" \
     -DBUILD_KUICKSHOW="OFF" \
