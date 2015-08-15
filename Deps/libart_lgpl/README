@@ -1,1 +1,11 @@
 This replaces the Slackware package
+
+###############################################################################################
+
+libart-lgpl is another dependency package that the Trinity Project has taken over after it was 
+dropped by its original maintainer, because it needed several patches to prevent crashes. 
+The version of libart provided by the Trinity Project includes those patches and is intended 
+to be a replacement for any version of libart currently installed by any distro. 
+Build this patched version of libart and replace the stock libart installed with the distro. 
+
+################ from the trinity desktop website, installation instructions ##################
