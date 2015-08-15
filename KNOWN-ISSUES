@@ -2,5 +2,7 @@
 otherwise =[ << though this may just be isolated to my computer (It hates GNU/Linux) D=
 2. I briefly tried tdm and it wouldn't start any desktop environment. I mainly use runlevel 3 so I won't be looking into
 this =[
+3. Multilib: If tqca-tls fails to build on multilib you will have to pass the qtdir to the script:
+   --qtdir=/usr/lib64/tqt3-R14.0.0
 
 https://bugs.trinitydesktop.org/buglist.cgi?quicksearch=ALL
