@@ -142,6 +142,10 @@ cd ${PRGNAM}
 chown -R root:root .
 chmod -R u+w,go+r-w,a+rX-st .
 
+# Optional deps have been turned off as they mainly affect tdefile plugins which wont even build.
+# Kpdf has been turned off because I've yet to even get it to open anything. If you want to try any 
+# of them feel free to turn the switches to "ON"
+# Kuickshow requires imlib, which will not build on Slackware current. I suppose you could try it on stable though
 mkdir -p build-${PRGNAM}
 cd build-${PRGNAM}
   cmake \
@@ -152,13 +156,14 @@ cd build-${PRGNAM}
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DSYSCONF_INSTALL_DIR=/etc \
     -DLIB_SUFFIX=${LIBDIRSUFFIX} \
-    -DWITH_T1LIB="ON" \
-    -DWITH_TIFF="ON" \
-    -DWITH_OPENEXR="ON" \
-    -DWITH_PDF="ON" \
+    -DWITH_T1LIB="OFF" \
+    -DWITH_TIFF="OFF" \
+    -DWITH_OPENEXR="OFF" \
+    -DWITH_PDF="OFF" \
     -DBUILD_ALL="ON" \
     -DBUILD_TDEFILE_PLUGINS="OFF" \
     -DBUILD_KUICKSHOW="OFF" \
+    -DBUILD_KPDF="OFF" \
     -Wno-dev \
     ..
   make || exit 1
