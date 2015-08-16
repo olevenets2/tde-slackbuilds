@@ -158,7 +158,7 @@ cd build-${PRGNAM}
     -DWITH_MTP="ON" \
     -DBUILD_ALL="ON" \
     -DWITH_XINE="ON" \
-    -DWITH_YAUAP="ON" \
+    -DWITH_YAUAP="OFF" \
     -DWITH_NJB="ON" \
     -Wno-dev \
     ..
