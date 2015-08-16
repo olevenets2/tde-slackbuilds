@@ -40,12 +40,12 @@ for dir in \
   Core/tdemultimedia \
   Core/tdenetwork \
   Core/tdeartwork \
+  Core/tdetoys \
   Core/tdegraphics \
   Core/tdepim \
   Core/tdesdk \
   Core/tdevelop \
   Core/tdeaddons \
-  Core/tdetoys \
   ; do
   # Get the package name
   package=$(echo $dir | cut -f2- -d /)
