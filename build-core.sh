@@ -46,7 +46,6 @@ for dir in \
   Core/tdevelop \
   Core/tdeaddons \
   Core/tdetoys \
-  Core/tdewebdev \
   ; do
   # Get the package name
   package=$(echo $dir | cut -f2- -d /)
