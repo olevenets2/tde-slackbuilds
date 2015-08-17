@@ -6,6 +6,7 @@ and get them from SBo for now. Well krb5 you can probably do without. Maybe avah
 like editing the build scripts.
 
 The build order is listed in each folder. Build the 3rdparty-deps first, then Deps, then the Core. 
+Now has build cripts that automate the build process
 
 I'm running Slackware Current. So these are untested on Stable. 
 
