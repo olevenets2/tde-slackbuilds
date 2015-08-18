@@ -239,6 +239,8 @@ mkdir -p $PKG/usr/lib${LIBDIRSUFFIX}/pkgconfig
 )
 
 # Symlink is needed for a tde app during future compilation:
+# TODO : possible removal, see if the other TDE programs can be directed to
+# tqt3's include dir. Should be possible. If not, no big deal.
 mkdir -p $PKG/usr/include
 ( cd $PKG/usr/include ; ln -sf /usr/lib${LIBDIRSUFFIX}/${PRGNAM}-${VERSION}/include qt3 )
 
