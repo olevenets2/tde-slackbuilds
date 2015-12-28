@@ -1,0 +1,12 @@
+diff -Naur tdelibs/dcop/dcopidlng/kdocAstUtil.pm tdelibs-new/dcop/dcopidlng/kdocAstUtil.pm
+--- tdelibs/dcop/dcopidlng/kdocAstUtil.pm	2011-11-29 02:39:37.000000000 -0500
++++ tdelibs-new/dcop/dcopidlng/kdocAstUtil.pm	2015-12-28 00:40:44.864306552 -0500
+@@ -439,7 +439,7 @@
+ 	}
+ 
+ 	print "\t" x $depth, "Documentation nodes:\n" if defined 
+-		@{ $node->{Doc}->{ "Text" }};
++		$node->{Doc}->{ "Text" };
+ 
+ 	foreach $kid ( @{ $node->{Doc}->{ "Text" }} ) {
+ 		dumpAst( $kid );

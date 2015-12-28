@@ -141,6 +141,10 @@ cd ${PRGNAM}
 chown -R root:root .
 chmod -R u+w,go+r-w,a+rX-st .
 
+# Patch a file with incorrect syntax
+# https://bugs.trinitydesktop.org/show_bug.cgi?id=2543
+patch -p1 < $SRCDIR/perlfix.patch
+
 # On Slackware current this wasn't building with CUPS support:
 mkdir -p build-${PRGNAM}
 cd build-${PRGNAM}
