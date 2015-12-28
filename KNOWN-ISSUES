@@ -1,7 +1,9 @@
 1. After the first time you reboot after using TDE, you should open xwmconfig and reselect it. Your computer might freeze
 otherwise =[ << though this may just be isolated to my computer (It hates GNU/Linux) D=
+
 2. I briefly tried tdm and it wouldn't start any desktop environment. I mainly use runlevel 3 so I won't be looking into
 this =[
-3. Multilib: Unsupported, for now. Can be added AFTER compiling TDE
+
+3. If you are multilib pass ARCH=x86_64 to the build-*.sh scripts. Should compile on Multilib now
 
 https://bugs.trinitydesktop.org/buglist.cgi?quicksearch=ALL

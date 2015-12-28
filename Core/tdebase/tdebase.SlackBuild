@@ -142,6 +142,8 @@ chmod -R u+w,go+r-w,a+rX-st .
 echo Building ...
 mkdir -p build-${PRGNAM}
 cd build-${PRGNAM}
+CC="clang" \
+CXX="clang++" \
   cmake \
     -DCMAKE_C_FLAGS:STRING="$SLKCFLAGS" \
     -DCMAKE_CXX_FLAGS:STRING="$SLKCFLAGS" \
