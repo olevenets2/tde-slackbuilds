@@ -142,9 +142,11 @@ cd ${PRGNAM}
 chown -R root:root .
 chmod -R u+w,go+r-w,a+rX-st .
 
+LDFLAGS="$SLKLDFLAGS" \
 CXXFLAGS="$SLKCFLAGS" \
 CFLAGS="$SLKCFLAGS" \
 ./configure  \
+--qtdir=/usr/lib64/tqt3-R14.0.0
   
 make || exit 1
 
