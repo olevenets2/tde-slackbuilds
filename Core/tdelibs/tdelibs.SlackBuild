@@ -23,8 +23,9 @@
 #   SUCH DAMAGE.
 
 PRGNAM=tdelibs
-VERSION=${VERSION:-R14.0.0}
+VERSION=${VERSION:-R14.0.2}
 BUILD=${BUILD:-1}
+NUMJOBS=${NUMJOBS:-" -j4 "}
 TAG=${TAG:-_tde}
 
 DOCS="AUTHORS COPYING* README* TODO"
@@ -155,6 +156,7 @@ cd build-${PRGNAM}
     -DCMAKE_SKIP_RPATH="OFF" \
     -DWITH_CUPS="OFF" \
     -DWITH_SUDO_TDESU_BACKEND="ON" \
+    -DWITH_NETWORK_MANAGER_BACKEND="ON" \
     -DWITH_ASPELL="ON" \
     -DWITH_AVAHI="ON" \
     -DWITH_LIBART="ON" \
@@ -162,9 +164,14 @@ cd build-${PRGNAM}
     -DWITH_LZMA="ON" \
     -DWITH_XRANDR="ON" \
     -DWITH_XCOMPOSITE="ON" \
+    -DWITH_UDISKS2="ON" \
+    -DWITH_UDISKS="ON" \
+    -DWITH_DEVKITPOWER="ON" \
+    -DWITH_LOGINDPOWER="ON" \
+    -DWITH_KDE4_MENU_SUFFIX="ON" \
     -Wno-dev \
     ..
-  make || exit 1
+  make $NUMJOBS || exit 1
   make DESTDIR=$PKG install || exit 1
 cd -
 

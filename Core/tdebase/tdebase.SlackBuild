@@ -23,8 +23,9 @@
 #   SUCH DAMAGE.
 
 PRGNAM=tdebase
-VERSION=${VERSION:-R14.0.0}
+VERSION=${VERSION:-R14.0.2}
 BUILD=${BUILD:-1}
+NUMJOBS=${NUMJOBS:-" -j4 "}
 TAG=${TAG:-_tde}
 
 DOCS="AUTHORS COPYING* README*"
@@ -139,11 +140,8 @@ cd ${PRGNAM}
 chown -R root:root .
 chmod -R u+w,go+r-w,a+rX-st .
 
-echo Building ...
 mkdir -p build-${PRGNAM}
 cd build-${PRGNAM}
-CC="clang" \
-CXX="clang++" \
   cmake \
     -DCMAKE_C_FLAGS:STRING="$SLKCFLAGS" \
     -DCMAKE_CXX_FLAGS:STRING="$SLKCFLAGS" \
@@ -178,7 +176,7 @@ CXX="clang++" \
     -DBUILD_ALL="ON" \
     -Wno-dev \
     ..
-  make || exit 1
+  make $NUMJOBS || exit 1
   make DESTDIR=$PKG install || exit 1
 cd -
 
