@@ -6,7 +6,7 @@
 # Copyright 2014 Willy Sudiarto Raharjo <willysr@slackware-id.org>
 # All rights reserved.
 #
-# Copyright 2015 Thorn Inurcide
+# Copyright 2015-2016 Thorn Inurcide thorninurcide@gmail.com
 #
 # Based on the xfce-build-all.sh script by Patrick J. Volkerding
 #
