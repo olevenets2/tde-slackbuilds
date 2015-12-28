@@ -141,10 +141,10 @@ cd ${PRGNAM}
 chown -R root:root .
 chmod -R u+w,go+r-w,a+rX-st .
 
+./autogen.sh
 LDFLAGS="$SLKLDFLAGS" \
 CXXFLAGS="$SLKCFLAGS" \
 CFLAGS="$SLKCFLAGS" \
-./autogen.sh
 ./configure \
   --prefix=/usr \
   --libdir=/usr/lib${LIBDIRSUFFIX} \
