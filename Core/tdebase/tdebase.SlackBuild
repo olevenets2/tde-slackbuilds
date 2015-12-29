@@ -182,28 +182,6 @@ cd build-${PRGNAM}
   make DESTDIR=$PKG install || exit 1
 cd -
 
-# Add this to the doinst.sh:
-mkdir -p $PKG/install
-cat <<EOINS >> $PKG/install/doinst.sh
-# Update the desktop database:
-if [ -x usr/bin/update-desktop-database ]; then
-  chroot . /usr/bin/update-desktop-database usr/share/applications > /dev/null 2>&1
-fi
-
-# Update hicolor theme cache:
-if [ -d usr/share/icons/hicolor ]; then
-  if [ -x /usr/bin/gtk-update-icon-cache ]; then
-    chroot . /usr/bin/gtk-update-icon-cache -f -t usr/share/icons/hicolor 1> /dev/null 2> /dev/null
-  fi
-fi
-
-# Update the mime database:
-if [ -x usr/bin/update-mime-database ]; then
-  chroot . /usr/bin/update-mime-database usr/share/mime >/dev/null 2>&1
-fi
-
-EOINS
-
 # Move the TDM files someplace FHS compliant:
 mkdir -p $PKG/etc/tde
 mv $PKG/usr/share/config/tdm $PKG/etc/tde
@@ -228,8 +206,20 @@ cat $SRCDIR/profile.d/tde.sh > $PKG/etc/profile.d/tde.sh
 cat $SRCDIR/profile.d/tde.csh > $PKG/etc/profile.d/tde.csh
 chmod 755 $PKG/etc/profile.d/tde.sh $PKG/etc/profile.d/tde.csh
 
+# Setup config files for TDM:
+$PKG/usr/bin/gentdmconf --no-old --no-old-scripts --no-backup --in $PKG/usr/share/config/tdm
+# Not allowing root to login at the console is just plain silly.  If they have physical access to
+# the machine, what's the point of trying to stop this?  Even the tdmrc file says this is supposed
+# to be the default.
+cat $PKG/usr/share/config/tdm/tdmrc | perl -pi -e 's|AllowRootLogin=false|AllowRootLogin=true|' > $PKG/usr/share/config/tdm/tdmrc.new
+rm -f $PKG/usr/share/config/tdm/tdmrc
+cp -a $PKG/usr/share/config/tdm/Xsession $PKG/usr/share/config/tdm/Xsession.orig
+cat $SRCDIR/config/Xsession > $PKG/usr/share/config/tdm/Xsession
+mv $PKG/usr/share/config/tdm/backgroundrc $PKG/usr/share/config/tdm/backgroundrc.new
+
 mkdir -p $PKG/install
 cat $SRCDIR/slack-desc > $PKG/install/slack-desc
+cat $SRCDIR/doinst.sh > $PKG/install/doinst.sh
 
 cd $PKG
 makepkg --linkadd y --chown n $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz}

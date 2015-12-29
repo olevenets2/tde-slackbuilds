@@ -1,11 +1,11 @@
 THIS WILL MOST LIKELY INTERFERE WITH KDE
 
+The build order is listed in each folder. Build the 3rdparty-deps first, then Deps,
+then the Core.
+
 3rdparty-deps are required with how I have these built. You can view the very short list 
 in the folder and get them from SBo for now. Well krb5 you can probably do without. 
 Maybe avahi as well if you feel like editing the build scripts.
-
-The build order is listed in each folder. Build the 3rdparty-deps first, then Deps,
-then the Core. 
 
 Has build scripts that automate the build process
 

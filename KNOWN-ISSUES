@@ -1,9 +1,6 @@
-1. After the first time you reboot after using TDE, you should open xwmconfig and reselect it. Your computer might freeze
-otherwise =[ << though this may just be isolated to my computer (It hates GNU/Linux) D=
+Not all mimetypes are detected. Files without extensions and things like slack-desc
+have no default assosiations.
+Anyone know fix? Besides just manually doing this in the settings after installing. 
 
-2. I briefly tried tdm and it wouldn't start any desktop environment. I mainly use runlevel 3 so I won't be looking into
-this =[
-
-3. If you are multilib pass ARCH=x86_64 to the build-*.sh scripts. Should compile on Multilib now
-
+THE BUG REPORTS FOR EVERYTHING IF YOU'RE INTERESTED
 https://bugs.trinitydesktop.org/buglist.cgi?quicksearch=ALL
