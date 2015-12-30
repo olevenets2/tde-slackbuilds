@@ -22,12 +22,12 @@
 #   OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 #   SUCH DAMAGE.
 
-PRGNAM=mp4v2
-VERSION=${VERSION:-2.0.0}
+PRGNAM=GraphicsMagick
+VERSION=${VERSION:-1.3.21}
 BUILD=${BUILD:-1}
-TAG=${TAG:-_thorn}
+TAG=${TAG:-_tde}
 
-DOCS="COPYING README*"
+DOCS="ChangeLog* Copyright* NEWS* README* TODO*"
 
 # Where do we look for sources?
 SRCDIR=$(cd $(dirname $0); pwd)
@@ -37,7 +37,7 @@ PKG=$TMP/package-$PRGNAM
 OUTPUT=${OUTPUT:-/tmp}
 
 SOURCE="$SRCDIR/${PRGNAM}-${VERSION}.tar.bz2"
-SRCURL="http://mp4v2.googlecode.com/files/${PRGNAM}-${VERSION}.tar.bz2"
+SRCURL="http://downloads.sourceforge.net/graphicsmagick/${PRGNAM}-${VERSION}.tar.bz2"
 
 # You can use your own private machine.conf file to overrule machine defaults:
 if [ -e $SRCDIR/machine.conf ]; then
@@ -94,11 +94,11 @@ _UMASK_=$(umask)
 umask 0022
 
 # Create working directories:
-mkdir -p $OUTPUT       
+mkdir -p $OUTPUT         
 mkdir -p $TMP/tmp-$PRGNAM 
-mkdir -p $PKG            
-rm -rf $PKG/*             
-rm -rf $TMP/tmp-$PRGNAM/*
+mkdir -p $PKG           
+rm -rf $PKG/*            
+rm -rf $TMP/tmp-$PRGNAM/* 
 rm -rf $OUTPUT/{checkout,configure,make,install,error,makepkg,patch}-$PRGNAM.log
 
 # Source file availability:
@@ -140,10 +140,31 @@ CFLAGS="$SLKCFLAGS" \
 ./configure \
   --prefix=/usr \
   --libdir=/usr/lib${LIBDIRSUFFIX} \
+  --localstatedir=/var \
+  --sysconfdir=/etc \
   --mandir=/usr/man \
   --docdir=/usr/doc/$PRGNAM-$VERSION \
+  --enable-shared \
   --disable-static \
-  --build=$ARCH-slackware-linux \
+  --disable-openmp \
+  --without-modules \
+  --with-x \
+  --with-frozenpaths \
+  --build=$ARCH-slackware-linux
+  
+# By default, GraphicsMagick is compiled with support for OpenMP (http://www.openmp.org/) if the compilation 
+# environment supports it. OpenMP automatically parallizes loops across concurrent threads based on instructions 
+# in pragmas. OpenMP was introduced in GCC 4.2. OpenMP is a well-established standard and was implemented in
+# some other compilers in the late '90s, long before its appearance in GCC. OpenMP adds additional build and linkage 
+# requirements.
+# By default, GraphicsMagick enables as many threads as there are CPU cores (or CPU threads). According to the OpenMP
+# standard, the OMP_NUM_THREADS environment variable specifies how many threads should be used and GraphicsMagick 
+# also honors this request. In order to obtain the best single-user performance, set OMP_NUM_THREADS equal to the 
+# number of available CPU cores. On a server with many cores and many programs running at once, there may be benefit 
+# to setting OMP_NUM_THREADS to a much smaller value than the number of cores, and sometimes values as low as two 
+# (or even one, to disable threading) will offer the best overall system performance. Tuning a large system with OpenMP
+# programs running in parallel (competing for resources) is a complex topic and some research and experimentation may
+# be required in order to find the best parameters.
 
 make || exit 1
 make DESTDIR=$PKG install || exit 1
@@ -166,11 +187,11 @@ mkdir -p $PKG/install
 cat $SRCDIR/slack-desc > $PKG/install/slack-desc
 
 cd $PKG
-makepkg --linkadd y --chown n $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} 
+makepkg --linkadd y --chown n $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz}
 cd $OUTPUT
 md5sum ${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} > ${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz}.md5
 cd -
 cat $PKG/install/slack-desc | grep "^${PRGNAM}" > $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.txt
 
 # Restore the original umask:
-umask ${_UMASK_}
+umask ${_UMASK_} 

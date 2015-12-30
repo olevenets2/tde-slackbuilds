@@ -22,22 +22,35 @@
 #   OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 #   SUCH DAMAGE.
 
-PRGNAM=avahi-tqt
-VERSION=${VERSION:-R14.0.2}
+# Heavily influenced by the SBo build script
+# Copyright (c) 2007  Alex Lysenka <me@alkos333.net>
+# Copyright (c) 2012  Vliegendehuiskat
+# Copyright (c) 2014-2015  Matteo Bernardini <ponce@slackbuilds.org>
+# All rights reserved.
+
+PRGNAM=speex
+PRGNAME=speexdsp
+VERSION=${VERSION:-1.2rc2}
+VER=${VER:-1.2rc3}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_tde}
 
-DOCS="LICENSE"
+DOCS="AUTHORS ChangeLog* COPYING NEWS README* TODO"
 
 # Where do we look for sources?
 SRCDIR=$(cd $(dirname $0); pwd)
 
+# Place to build (TMP) package (PKG) and output (OUTPUT) the program:
 TMP=${TMP:-/tmp/build}
 PKG=$TMP/package-$PRGNAM
 OUTPUT=${OUTPUT:-/tmp}
 
-SOURCE="$SRCDIR/${PRGNAM}-${VERSION}.tar.bz2"
-SRCURL="http://tde-mirror.yosemite.net/trinity/releases/${VERSION}/dependencies/${PRGNAM}-${VERSION}.tar.bz2"
+# Input URL: http://downloads.xiph.org/releases/speex/speex-1.2rc2.tar.gz
+SOURCE[0]="$SRCDIR/${PRGNAM}-${VERSION}.tar.gz"
+SRCURL[0]="http://downloads.xiph.org/releases/${PRGNAM}/${PRGNAM}-${VERSION}.tar.gz"
+# Input URL: http://downloads.xiph.org/releases/speex/speexdsp-1.2rc3.tar.gz
+SOURCE[1]="$SRCDIR/${PRGNAME}-${VER}.tar.gz"
+SRCURL[1]="http://downloads.xiph.org/releases/${PRGNAM}/${PRGNAME}-${VER}.tar.gz"
 
 # You can use your own private machine.conf file to overrule machine defaults:
 if [ -e $SRCDIR/machine.conf ]; then
@@ -94,32 +107,34 @@ _UMASK_=$(umask)
 umask 0022
 
 # Create working directories:
-mkdir -p $OUTPUT          
+mkdir -p $OUTPUT        
 mkdir -p $TMP/tmp-$PRGNAM 
-mkdir -p $PKG      
-rm -rf $PKG/*             
+mkdir -p $PKG           
+rm -rf $PKG/*            
 rm -rf $TMP/tmp-$PRGNAM/* 
 rm -rf $OUTPUT/{checkout,configure,make,install,error,makepkg,patch}-$PRGNAM.log
 
 # Source file availability:
-if ! [ -f ${SOURCE} ]; then
-  echo "Source '$(basename ${SOURCE})' not available yet..."
-  # Check if the $SRCDIR is writable at all - if not, download to $OUTPUT
-  [ -w "$SRCDIR" ] || SOURCE="$OUTPUT/$(basename $SOURCE)"
-  if [ -f ${SOURCE} ]; then echo "Ah, found it!"; continue; fi
-  if ! [ "x${SRCURL}" == "x" ]; then
-    echo "Will download file to $(dirname $SOURCE)"
-    wget -nv -T 20 -O "${SOURCE}" "${SRCURL}" || true
-    if [ $? -ne 0 -o ! -s "${SOURCE}" ]; then
-      echo "Downloading '$(basename ${SOURCE})' failed... aborting the build."
-      mv -f "${SOURCE}" "${SOURCE}".FAIL
+for (( i = 0; i < ${#SOURCE[*]}; i++ )) ; do
+  if ! [ -f ${SOURCE[$i]} ]; then
+    echo "Source '$(basename ${SOURCE[$i]})' not available yet..."
+    # Check if the $SRCDIR is writable at all - if not, download to $OUTPUT
+    [ -w "$SRCDIR" ] || SOURCE[$i]="$OUTPUT/$(basename ${SOURCE[$i]})"
+    if [ -f ${SOURCE[$i]} ]; then echo "Ah, found it!"; continue; fi
+    if ! [ "x${SRCURL[$i]}" == "x" ]; then
+      echo "Will download file to $(dirname $SOURCE[$i])"
+      wget -nv -T 20 -O "${SOURCE[$i]}" "${SRCURL[$i]}" || true
+      if [ $? -ne 0 -o ! -s "${SOURCE[$i]}" ]; then
+        echo "Fail to download '$(basename ${SOURCE[$i]})'. Aborting the build."
+        mv -f "${SOURCE[$i]}" "${SOURCE[$i]}".FAIL
+        exit 1
+      fi
+    else
+      echo "File '$(basename ${SOURCE[$i]})' not available. Aborting the build."
       exit 1
     fi
-  else
-    echo "File '$(basename ${SOURCE})' not available... aborting the build."
-    exit 1
   fi
-fi
+done
 
 if [ "$P1" == "--download" ]; then
   echo "Download complete."
@@ -128,32 +143,35 @@ fi
 
 cd $TMP/tmp-$PRGNAM
 echo "Extracting the source archive(s) for $PRGNAM..."
-if $(file ${SOURCE} | grep -qi ": 7-zip"); then
-  7za x ${SOURCE}
-elif $(file ${SOURCE} | grep -qi ": zip"); then
-  unzip ${SOURCE}
-else
-  tar -xvf ${SOURCE}
-fi
+for (( i = 0; i < ${#SOURCE[*]}; i++ )) ; do
+  if $(file ${SOURCE[$i]} | grep -qi ": 7-zip"); then
+    7za x ${SOURCE[$i]}
+  elif $(file ${SOURCE[$i]} | grep -qi ": zip"); then
+    unzip ${SOURCE[$i]}
+  else
+    tar -xvf ${SOURCE[$i]}
+  fi
+done
 
-cd dependencies
-cd ${PRGNAM}
+cd ${PRGNAME}-${VER}
 chown -R root:root .
 chmod -R u+w,go+r-w,a+rX-st .
 
-./autogen.sh
+# Thanks to SBo script for patch
+patch -p1 < $SRCDIR/speexdsp-fixbuilds-774c87d.patch
+autoreconf -fi
+
 LDFLAGS="$SLKLDFLAGS" \
 CXXFLAGS="$SLKCFLAGS" \
 CFLAGS="$SLKCFLAGS" \
 ./configure \
   --prefix=/usr \
   --libdir=/usr/lib${LIBDIRSUFFIX} \
-  --docdir=/usr/doc/$PRGNAM-$VERSION \
-  --with-distro=slackware \
-  --enable-introspection=auto \
-  --disable-static \
-  --enable-shared \
-  --build=$ARCH-slackware-linux \
+  --mandir=/usr/man \
+  --docdir=/usr/doc/$PRGNAM-$VERSION/dsp \
+  --enable-static=no \
+  --enable-sse \
+  --build=$ARCH-slackware-linux
 
 make || exit 1
 make DESTDIR=$PKG install || exit 1
@@ -164,6 +182,45 @@ cat $SRCDIR/$(basename $0) > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 chown -R root:root $PKG/usr/doc/$PRGNAM-$VERSION
 find $PKG/usr/doc -type f -exec chmod 644 {} \;
 
+cd ..
+cd ${PRGNAM}-${VERSION}
+chown -R root:root .
+chmod -R u+w,go+r-w,a+rX-st .
+
+# Thanks to SBo again:
+sed -i 's/\r//' README.TI-DSP
+
+LDFLAGS="$SLKLDFLAGS" \
+CFLAGS="$SLKCFLAGS" \
+CXXFLAGS="$SLKCFLAGS" \
+SPEEXDSP_CFLAGS="-I$PKG/usr/include" \
+SPEEXDSP_LIBS="-L$PKG/usr/lib${LIBDIRSUFFIX} -lspeexdsp" \
+./configure \
+  --prefix=/usr \
+  --libdir=/usr/lib${LIBDIRSUFFIX} \
+  --mandir=/usr/man \
+  --docdir=/usr/doc/$PRGNAM-$VERSION \
+  --enable-static=no \
+  --enable-binaries \
+  --build=$ARCH-slackware-linux
+  
+make || exit 1
+make DESTDIR=$PKG install || exit 1
+
+mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a $DOCS $PKG/usr/doc/$PRGNAM-$VERSION || true
+cat $SRCDIR/$(basename $0) > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
+chown -R root:root $PKG/usr/doc/$PRGNAM-$VERSION
+find $PKG/usr/doc -type f -exec chmod 644 {} \;
+
+if [ -d $PKG/usr/man ]; then
+  find $PKG/usr/man -type f -name "*.?" -exec gzip -9f {} \;
+  for i in $(find $PKG/usr/man -type l -name "*.?") ; do ln -s $( readlink $i ).gz $i.gz ; rm $i ; done
+fi
+
+# Fix libspeex.la Thanks SBo script:
+sed -i "s|-L$PKG.*/lib${LIBDIRSUFFIX} ||" $PKG/usr/lib${LIBDIRSUFFIX}/libspeex.la
+
 find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
   | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
 
@@ -171,7 +228,7 @@ mkdir -p $PKG/install
 cat $SRCDIR/slack-desc > $PKG/install/slack-desc
 
 cd $PKG
-makepkg --linkadd y --chown n $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} 
+makepkg --linkadd y --chown n $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} 2>&1 | tee $OUTPUT/makepkg-${PRGNAM}.log
 cd $OUTPUT
 md5sum ${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} > ${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz}.md5
 cd -

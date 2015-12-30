@@ -34,6 +34,9 @@ ROOT=$(pwd)
 
 # Loop for all packages
 for dir in \
+  Deps\GraphicsMagick \
+  Deps\mp4v2 \
+  Deps\speex \
   Deps/tqt3 \
   Deps/tqtinterface \
   Deps/arts \
@@ -41,7 +44,6 @@ for dir in \
   Deps/dbus-1-tqt \
   Deps/tqca-tls \
   Deps/libart_lgpl \
-  Deps/avahi-tqt \
   ; do
   # Get the package name
   package=$(echo $dir | cut -f2- -d /)
