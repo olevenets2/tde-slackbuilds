@@ -1,6 +1,6 @@
 THIS WILL MOST LIKELY INTERFERE WITH KDE
 
-Build the Deps first, then the core.
+Build the Deps first, then the Core.
 You can choose to build optional packages from Apps
 
 Has build scripts that automate the build process
