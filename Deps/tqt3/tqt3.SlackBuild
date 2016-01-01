@@ -154,26 +154,26 @@ echo "yes" | CFLAGS="$SLKCFLAGS" CXXFLAGS="$SLKCFLAGS" ./configure \
  -release \
  -I/usr/include/freetype2 \
  -system-zlib \
- -system-libpng \
  -qt-imgfmt-png \
- -system-libmng \
  -qt-imgfmt-mng \
- -system-libjpeg \
- -qt-imgfmt-jpeg \
  -qt-gif \
  -thread \
  -stl \
- -no-g++-exceptions \
+ -pch \
  -xft \
+ -xrender \
+ -xrandr \
+ -cups \
+ -tablet \
+ -xinerama \
  -plugin-sql-mysql \
  -plugin-style-cde \
  -plugin-style-compact \
- -qt-style-motif \
+ -plugin-style-motif \
  -plugin-style-motifplus \
  -plugin-style-platinum \
  -plugin-style-sgi \
- -plugin-style-windows \
- -enable-opengl
+ -plugin-style-windows 
 
 make -i || exit 1
 QTDIR=$PKG/usr/lib${LIBDIRSUFFIX}/$PRGNAM-$VERSION
