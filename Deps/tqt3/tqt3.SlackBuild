@@ -152,6 +152,7 @@ sed -i "s|mysql\.h|mysql/mysql\.h|" src/sql/drivers/mysql/qsql_mysql.h
 echo "yes" | CFLAGS="$SLKCFLAGS" CXXFLAGS="$SLKCFLAGS" ./configure \
  -prefix /usr/lib${LIBDIRSUFFIX}/$PRGNAM-${VERSION} \
  -release \
+ -verbose \
  -I/usr/include/freetype2 \
  -L/usr/lib${LIBDIRSUFFIX} \
  -system-zlib \
