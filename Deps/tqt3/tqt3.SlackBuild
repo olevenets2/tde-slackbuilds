@@ -163,7 +163,6 @@ echo "yes" | CFLAGS="$SLKCFLAGS" CXXFLAGS="$SLKCFLAGS" ./configure \
  -xft \
  -xrender \
  -xrandr \
- -cups \
  -tablet \
  -xinerama \
  -plugin-sql-mysql \
