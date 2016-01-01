@@ -34,9 +34,9 @@ ROOT=$(pwd)
 
 # Loop for all packages
 for dir in \
-  Deps\GraphicsMagick \
-  Deps\mp4v2 \
-  Deps\speex \
+  Deps/GraphicsMagick \
+  Deps/mp4v2 \
+  Deps/speex \
   Deps/tqt3 \
   Deps/tqtinterface \
   Deps/arts \
