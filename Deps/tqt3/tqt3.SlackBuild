@@ -153,12 +153,14 @@ echo "yes" | CFLAGS="$SLKCFLAGS" CXXFLAGS="$SLKCFLAGS" ./configure \
  -prefix /usr/lib${LIBDIRSUFFIX}/$PRGNAM-${VERSION} \
  -release \
  -I/usr/include/freetype2 \
+ -L/usr/lib${LIBDIRSUFFIX} \
  -system-zlib \
  -qt-imgfmt-png \
  -qt-imgfmt-mng \
  -qt-gif \
  -thread \
  -stl \
+ -cups \
  -pch \
  -xft \
  -xrender \
