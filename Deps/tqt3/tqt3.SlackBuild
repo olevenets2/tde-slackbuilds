@@ -206,9 +206,9 @@ chown -R root:root $PKG/usr/doc/$PRGNAM-$VERSION
 find $PKG/usr/doc -type f -exec chmod 644 {} \;
 
 # Add man pages:
-mkdir -p $PKG/usr/man
-cp -a doc/man/* $PKG/usr/man
-find $PKG/usr/man -type f -exec gzip -9 "{}" \;
+# mkdir -p $PKG/usr/man
+# cp -a doc/man/* $PKG/usr/man
+# find $PKG/usr/man -type f -exec gzip -9 "{}" \;
 
 mkdir -p $PKG/etc/profile.d
 cat $SRCDIR/profile.d/${PRGNAM}.sh > $PKG/etc/profile.d/${PRGNAM}.sh
