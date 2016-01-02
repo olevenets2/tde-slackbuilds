@@ -203,7 +203,10 @@ cat $SRCDIR/$(basename $0) > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 chown -R root:root $PKG/usr/doc/$PRGNAM-$VERSION
 find $PKG/usr/doc -type f -exec chmod 644 {} \;
 
-# Skipping the man pages: Will first need to see if they interfere with anything
+# Add man pages:
+mkdir -p $PKG/usr/man
+cp -a doc/man/* $PKG/usr/man
+find $PKG/usr/man -type f -exec gzip -9 "{}" \;
 
 mkdir -p $PKG/etc/profile.d
 cat $SRCDIR/profile.d/${PRGNAM}.sh > $PKG/etc/profile.d/${PRGNAM}.sh
