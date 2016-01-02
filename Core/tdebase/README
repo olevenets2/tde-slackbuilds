@@ -1,0 +1,6 @@
+Add this to  /etc/rc.d/rc.4 to start tdm
+
+# Start TDM:
+if [ -x /usr/bin/tdm ]; then
+  exec /usr/bin/tdm -nodaemon
+fi
