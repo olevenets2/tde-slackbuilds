@@ -150,6 +150,7 @@ echo "yes" | CFLAGS="$SLKCFLAGS" CXXFLAGS="$SLKCFLAGS" ./configure \
  -qt-gif \
  -thread \
  -stl \
+ -nis \
  -cups \
  -pch \
  -xft \
@@ -157,6 +158,7 @@ echo "yes" | CFLAGS="$SLKCFLAGS" CXXFLAGS="$SLKCFLAGS" ./configure \
  -xrandr \
  -tablet \
  -xinerama \
+ -xcurser \
  -plugin-sql-mysql \
  -plugin-style-cde \
  -plugin-style-compact \
