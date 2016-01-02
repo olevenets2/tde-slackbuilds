@@ -145,7 +145,6 @@ chmod -R u+w,go+r-w,a+rX-st .
 # https://bugs.trinitydesktop.org/show_bug.cgi?id=2543
 patch -p1 < $SRCDIR/perlfix.patch
 
-# On Slackware current this wasn't building with CUPS support:
 mkdir -p build-${PRGNAM}
 cd build-${PRGNAM}
   cmake \
@@ -158,7 +157,7 @@ cd build-${PRGNAM}
     -DSYSCONF_INSTALL_DIR=/etc \
     -DLIB_SUFFIX=${LIBDIRSUFFIX} \
     -DCMAKE_SKIP_RPATH="OFF" \
-    -DWITH_CUPS="OFF" \
+    -DWITH_CUPS="ON" \
     -DWITH_SUDO_TDESU_BACKEND="ON" \
     -DWITH_NETWORK_MANAGER_BACKEND="ON" \
     -DWITH_ASPELL="ON" \
