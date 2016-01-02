@@ -146,7 +146,7 @@ LDFLAGS="$SLKLDFLAGS" \
 CXXFLAGS="$SLKCFLAGS" \
 CFLAGS="$SLKCFLAGS" \
 ./configure  \
---qtdir=/usr/lib64/tqt3
+--qtdir=/usr/lib64/tqt3-${VERSION}
   
 make || exit 1
 
