@@ -143,9 +143,6 @@ cd ${PRGNAM}
 chown -R root:root .
 chmod -R u+w,go+r-w,a+rX-st .
 
-# Force CFLAGS in qmake.conf 
-sed -i "/QMAKE_CFLAGS_RELEASE/s|-O2|$SLKCFLAGS|" mkspecs/linux-g++/qmake.conf
-
 echo "yes" | CFLAGS="$SLKCFLAGS" CXXFLAGS="$SLKCFLAGS" ./configure \
  -prefix /usr/lib${LIBDIRSUFFIX}/$PRGNAM-${VERSION} \
  -release \
