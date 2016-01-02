@@ -146,14 +146,12 @@ chmod -R u+w,go+r-w,a+rX-st .
 # Force CFLAGS in qmake.conf 
 sed -i "/QMAKE_CFLAGS_RELEASE/s|-O2|$SLKCFLAGS|" mkspecs/linux-g++/qmake.conf
 
-# Fix location of mysql.h
-sed -i "s|mysql\.h|mysql/mysql\.h|" src/sql/drivers/mysql/qsql_mysql.h
-
 echo "yes" | CFLAGS="$SLKCFLAGS" CXXFLAGS="$SLKCFLAGS" ./configure \
  -prefix /usr/lib${LIBDIRSUFFIX}/$PRGNAM-${VERSION} \
  -release \
  -verbose \
  -I/usr/include/freetype2 \
+ -I/usr/include/mysql \
  -L/usr/lib${LIBDIRSUFFIX} \
  -system-zlib \
  -qt-imgfmt-png \
