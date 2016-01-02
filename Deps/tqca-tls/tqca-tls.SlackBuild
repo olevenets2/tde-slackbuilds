@@ -150,8 +150,8 @@ CFLAGS="$SLKCFLAGS" \
   
 make || exit 1
 
-mkdir -p $PKG/usr/lib${LIBDIRSUFFIX}/tqt3-R14.0.0/plugins/crypto/
-install -m 0755 libtqca-tls.so $PKG/usr/lib${LIBDIRSUFFIX}/tqt3-R14.0.0/plugins/crypto/
+mkdir -p $PKG/usr/lib${LIBDIRSUFFIX}/tqt3-${VERSION}/plugins/crypto/
+install -m 0755 libtqca-tls.so $PKG/usr/lib${LIBDIRSUFFIX}/tqt3-${VERSION}/plugins/crypto/
 
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
 cp -a $DOCS $PKG/usr/doc/$PRGNAM-$VERSION || true
