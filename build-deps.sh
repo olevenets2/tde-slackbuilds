@@ -27,10 +27,17 @@
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# These need set here:
+# These need to be set here:
 INST=1
 TMP=${TMP:-/tmp}
 ROOT=$(pwd)
+
+## Allow a rebuild of all dependencies,
+## even if they are already installed.
+##
+## Run:
+##   REBUILD=yes ./build-deps.sh
+REBUILD=${REBUILD:-no}
 
 # Loop for all packages
 for dir in \
@@ -48,27 +55,31 @@ for dir in \
   # Get the package name
   package=$(echo $dir | cut -f2- -d /)
 
-  # Change to package directory
-  cd $ROOT/$dir || exit 1
+  if [ -z "`find /var/log/packages/ -name *$package-*`" ] || [ "${REBUILD}" = "yes" ]; then
+    # Change to package directory
+    cd $ROOT/$dir || exit 1
 
-  # Get the version
-  version=$(cat ${package}.SlackBuild | grep "VERSION:" | head -n1 | cut -d "-" -f2 | rev | cut -c 2- | rev)
+    # Get the version
+    version=$(cat ${package}.SlackBuild | grep "VERSION:" | head -n1 | cut -d "-" -f2 | rev | cut -c 2- | rev)
 
-  # Get the build
-  build=$(cat ${package}.SlackBuild | grep "BUILD:" | cut -d "-" -f2 | rev | cut -c 2- | rev)
+    # Get the build
+    build=$(cat ${package}.SlackBuild | grep "BUILD:" | cut -d "-" -f2 | rev | cut -c 2- | rev)
 
-  # The real build starts here
-  sh ${package}.SlackBuild || exit 1
-  if [ "$INST" = "1" ]; then
-    PACKAGE=`ls --color=never $TMP/${package}-${version}-*-${build}*.txz`
-    if [ -f "$PACKAGE" ]; then
-      upgradepkg --install-new --reinstall "$PACKAGE"
-    else
-      echo "Error:  package to upgrade "$PACKAGE" not found in $TMP"
-      exit 1
+    # The real build starts here
+    sh ${package}.SlackBuild || exit 1
+    if [ "$INST" = "1" ]; then
+      PACKAGE=`ls --color=never $TMP/${package}-${version}-*-${build}*.txz`
+      if [ -f "$PACKAGE" ]; then
+        upgradepkg --install-new --reinstall "$PACKAGE"
+      else
+        echo "Error:  package to upgrade "$PACKAGE" not found in $TMP"
+        exit 1
+      fi
     fi
-  fi
 
-  # back to original directory
-  cd $ROOT
+    # back to original directory
+    cd $ROOT
+  else
+    echo "$package already installed."
+  fi
 done
