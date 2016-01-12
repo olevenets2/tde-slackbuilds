@@ -32,12 +32,9 @@ INST=1
 TMP=${TMP:-/tmp}
 ROOT=$(pwd)
 
-## Allow a rebuild of all dependencies,
-## even if they are already installed.
-##
-## Run:
-##   REBUILD=yes ./build-deps.sh
-REBUILD=${REBUILD:-no}
+#### We Will default this to yes or libart_lgpl won't be built and installed
+#### It needs to replace the version in Slackware. (I will test this in the future maybe it can come out)
+REBUILD=${REBUILD:-yes}
 
 # Loop for all packages
 for dir in \
