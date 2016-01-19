@@ -32,9 +32,12 @@ INST=1
 TMP=${TMP:-/tmp}
 ROOT=$(pwd)
 
-#### We Will default this to yes or libart_lgpl won't be built and installed
-#### It needs to replace the version in Slackware. (I will test this in the future maybe it can come out)
-REBUILD=${REBUILD:-yes}
+## Allow a rebuild of all dependencies,
+## even if they are already installed.
+##
+## Run:
+##   REBUILD=yes ./build-deps.sh
+REBUILD=${REBUILD:-no}
 
 # Loop for all packages
 for dir in \
@@ -52,7 +55,8 @@ for dir in \
   # Get the package name
   package=$(echo $dir | cut -f2- -d /)
 
-  if [ -z "`find /var/log/packages/ -name *$package-*`" ] || [ "${REBUILD}" = "yes" ]; then
+  ## this check ignores system packages, since we have to replace Slackware's libart
+  if [ -z `find /var/log/packages/ -iname "*$package*" | grep -v [0-9]$` ] || [ "${REBUILD}" = "yes" ]; then
     # Change to package directory
     cd $ROOT/$dir || exit 1
 
