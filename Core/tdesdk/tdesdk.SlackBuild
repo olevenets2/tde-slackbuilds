@@ -23,7 +23,7 @@
 #   SUCH DAMAGE.
 
 PRGNAM=tdesdk
-VERSION=${VERSION:-R14.0.2}
+VERSION=${VERSION:-R14.0.3}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_tde}
 
@@ -127,14 +127,7 @@ if [ "$P1" == "--download" ]; then
 fi
 
 cd $TMP/tmp-$PRGNAM
-echo "Extracting the source archive(s) for $PRGNAM..."
-if $(file ${SOURCE} | grep -qi ": 7-zip"); then
-  7za x ${SOURCE}
-elif $(file ${SOURCE} | grep -qi ": zip"); then
-  unzip ${SOURCE}
-else
-  tar -xvf ${SOURCE}
-fi
+bsdtar -xvf ${SOURCE}
 
 cd ${PRGNAM}
 
