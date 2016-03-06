@@ -129,21 +129,11 @@ if [ "$P1" == "--download" ]; then
 fi
 
 cd $TMP/tmp-$PRGNAM
-echo "Extracting the source archive(s) for $PRGNAM..."
-if $(file ${SOURCE} | grep -qi ": 7-zip"); then
-  7za x ${SOURCE}
-elif $(file ${SOURCE} | grep -qi ": zip"); then
-  unzip ${SOURCE}
-else
-  tar -xvf ${SOURCE}
-fi
+bsdtar -xvf ${SOURCE}
+
 cd ${PRGNAM}
 chown -R root:root .
 chmod -R u+w,go+r-w,a+rX-st .
-
-# Patch a file with incorrect syntax
-# https://bugs.trinitydesktop.org/show_bug.cgi?id=2543
-patch -p1 < $SRCDIR/perlfix.patch
 
 mkdir -p build-${PRGNAM}
 cd build-${PRGNAM}
