@@ -131,7 +131,7 @@ echo "Extracting the source archive(s) for $PRGNAM..."
 bsdtar -xvf ${SOURCE}
 
 cd ${PRGNAM}
-
+patch -p0 < $SRCDIR/arkplugin-diffs-1
 chown -R root:root .
 chmod -R u+w,go+r-w,a+rX-st .
 
