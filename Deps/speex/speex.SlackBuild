@@ -30,7 +30,6 @@
 
 PRGNAM=speex
 VERSION=${VERSION:-1.2rc2}
-VER=${VER:-1.2rc3}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_tde}
 
@@ -45,8 +44,8 @@ PKG=$TMP/package-$PRGNAM
 OUTPUT=${OUTPUT:-/tmp}
 
 # Input URL: http://downloads.xiph.org/releases/speex/speex-1.2rc2.tar.gz
-SOURCE[0]="$SRCDIR/${PRGNAM}-${VERSION}.tar.gz"
-SRCURL[0]="http://downloads.xiph.org/releases/${PRGNAM}/${PRGNAM}-${VERSION}.tar.gz"
+SOURCE="$SRCDIR/${PRGNAM}-${VERSION}.tar.gz"
+SRCURL="http://downloads.xiph.org/releases/${PRGNAM}/${PRGNAM}-${VERSION}.tar.gz"
 
 # You can use your own private machine.conf file to overrule machine defaults:
 if [ -e $SRCDIR/machine.conf ]; then
@@ -111,26 +110,24 @@ rm -rf $TMP/tmp-$PRGNAM/*
 rm -rf $OUTPUT/{checkout,configure,make,install,error,makepkg,patch}-$PRGNAM.log
 
 # Source file availability:
-for (( i = 0; i < ${#SOURCE[*]}; i++ )) ; do
-  if ! [ -f ${SOURCE[$i]} ]; then
-    echo "Source '$(basename ${SOURCE[$i]})' not available yet..."
-    # Check if the $SRCDIR is writable at all - if not, download to $OUTPUT
-    [ -w "$SRCDIR" ] || SOURCE[$i]="$OUTPUT/$(basename ${SOURCE[$i]})"
-    if [ -f ${SOURCE[$i]} ]; then echo "Ah, found it!"; continue; fi
-    if ! [ "x${SRCURL[$i]}" == "x" ]; then
-      echo "Will download file to $(dirname $SOURCE[$i])"
-      wget -nv -T 20 -O "${SOURCE[$i]}" "${SRCURL[$i]}" || true
-      if [ $? -ne 0 -o ! -s "${SOURCE[$i]}" ]; then
-        echo "Fail to download '$(basename ${SOURCE[$i]})'. Aborting the build."
-        mv -f "${SOURCE[$i]}" "${SOURCE[$i]}".FAIL
-        exit 1
-      fi
-    else
-      echo "File '$(basename ${SOURCE[$i]})' not available. Aborting the build."
+if ! [ -f ${SOURCE} ]; then
+  echo "Source '$(basename ${SOURCE})' not available yet..."
+  # Check if the $SRCDIR is writable at all - if not, download to $OUTPUT
+  [ -w "$SRCDIR" ] || SOURCE="$OUTPUT/$(basename $SOURCE)"
+  if [ -f ${SOURCE} ]; then echo "Ah, found it!"; continue; fi
+  if ! [ "x${SRCURL}" == "x" ]; then
+    echo "Will download file to $(dirname $SOURCE)"
+    wget -nv -T 20 -O "${SOURCE}" "${SRCURL}" || true
+    if [ $? -ne 0 -o ! -s "${SOURCE}" ]; then
+      echo "Downloading '$(basename ${SOURCE})' failed... aborting the build."
+      mv -f "${SOURCE}" "${SOURCE}".FAIL
       exit 1
     fi
+  else
+    echo "File '$(basename ${SOURCE})' not available... aborting the build."
+    exit 1
   fi
-done
+fi
 
 if [ "$P1" == "--download" ]; then
   echo "Download complete."
