@@ -136,7 +136,7 @@ chown -R root:root .
 chmod -R u+w,go+r-w,a+rX-st .
 
 cp -Rp /usr/share/libtool/build-aux/ltmain.sh admin/ltmain.sh
-cp -Rp /usr/share/apps/kapptemplate/admin/libtool.m4.in admin/libtool.m4.in
+cp -Rp /usr/share/aclocal/libtool.m4 admin/libtool.m4.in
 make -f admin/Makefile.common
 
 LDFLAGS="$SLKLDFLAGS" \
