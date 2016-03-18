@@ -135,7 +135,7 @@ if [ "$P1" == "--download" ]; then
 fi
 
 cd $TMP/tmp-$PRGNAM
-bsdtar -xvf ${SOURCE[$i]}
+bsdtar -xvf ${SOURCE}
 
 cd ${PRGNAM}-${VERSION}
 chown -R root:root .
