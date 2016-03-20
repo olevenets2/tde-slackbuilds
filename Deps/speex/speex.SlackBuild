@@ -141,14 +141,12 @@ cd ${PRGNAM}-${VERSION}
 chown -R root:root .
 chmod -R u+w,go+r-w,a+rX-st .
 
-# Thanks to SBo again:
+# Thanks to SBo:
 sed -i 's/\r//' README.TI-DSP
 
 LDFLAGS="$SLKLDFLAGS" \
 CFLAGS="$SLKCFLAGS" \
 CXXFLAGS="$SLKCFLAGS" \
-SPEEXDSP_CFLAGS="-I$PKG/usr/include" \
-SPEEXDSP_LIBS="-L$PKG/usr/lib${LIBDIRSUFFIX} -lspeexdsp" \
 ./configure \
   --prefix=/usr \
   --libdir=/usr/lib${LIBDIRSUFFIX} \
