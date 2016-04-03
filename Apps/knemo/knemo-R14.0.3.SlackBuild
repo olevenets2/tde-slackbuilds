@@ -27,13 +27,14 @@ VERSION=${VERSION:-R14.0.3}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_tde}
 PREFIX=/usr
-QTDIR=""         # let configure find the tqt3 directories
 # You may or may not get away with more than -j1, but mostly it just breaks the build:
 NUMJOBS=${NUMJOBS:--j1}
 
 Options()
-(
+{
 ## Edit or comment out as required
+# let configure find the tqt3 directories
+QTDIR=""
 # rename knemo icons to avoid conflict with those in tdeartwork
 rename network_ knemo_network_ src/knemod/pics/*png
 sed -i -e 's|network_|knemo_network_|g' src/{knemod/interfaceicon,kcm/configdialog}.cpp
@@ -45,10 +46,12 @@ sed -i 's|<tr><td>|<tr><td width=60%>|g' src/knemod/interfacetooltip.cpp
 # SUBDIRS= ar bg br cs cy da de el en_GB es et fr ga gl hu it ja ka lt nl pl pt pt_BR ru rw sk sr sr@Latn sv tr
 # needs msgfmt - no error message given - uses bash built-in ':' otherwise
 sed -i 's|SUBDIRS=.*$|SUBDIRS= de en_GB|' translations/Makefile.am
-)
+## Bash builtin null command placeholder in case all options are commented out - DO NOT change
+:
+}
 
 SlackDesc()
-(
+{
 echo "
 # HOW TO EDIT THIS FILE:
 # The 'handy ruler' below makes it easier to edit a package description.  Line
@@ -70,7 +73,7 @@ knemo: IMPORTANT: KNemo has to be started using
 knemo: Trinity Control Center|Internet & Network|Network Monitor.
 knemo:
 " > $PKG/install/slack-desc
-)
+}
 
 
 DOCS="AUTHORS ChangeLog* COPYING* README* TODO"
@@ -183,8 +186,8 @@ Options
 
 
 # update admin for installed version of libtool
-cp /$(grep -h ltmain.sh /var/log/packages/*) admin/
-cp /$(grep -h libtool.m4 /var/log/packages/*) admin/libtool.m4.in
+cp /$(grep -h ltmain.sh /var/log/packages/libtool/*) admin/
+cp /$(grep -h libtool.m4 /var/log/packages/libtool/*) admin/libtool.m4.in
 
 make -f admin/Makefile.common
 
