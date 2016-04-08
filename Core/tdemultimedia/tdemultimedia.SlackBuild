@@ -24,10 +24,24 @@
 
 PRGNAM=tdemultimedia
 VERSION=${VERSION:-R14.0.3}
-BUILD=${BUILD:-1}
-# You may or may not get away with removing -j1, but mostly it just breaks the build:
-NUMJOBS=${NUMJOBS:-" -j1 "}
+BUILD=${BUILD:-2}
 TAG=${TAG:-_tde}
+PREFIX="/usr"
+
+# Set the number of parallel jobs [-jn] to whatever your system will support
+# This is one of the builds that Trinity 'How to Build' advises may not build if greater than -j1
+NUMJOBS=${NUMJOBS:-" -j "}
+# cmake only builds 'kmix' - uncomment to use automake/configure to be able to build all options
+#USECMAKE="no"
+
+#For automake/configure build
+Options()
+{
+## Edit or comment out as required
+# let configure find the tqt3 directories
+QTDIR=""
+return
+}
 
 DOCS="AUTHORS COPYING* README*"
 
@@ -143,6 +157,8 @@ cd ${PRGNAM}
 chown -R root:root .
 chmod -R u+w,go+r-w,a+rX-st .
 
+if [ ! "${USECMAKE:-}" == "no" ]
+then
 # Ummm...so this just builds kmix....? lmao
 mkdir -p build-${PRGNAM}
 cd build-${PRGNAM}
@@ -155,7 +171,32 @@ cd build-${PRGNAM}
     -DLIB_SUFFIX=${LIBDIRSUFFIX} \
     -DBUILD_ALL="ON" \
     ..
-  make $NUMJOBS || exit 1
+else
+# update admin for installed version of libtool
+cp /$(grep -h ltmain.sh /var/log/packages/libtool*) admin/
+cp /$(grep -h libtool.m4 /var/log/packages/libtool*) admin/libtool.m4.in
+
+make -f admin/Makefile.common
+
+mkdir -p build-${PRGNAM}
+cd build-${PRGNAM}
+
+Options
+
+# Configure the package
+LDFLAGS="${SLKLDFLAGS}"
+CFLAGS="${SLKCFLAGS}"
+CXXFLAGS="${SLKCFLAGS}"
+../configure \
+   --prefix=${PREFIX} \
+   --sysconfdir="/etc/trinity" \
+   --mandir=${PREFIX}/man \
+   --disable-rpath \
+   --disable-debug \
+   --enable-closure
+fi
+
+  make ${NUMJOBS:-} || exit 1
   make DESTDIR=$PKG install || exit 1
 cd -
 
