@@ -24,15 +24,16 @@
 
 PRGNAM=knemo
 VERSION=${VERSION:-R14.0.3}
-BUILD=${BUILD:-1}
+BUILD=${BUILD:-2}
 TAG=${TAG:-_tde}
 PREFIX=/usr
-# You may or may not get away with more than -j1, but mostly it just breaks the build:
-NUMJOBS=${NUMJOBS:--j1}
+
 
 Options()
 {
 ## Edit or comment out as required
+# Set the number of parallel jobs [-jn] to whatever your system will support
+NUMJOBS=${NUMJOBS:--j}
 # let configure find the tqt3 directories
 QTDIR=""
 # rename knemo icons to avoid conflict with those in tdeartwork
@@ -46,8 +47,7 @@ sed -i 's|<tr><td>|<tr><td width=60%>|g' src/knemod/interfacetooltip.cpp
 # SUBDIRS= ar bg br cs cy da de el en_GB es et fr ga gl hu it ja ka lt nl pl pt pt_BR ru rw sk sr sr@Latn sv tr
 # needs msgfmt - no error message given - uses bash built-in ':' otherwise
 sed -i 's|SUBDIRS=.*$|SUBDIRS= de en_GB|' translations/Makefile.am
-## Bash builtin null command placeholder in case all options are commented out - DO NOT change
-:
+return
 }
 
 SlackDesc()
@@ -208,7 +208,7 @@ CXXFLAGS="${SLKCFLAGS}"
    --disable-rpath \
    --enable-closure
 
-  make $NUMJOBS || exit 1
+  make ${NUMJOBS:-} || exit 1
   make DESTDIR=$PKG install || exit 1
 cd -
 
