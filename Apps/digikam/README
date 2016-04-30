@@ -1,0 +1,11 @@
+Digikam is a digital photo management application for TDE.
+Interface with camera using gphoto, or view images from card or on disk.
+
+Showfoto is an image editor.
+
+
+If Digikam is to be built with Kipi Plugins support, build and install kipi-plugins first.
+
+The default build is for [US] English only - additional language support can be set by the 'lang' variable.
+
+Added work-around for showfoto language support.
