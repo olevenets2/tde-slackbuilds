@@ -135,8 +135,10 @@ cd ${PRGNAM}
 chown -R root:root .
 chmod -R u+w,go+r-w,a+rX-st .
 
-cp -Rp /usr/share/libtool/build-aux/ltmain.sh admin/ltmain.sh
-cp -Rp /usr/share/aclocal/libtool.m4 admin/libtool.m4.in
+# update admin for installed version of libtool
+cp /$(grep -h ltmain.sh /var/log/packages/libtool*) admin/
+cp /$(grep -h libtool.m4 /var/log/packages/libtool*) admin/libtool.m4.in
+
 make -f admin/Makefile.common
 
 LDFLAGS="$SLKLDFLAGS" \
