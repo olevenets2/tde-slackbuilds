@@ -211,8 +211,9 @@ find $PKG/usr/doc -type f -exec chmod 644 {} \;
 # find $PKG/usr/man -type f -exec gzip -9 "{}" \;
 
 mkdir -p $PKG/etc/profile.d
-cat $SRCDIR/profile.d/${PRGNAM}.sh > $PKG/etc/profile.d/${PRGNAM}.sh
-cat $SRCDIR/profile.d/${PRGNAM}.csh > $PKG/etc/profile.d/${PRGNAM}.csh
+# JD: adapt these to the correct value of LIBDIRSUFFIX
+sed "s/\${LIBDIRSUFFIX}/$LIBDIRSUFFIX/g" < $SRCDIR/profile.d/${PRGNAM}.sh > $PKG/etc/profile.d/${PRGNAM}.sh
+sed "s/\${LIBDIRSUFFIX}/$LIBDIRSUFFIX/g" < $SRCDIR/profile.d/${PRGNAM}.csh > $PKG/etc/profile.d/${PRGNAM}.csh
 chmod 755 $PKG/etc/profile.d/*
 
 # Strip binaries:
