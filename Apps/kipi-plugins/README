@@ -10,3 +10,5 @@ libkdcraw, libkipi, kipi-plugins
 --------------------------------
 The default build is for [US] English only - additional language support
 can be built by setting the 'lang' variable.
+
+NOTE: exiv2 is shipped with Slackware -current
