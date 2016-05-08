@@ -74,7 +74,7 @@ PKG=$TMP/package-$PRGNAM
 OUTPUT=${OUTPUT:-/tmp}
 
 SOURCE="$SRCDIR/${PRGNAM}-${VERSION}.tar.bz2"
-SRCURL="http://tde-mirror.yosemite.net/trinity/releases/${VERSION}/applications/${PRGNAM}-${VERSION}.tar.bz2"
+SRCURL="http://tde-mirror.yosemite.net/trinity/releases/${VERSION}/libraries/${PRGNAM}-${VERSION}.tar.bz2"
 
 # You can use your own private machine.conf file to overrule machine defaults:
 if [ -e $SRCDIR/machine.conf ]; then
