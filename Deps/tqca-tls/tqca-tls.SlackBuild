@@ -127,14 +127,7 @@ if [ "$P1" == "--download" ]; then
 fi
 
 cd $TMP/tmp-$PRGNAM
-echo "Extracting the source archive(s) for $PRGNAM..."
-if $(file ${SOURCE} | grep -qi ": 7-zip"); then
-  7za x ${SOURCE}
-elif $(file ${SOURCE} | grep -qi ": zip"); then
-  unzip ${SOURCE}
-else
-  tar -xvf ${SOURCE}
-fi
+bsdtar -xvf ${SOURCE}
 
 cd dependencies
 cd ${PRGNAM}
@@ -146,7 +139,7 @@ LDFLAGS="$SLKLDFLAGS" \
 CXXFLAGS="$SLKCFLAGS" \
 CFLAGS="$SLKCFLAGS" \
 ./configure  \
---qtdir=/usr/lib64/tqt3-${VERSION}
+--qtdir=/usr/lib${LIBDIRSUFFIX}/tqt3-${VERSION}
   
 make || exit 1
 
