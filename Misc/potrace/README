@@ -1,0 +1,20 @@
+
+ POTRACE - transform bitmaps into vector graphics
+
+ Potrace is a tool for tracing a bitmap, which means, transforming a
+ bitmap into a smooth, scalable image.  The input is a bitmap (PBM,
+ PGM, PPM, or BMP), and the default output is one of several vector
+ file formats.  A typical use is to create EPS files from scanned
+ data, such as company or university logos, handwritten notes, etc.
+ The resulting image is not "jaggy" like a bitmap, but smooth. It can
+ then be rendered at any resolution.
+
+ Potrace can currently produce the following output formats: EPS,
+ PostScript, PDF, SVG (scalable vector graphics), DXF, GeoJSON, PGM
+ (for easy antialiasing of pixel-based images), Gimppath, and
+ XFig. Additional backends might be added in the future.
+
+ A separate program, mkbitmap, is also provided. This program can act
+ as a pre-processor for Potrace, applying scaling and various filters
+ to an image before converting it to a bitmap. This is useful for
+ potracing greyscale and color images.

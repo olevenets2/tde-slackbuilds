@@ -11,7 +11,7 @@ elif [ ! -e etc/X11/tdm ]; then
   ( cd etc/X11 ; ln -sf /etc/tde/tdm tdm )
 fi
 
-#!/bin/sh
+
 config() {
   NEW="$1"
   OLD="`dirname $NEW`/`basename $NEW .new`"
@@ -42,3 +42,31 @@ fi
 if [ -x usr/bin/update-mime-database ]; then
   chroot . /usr/bin/update-mime-database usr/share/mime >/dev/null 2>&1
 fi
+
+
+# update PATH
+# upgradepkg runs this twice, so even though $TQTDIR/bin will be
+# a new PATH, it needs to be tested for the second run
+if ! grep ${INSTALL_TDE}/bin /etc/profile
+then
+echo "PATH=\$PATH:${INSTALL_TDE}/bin:$TQTDIR/bin" >> /etc/profile
+else
+if ! grep $TQTDIR/bin /etc/profile
+then
+echo "PATH=\$PATH:$TQTDIR/bin" >> /etc/profile
+fi
+fi
+
+
+# update MANPATH
+if ! grep ${INSTALL_TDE}/man /etc/profile
+then
+echo "export MANPATH=\$MANPATH:${INSTALL_TDE}/man" >> /etc/profile
+fi
+
+
+## you may not want to do this ##
+# start a 'konsole' with system-wide profile
+[[ ! $(grep -x "source /etc/profile" $HOME/.bashrc ) ]] && echo "source /etc/profile" >> $HOME/.bashrc || true
+# don't want this
+sed -i 's|source /etc/profile.d/mc.sh|#source /etc/profile.d/mc.sh|' $HOME/.bashrc || true

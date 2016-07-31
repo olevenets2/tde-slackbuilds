@@ -1,0 +1,1546 @@
+# translation of knights.po to Spanish
+# Copyright (C) 2016 Free Software Foundation, Inc.
+# Copyright 2016 github.com/Thorn-Inurcide/tde-slackbuilds
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: knights\n"
+"POT-Creation-Date: 2003-03-02 12:02-0600\n"
+"PO-Revision-Date: 2016-05-02 14:59+0100\n"
+"Last-Translator: \n"
+"Language-Team: Spanish <es@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+
+
+msgid "Name: %1 Rating: %2 Match Type: %3 %4 Base Time: %5 Increment: %6"
+msgstr "Nombre: %1 Clasificación: %2 Tipo de partido: %3 %4 Tiempo Base: %5 Incremento: %6"
+
+msgid "min."
+msgstr "min."
+
+msgid "moves"
+msgstr "movimientos"
+
+msgid "sec."
+msgstr "seg."
+
+msgid "%1 %2 vs. %3 %4\nin a %5 match."
+msgstr "%1 %2 vs. %3 %4\nen un partido %5."
+
+msgid "%1 - Knights"
+msgstr "%1 - Knights"
+
+msgid "%1 Console"
+msgstr "%1 de consola"
+
+msgid "%1 did not pass it's copy protection check."
+msgstr "%1 no pasó la verificación de protección de copia."
+
+msgid "%1 matches found."
+msgstr "%1 se han encontrado partidos."
+
+msgid "%1 suggests this move:\n%2"
+msgstr "%1 sugiere este movimiento:\n%2"
+
+msgid "%1 tells you:\n%2"
+msgstr "%1 le dice:\n%2"
+
+msgid "%1 vs. %2"
+msgstr "%1 vs. %2"
+
+msgid "&Accept Draw"
+msgstr "&Aceptar Tablas"
+
+msgid "&Add..."
+msgstr "&Añadir..."
+
+msgid "&Call Flag"
+msgstr "&Llame a la bandera"
+
+msgid "&Close Match"
+msgstr "&Cerrar Partido"
+
+msgid "&Configure Knights..."
+msgstr "&Configurar Knights..."
+
+msgid "&Copy"
+msgstr "&Copia"
+
+msgid "&Delete..."
+msgstr "&Borrar..."
+
+msgid "&Draw"
+msgstr "&Tablas"
+
+msgid "&File"
+msgstr "&Archivo"
+
+msgid "&Find"
+msgstr "&Encontrar"
+
+msgid "&Flip View"
+msgstr "&Invertir el tablero"
+
+msgid "&Help"
+msgstr "A&yuda"
+
+msgid "&Hint"
+msgstr "&Insinuación"
+
+msgid "&Ignore Draw"
+msgstr "&Ignorar Tablas"
+
+msgid "&Install Themes"
+msgstr "&Instalar Temas"
+
+msgid "&Load Match..."
+msgstr "&Partido de carga..."
+
+msgid "&Match"
+msgstr "&Partido"
+
+msgid "&Modify..."
+msgstr "&Modificar..."
+
+msgid "&New Match..."
+msgstr "&Nuevo Partido..."
+
+msgid "&Offer Draw"
+msgstr "&Ofrecer Tablas"
+
+msgid "&Ponder"
+msgstr "&Reflexionar"
+
+msgid "&Print"
+msgstr "&Impresión"
+
+msgid "&Print Notation..."
+msgstr "&Impresión de notación..."
+
+msgid "&Quit"
+msgstr "&Dejar"
+
+msgid "&Reject Draw"
+msgstr "&Rechazar Tablas"
+
+msgid "&Retract Move"
+msgstr "&Retraer Movimiento"
+
+msgid "&Save Match"
+msgstr "&Guardar Partido"
+
+msgid "&Settings"
+msgstr "Co&nfiguración"
+
+msgid "&Tutorials"
+msgstr "&Tutoriales"
+
+msgid "50 moves rule, draw match"
+msgstr "50 movimientos regla, partido tablas"
+
+msgid "A .pgn file to be loaded."
+msgstr "Un archivo .pgn se va a cargar."
+
+msgid "Abort logging into the server"
+msgstr "Abortar sesión en el servidor"
+
+msgid "Accept"
+msgstr "Aceptar"
+
+msgid "Accept This Match"
+msgstr "Este partido de aceptar"
+
+msgid "Add to Friends"
+msgstr "Añadir a amigos"
+
+msgid "Aimed against..."
+msgstr "Dirigido contra..."
+
+msgid "Always Promote to Queen"
+msgstr "Siempre Promover a la reina"
+
+msgid "Animate Moves"
+msgstr "Se movimientos la animación"
+
+msgid "Append to Save File"
+msgstr "Anexar a guardar archivo"
+
+msgid "Append to Save File:"
+msgstr "Anexar a guardar archivo:"
+
+msgid "Ask"
+msgstr "Pedir"
+
+msgid "Assess..."
+msgstr "Evaluar..."
+
+msgid "Audio"
+msgstr "Audio"
+
+msgid "Audio Themes"
+msgstr "Temas de audio"
+
+msgid "Australian FICS"
+msgstr "FICS australiana"
+
+msgid "Automatic Preview"
+msgstr "Vista previa automática"
+
+msgid "Automatically Close Previous ICS Match"
+msgstr "Cerrar automáticamente Partido ICS Anterior"
+
+msgid "Backwards pawn"
+msgstr "Peón retrasado"
+
+msgid "Base Time"
+msgstr "Base de tiempo"
+
+msgid "Base Time:"
+msgstr "Base de tiempo:"
+
+msgid "Begin a Tutorial"
+msgstr "Iniciar un Tutorial"
+
+msgid "Better Move"
+msgstr "Mejor Mover"
+
+msgid "Bishops of opposite color"
+msgstr "Alfiles de color opuesto"
+
+msgid "Bishops of same color"
+msgstr "Alfiles del mismo color"
+
+msgid "Black"
+msgstr "Negro"
+
+msgid "Black Book Engine Problem"
+msgstr "El libro negro de problema del motor"
+
+msgid "Black Engine Problem"
+msgstr "Problema del motor de negro"
+
+msgid "Black has a crushing advantage ( White should resign )"
+msgstr "Negro tiene una ventaja de trituración (blanco debería renunciar)"
+
+msgid "Black has a decisive advantage"
+msgstr "Negro tiene una ventaja decisiva"
+
+msgid "Black has a decisive center control advantage"
+msgstr "Negro tiene una decisiva ventaja del control central"
+
+msgid "Black has a decisive kingside control advantage"
+msgstr "Negro tiene una ventaja decisiva de control flanco de rey"
+
+msgid "Black has a decisive queenside control advantage"
+msgstr "Negro tiene una ventaja decisiva de control flanco de dama"
+
+msgid "Black has a decisive space advantage"
+msgstr "Negro tiene una ventaja decisiva espacio"
+
+msgid "Black has a decisive time ( development ) advantage"
+msgstr "Negro tiene un tiempo decisiva ventaja (desarrollo)"
+
+msgid "Black has a lasting initiative"
+msgstr "Negro tiene una iniciativa duradera"
+
+msgid "Black has a moderate advantage"
+msgstr "Negro tiene una ventaja moderada"
+
+msgid "Black has a moderate center control advantage"
+msgstr "Negro tiene una ventaja de control de centro moderado"
+
+msgid "Black has a moderate kingside control advantage"
+msgstr "Negro tiene una ventaja de control flanco de rey moderada"
+
+msgid "Black has a moderate queenside control advantage"
+msgstr "Negro tiene una ventaja de control de dama moderada"
+
+msgid "Black has a moderate space advantage"
+msgstr "Negro tiene una ventaja de espacio moderada"
+
+msgid "Black has a moderate time ( development ) advantage"
+msgstr "Negro tiene un tiempo moderado ventaja (desarrollo)"
+
+msgid "Black has a moderately strong pawn structure"
+msgstr "Negro tiene una estructura de peones moderadamente fuerte"
+
+msgid "Black has a moderately weak pawn structure"
+msgstr "Negro tiene una estructura de peones moderadamente débil"
+
+msgid "Black has a pair of Bishops"
+msgstr "Negro tiene un par de Alfiles"
+
+msgid "Black has a poorly placed king"
+msgstr "Negro tiene un rey mal colocada"
+
+msgid "Black has a poorly protected king"
+msgstr "Negro tiene un rey mal protegido"
+
+msgid "Black has a slight advantage"
+msgstr "Negro tiene una ligera ventaja"
+
+msgid "Black has a slight center control advantage"
+msgstr "Negro tiene una ligera ventaja del control central"
+
+msgid "Black has a slight kingside control advantage"
+msgstr "Negro tiene una ligera ventaja de control flanco de rey"
+
+msgid "Black has a slight queenside control advantage"
+msgstr "Negro tiene una ligera ventaja de control de dama"
+
+msgid "Black has a slight space advantage"
+msgstr "Negro tiene una ligera ventaja de espacio"
+
+msgid "Black has a slight time ( development ) advantage"
+msgstr "Negro tiene una ligera ventaja de tiempo (desarrollo)"
+
+msgid "Black has a very strong pawn structure"
+msgstr "Negro tiene una estructura de peones muy fuerte"
+
+msgid "Black has a very weak pawn structure"
+msgstr "Negro tiene una estructura de peones muy débil"
+
+msgid "Black has a vulnerable first rank"
+msgstr "Negro tiene una primera fila vulnerables"
+
+msgid "Black has a well placed king"
+msgstr "Negro tiene un rey bien colocada"
+
+msgid "Black has a well protected first rank"
+msgstr "Negro tiene una primera fila bien protegido"
+
+msgid "Black has a well protected king"
+msgstr "Negro tiene un rey bien protegido"
+
+msgid "Black has decisive counterplay"
+msgstr "Negro tiene contrajuego decisiva"
+
+msgid "Black has good bishop placement"
+msgstr "Negro tiene una buena colocación alfil"
+
+msgid "Black has good knight placement"
+msgstr "Negro tiene una buena colocación caballo"
+
+msgid "Black has good piece coordination"
+msgstr "Negro tiene una buena coordinación pieza"
+
+msgid "Black has good queen placement"
+msgstr "Negro tiene una buena colocación de la reina"
+
+msgid "Black has good rook placement"
+msgstr "Negro tiene una buena colocación de torres"
+
+msgid "Black has insufficient compensation for material deficit"
+msgstr "Negro tiene una compensación insuficiente para déficit de materia"
+
+msgid "Black has moderate counterplay"
+msgstr "Negro tiene contrajuego moderada"
+
+msgid "Black has moderate time control pressure"
+msgstr "Negro tiene la presión de control de tiempo moderado"
+
+msgid "Black has more than adequate compensation for material deficit"
+msgstr "Negro tiene más de una compensación adecuada por déficit de materia"
+
+msgid "Black has offered a draw"
+msgstr "Negro ha ofrecido en tablas"
+
+msgid "Black has played the ending poorly"
+msgstr "Negro ha jugado el que termina mal"
+
+msgid "Black has played the ending very poorly"
+msgstr "Negro ha jugado el que termina muy mal"
+
+msgid "Black has played the ending very well"
+msgstr "Negro ha jugado muy bien el final"
+
+msgid "Black has played the ending well"
+msgstr "Negro ha jugado el final así"
+
+msgid "Black has played the middlegame poorly"
+msgstr "Negro ha jugado el medio juego mal"
+
+msgid "Black has played the middlegame very poorly"
+msgstr "Negro ha jugado el medio juego muy mal"
+
+msgid "Black has played the middlegame very well"
+msgstr "Negro ha jugado muy bien el medio juego"
+
+msgid "Black has played the middlegame well"
+msgstr "Negro ha jugado bien el medio juego"
+
+msgid "Black has played the opening poorly"
+msgstr "Negro ha jugado la apertura mal"
+
+msgid "Black has played the opening very poorly"
+msgstr "Negro ha jugado la apertura muy mal"
+
+msgid "Black has played the opening very well"
+msgstr "Negro ha jugado muy bien la apertura"
+
+msgid "Black has played the opening well"
+msgstr "Negro ha jugado bien la apertura"
+
+msgid "Black has poor bishop placement"
+msgstr "Negro tiene colocación alfil pobres"
+
+msgid "Black has poor knight placement"
+msgstr "Negro tiene colocación caballo pobre"
+
+msgid "Black has poor piece coordination"
+msgstr "Negro tiene mala coordinación pieza"
+
+msgid "Black has poor queen placement"
+msgstr "Negro tiene colocación reina pobres"
+
+msgid "Black has poor rook placement"
+msgstr "Negro tiene la colocación de torres pobres"
+
+msgid "Black has severe time control pressure"
+msgstr "Negro tiene la presión de control de tiempo severo"
+
+msgid "Black has slight counterplay"
+msgstr "Negro tiene una ligera contrajuego"
+
+msgid "Black has sufficient compensation for material deficit"
+msgstr "Negro tiene suficiente compensación por déficit de materia"
+
+msgid "Black has the attack"
+msgstr "Negro tiene el ataque"
+
+msgid "Black has the initiative"
+msgstr "Negro tiene la iniciativa"
+
+msgid "Black is in zugzwang"
+msgstr "Negro está en Zugzwang"
+
+msgid "Black resigns"
+msgstr "Renuncia negro"
+
+msgid "Black wins"
+msgstr "Gana el negro"
+
+msgid "Black's flag fell"
+msgstr "La bandera de negro cayó"
+
+msgid "Black's flag was called, White wins"
+msgstr "La bandera de negro fue llamado, blanco gana"
+
+msgid "Black's turn"
+msgstr "Turno de negro"
+
+msgid "Board Themes"
+msgstr "Temas de mesa"
+
+msgid "Brazilian FICS"
+msgstr "FICS brasileña"
+
+msgid "Call Flag Automatically"
+msgstr "Llame a la bandera automáticamente"
+
+msgid "Can not install theme"
+msgstr "No se puede instalar el tema"
+
+msgid "Can not move a chessman while reviewing the match"
+msgstr "No se puede mover una pieza de ajedrez mientras revisa el partido"
+
+msgid "Can not open %1"
+msgstr "No se puede abrir %1"
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Cannot connect to server(timeseal)."
+msgstr "No se puede conectar al servidor (timeseal)."
+
+msgid "Cannot connect to server."
+msgstr "No es posible conectar con el servidor."
+
+msgid "Cannot find Timeseal."
+msgstr "Si no encuentra Timeseal."
+
+msgid "Cannot find a server."
+msgstr "Si no encuentra un servidor."
+
+msgid "Channel Font..."
+msgstr "Canal Fuente..."
+
+msgid "Channel Tell"
+msgstr "Tell canal"
+
+msgid "Checkmate, Black wins"
+msgstr "Jaque mate, Negro gana"
+
+msgid "Checkmate, White wins"
+msgstr "Jaque mate, blanco gana"
+
+msgid "Chess Engines"
+msgstr "Motores de ajedrez"
+
+msgid "Chess Servers"
+msgstr "Servidores de ajedrez"
+
+msgid "Chess-Square.Com"
+msgstr "Chess-Square.Com"
+
+msgid "Chess.Net"
+msgstr "Chess.Net"
+
+msgid "Chessman Themes"
+msgstr "Temas chessman"
+
+msgid "Chilean FICS"
+msgstr "FICS chilena"
+
+msgid "Click this if you want to change the keyboard shortcuts that Knights uses."
+msgstr "Haga clic en esta opción si desea cambiar los atajos de teclado que utiliza Knights."
+
+msgid "Clicking this option will force your opponent to move immediately."
+msgstr "Al hacer clic en esta opción obligará a su oponente a moverse inmediatamente."
+
+msgid "Clicking this will accept a draw offered by your opponent."
+msgstr "Al hacer clic en este aceptará en tablas ofrecido por su oponente."
+
+msgid "Clicking this will connect Knights with an internet chess server."
+msgstr "Al hacer clic en este se conectará Knights con un servidor de Internet de ajedrez."
+
+msgid "Clicking this will ignore future draw offers from your opponent."
+msgstr "Al hacer clic en este ignorará futuras ofertas de tablas de su oponente."
+
+msgid "Clicking this will inform your opponent that you are willing draw the match."
+msgstr "Al hacer clic en este informará a su oponente que está dispuesto en tablas."
+
+msgid "Clicking this will reject a draw offered by your opponent."
+msgstr "Al hacer clic en este rechazará en tablas ofrecido por su oponente."
+
+msgid "Close All"
+msgstr "Cierra todo"
+
+msgid "Close This Tab"
+msgstr "Cerrar esta ficha"
+
+msgid "Command Line Arguments"
+msgstr "Argumentos de la línea de comandos"
+
+msgid "Communications Programmer"
+msgstr "Programador comunicaciones"
+
+msgid "Computer"
+msgstr "Computadora"
+
+msgid "Computer Opponents"
+msgstr "Oponentes de la computadora"
+
+msgid "Computer Players"
+msgstr "Los jugadores de ordenador"
+
+msgid "Computer Players' Helper"
+msgstr "Ayudante de computadora de los jugadores"
+
+msgid "Configure"
+msgstr "Configurar"
+
+msgid "Configure &Key Bindings..."
+msgstr "Configurar &Atajos de teclado..."
+
+msgid "Configure Engine"
+msgstr "Configurar motor"
+
+msgid "Configure Server"
+msgstr "Configuración del servidor"
+
+msgid "Configure your chess engines here."
+msgstr "Configurar los motores de ajedrez aquí."
+
+msgid "Configure your internet chess servers here."
+msgstr "Configurar los servidores de ajedrez de Internet aquí."
+
+msgid "Confirm Password"
+msgstr "Confirmar contraseña"
+
+msgid "Connect to ICS"
+msgstr "Conectar a ICS"
+
+msgid "Connect to Server"
+msgstr "Conectar al servidor"
+
+msgid "Connected pawns"
+msgstr "Peones conectados"
+
+msgid "Console"
+msgstr "Consola"
+
+msgid "Counter Offer"
+msgstr "Contraoferta"
+
+msgid "Croatian FICS"
+msgstr "FICS croata"
+
+msgid "Current Server"
+msgstr "Servidor actual"
+
+msgid "Date"
+msgstr "Fecha"
+
+msgid "Decline"
+msgstr "Rechazar"
+
+msgid "Decrease Board Size"
+msgstr "Reducir el tamaño de la Junta"
+
+msgid "Default"
+msgstr "Defecto"
+
+msgid "Diagonal"
+msgstr "Diagonal"
+
+msgid "Disconnect from Server"
+msgstr "Desconectarse del servidor"
+
+msgid "Display"
+msgstr "Visualización"
+
+msgid "Display Startup Logo"
+msgstr "Visualización del logo de inicio"
+
+msgid "Do Nothing"
+msgstr "Hacer nada"
+
+msgid "Do you accept the terms of our license?"
+msgstr "¿Usted acepta los términos de nuestra licencia?"
+
+msgid "Doubled pawns"
+msgstr "Peones doblados"
+
+msgid "Draw match"
+msgstr "Tablas partido"
+
+msgid "Drawish position"
+msgstr "Posición Drawish"
+
+msgid "Draws"
+msgstr "Tablas"
+
+msgid "Dutch FICS"
+msgstr "FICS holandesa"
+
+msgid "Editor's Remark"
+msgstr "Nota del editor"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Enable Audio"
+msgstr "Habilitar audio"
+
+msgid "Enable Book Engine"
+msgstr "Habilitar el libro del motor"
+
+msgid "Enable Kibitzes"
+msgstr "Habilitar Kibitzes"
+
+msgid "Enable Premove"
+msgstr "Habilitar premotivar"
+
+msgid "Enable Seeks"
+msgstr "Habilitar Se busca"
+
+msgid "Enable Shouts"
+msgstr "Habilitar gritos"
+
+msgid "Enable Unregistered Tells"
+msgstr "Habilitar no registrado Indica"
+
+msgid "Endgame"
+msgstr "Final de partida"
+
+msgid "Engine Filename"
+msgstr "Nombre de archivo del motor"
+
+msgid "Engine Name"
+msgstr "Nombre del motor"
+
+msgid "Engines to Play Black"
+msgstr "Motores para jugar Negro"
+
+msgid "Engines to Play White"
+msgstr "Motores para jugar Blanco"
+
+msgid "Enter Text"
+msgstr "Ingrese texto"
+
+msgid "Equal chances, active position"
+msgstr "Igualdad de oportunidades, la posición activa"
+
+msgid "Equal chances, quiet position"
+msgstr "Igualdad de oportunidades, lugar tranquilo"
+
+msgid "Equivalent move"
+msgstr "Movimiento equivalente"
+
+msgid "Error with black book engine"
+msgstr "Error con el motor de libro negro"
+
+msgid "Error with black engine"
+msgstr "Error con el motor en negro"
+
+msgid "Error with white book engine"
+msgstr "Error con el motor de libro blanco"
+
+msgid "Error with white engine"
+msgstr "Error con motor blanco"
+
+msgid "Etc."
+msgstr "Etc."
+
+msgid "Filter Everything"
+msgstr "Todo filtrar"
+
+msgid "Find &Next"
+msgstr "Encuentra el &proximo"
+
+msgid "Find PGN..."
+msgstr "Encuentra PGN..."
+
+msgid "Find Player Images File..."
+msgstr "Encuentra jugador Imágenes de archivo..."
+
+msgid "For Current Match Only"
+msgstr "Para Partido sólo actual"
+
+msgid "Forced move"
+msgstr "Jugada forzada"
+
+msgid "Free Internet Chess Server"
+msgstr "Con internet gratuito de ajedrez servidor"
+
+msgid "French FICS"
+msgstr "FICS francés"
+
+msgid "General"
+msgstr "General"
+
+msgid "German FICS"
+msgstr "FICS alemán"
+
+msgid "Global Chess Server"
+msgstr "Servidor de ajedrez mundial"
+
+msgid "Good move"
+msgstr "Buen movimiento"
+
+msgid "Hanging pawns"
+msgstr "Colgando peones"
+
+msgid "Hint"
+msgstr "Insinuación"
+
+msgid "Human"
+msgstr "Humano"
+
+msgid "Ignore This Player"
+msgstr "No haga caso de este jugador"
+
+msgid "Illegal Move"
+msgstr "Mover ilegal"
+
+msgid "In order for you to play chess online, Knights will have to connect to a chess server. Knights has a list of several of these servers. If you like, this list can be used to automatically configure Knights."
+msgstr "Con el fin de que a jugar ajedrez en línea, Knights tendrá que conectarse a un servidor de ajedrez. Knights tiene una lista de varios de estos servidores. Si lo desea, esta lista se puede utilizar para configurar automáticamente los Knights."
+
+msgid "Increase Board Size"
+msgstr "Aumentar el tamaño del Consejo"
+
+msgid "Increment"
+msgstr "Incremento"
+
+msgid "Increment Per Move"
+msgstr "De incremento por jugada"
+
+msgid "Install Theme..."
+msgstr "Instalar el tema..."
+
+msgid "Installed theme locally"
+msgstr "Tema instalado localmente"
+
+msgid "Internet Chess Club"
+msgstr "Internet Chess Club"
+
+msgid "Is Rated?"
+msgstr "Tiene una clasificación?"
+
+msgid "Isolated pawn"
+msgstr "Peón aislado"
+
+msgid "KDE3 Compatability Patch"
+msgstr "KDE3 Parche de Compatibilidad"
+
+msgid "Kibitz"
+msgstr "Kibitz"
+
+msgid "Knights"
+msgstr "Knights"
+
+msgid "Knights Setup Wizard"
+msgstr "Knights Asistente para la instalación"
+
+msgid "Knights Themes"
+msgstr "Temas Knights"
+
+msgid "Knights can not play a chess match against you without help. Known as Chess Engines, these helpers can be found on the Internet and are often included with your distribution. Knights can look for Chess Engines that you may already have. If found, Knights will configure itself to use them."
+msgstr "Knights no se puede jugar una partida de ajedrez contra sin ayuda. Conocido como motores de ajedrez, estos ayudantes se pueden encontrar en Internet y muchas veces se incluyen con su distribución. Knights puede mirar para los motores de ajedrez que ya pueda tener. Si lo encuentra, Knights se configurará para usarlos."
+
+msgid "Knights can not start Timeseal.\nPlease make sure you have the correct path and filename configured."
+msgstr "Knights no se puede iniciar Timeseal.\nPor favor asegúrese de que tiene la ruta correcta y el nombre configurado."
+
+msgid "Knights has now configured itself according to your choices. We strongly recommend that you read the documentation to make full use of all that Knights has to offer. You can access it by pressing F1."
+msgstr "Knights ahora se ha configurado en sí de acuerdo a sus opciones. Es muy recomendable que lea la documentación para hacer un uso completo de todo lo que tiene que ofrecer Knights. Se puede acceder a él pulsando la tecla F1."
+
+msgid "Knights is unable to connect to the server.\n Please make sure your internet connection is working and try again."
+msgstr "Knights es incapaz de conectar con el servidor.\nPor favor asegúrese de que su conexión a Internet funciona y vuelve a intentarlo."
+
+msgid "Large"
+msgstr "Grande"
+
+msgid "Last History Item"
+msgstr "Último elemento Historial"
+
+msgid "Let Knights configure chess servers?"
+msgstr "Vamos Knights configurar servidores de ajedrez?"
+
+msgid "Let Knights handle PGN files?"
+msgstr "Vamos Knights manejar archivos PGN?"
+
+msgid "Let Knights handle your .pgn files?"
+msgstr "Vamos Knights manejar sus archivos .pgn?"
+
+msgid "Let Knights search for chess engines?"
+msgstr "Vamos Knights búsqueda de motores de ajedrez?"
+
+msgid "Line"
+msgstr "Línea"
+
+msgid "Load PGN..."
+msgstr "Cargar PGN..."
+
+msgid "Loading complete"
+msgstr "Carga completa"
+
+msgid "Log File"
+msgstr "Archivo de registro"
+
+msgid "Log in as guest"
+msgstr "Entrar como invitado"
+
+msgid "Log in to the chess server using this name and password."
+msgstr "Iniciar sesión en el servidor de ajedrez usando este nombre y contraseña."
+
+msgid "Login"
+msgstr "Iniciar sesión"
+
+msgid "Login Prompt"
+msgstr "indicador de conexión"
+
+msgid "Login:"
+msgstr "Iniciar sesión:"
+
+msgid "Losses"
+msgstr "Pérdidas"
+
+msgid "Lost contact with opponent"
+msgstr "Pérdida de contacto con el oponente"
+
+msgid "Match Type"
+msgstr "Tipo de partido"
+
+msgid "Match paused"
+msgstr "Partido pausa"
+
+msgid "Maximum"
+msgstr "Máximo"
+
+msgid "Minimum"
+msgstr "Mínimo"
+
+msgid "Move &Now"
+msgstr "&Movimiento ahora"
+
+msgid "Moves Per Base Time"
+msgstr "Se movimientos por la base de tiempo"
+
+msgid "Name"
+msgstr "Nombre"
+
+msgid "Next History Item"
+msgstr "Siguiente Historia de artículos"
+
+msgid "Next Move"
+msgstr "Próximo movimiento"
+
+msgid "No"
+msgstr "No"
+
+msgid "No Filtering"
+msgstr "Sin filtros"
+
+msgid "Notification"
+msgstr "Notificación"
+
+msgid "Notification Font..."
+msgstr "Notificación de fuentes..."
+
+msgid "Novelty"
+msgstr "Novedad"
+
+msgid "Options"
+msgstr "Opciones"
+
+msgid "Other Display Options"
+msgstr "Otras Opciones de visualización"
+
+msgid "Page %1 of %2"
+msgstr "Página 1 de 2"
+
+msgid "Page Down"
+msgstr "Av Pág"
+
+msgid "Page Up"
+msgstr "Re Pág"
+
+msgid "Password"
+msgstr "Contraseña"
+
+msgid "Password:"
+msgstr "Contraseña:"
+
+msgid "Patches and suggestions"
+msgstr "Parches y sugerencias"
+
+msgid "Pause"
+msgstr "Pausa"
+
+msgid "Pause on Minimize"
+msgstr "Pausa en Minimizar"
+
+msgid "Pawn Promotion"
+msgstr "Promoción del peón"
+
+msgid "Player History"
+msgstr "Historia del jugador"
+
+msgid "Player Images File:"
+msgstr "Imágenes del jugador del archivo:"
+
+msgid "Player Info"
+msgstr "Información del jugador"
+
+msgid "Player Strength"
+msgstr "Fuerza del jugador"
+
+msgid "Please read and accept our license:"
+msgstr "Por favor, lea y acepte nuestra licencia:"
+
+msgid "Poor move"
+msgstr "Movimiento pobre"
+
+msgid "Previous Move"
+msgstr "Mover anterior"
+
+msgid "Private Font..."
+msgstr "Fuentes privada..."
+
+msgid "Private Matches"
+msgstr "Partidos privados"
+
+msgid "Private Tell"
+msgstr "Tell privada"
+
+msgid "Profanity Filter"
+msgstr "Filtro profanidad"
+
+msgid "Project Manager and Programmer"
+msgstr "Director del proyecto y Programmer"
+
+msgid "Promote your pawn to..."
+msgstr "Promocionar su peón para..."
+
+msgid "Protocol"
+msgstr "Protocolo"
+
+msgid "Questionable move"
+msgstr "Jugada dudosa"
+
+msgid "Rated"
+msgstr "Clasificar"
+
+msgid "Rating"
+msgstr "Clasificación"
+
+msgid "Reading File"
+msgstr "La lectura del archivo"
+
+msgid "Ready"
+msgstr "Listo"
+
+msgid "Remember My Password"
+msgstr "Recordar mi contraseña"
+
+msgid "Reply to the Channel"
+msgstr "Responder al Canal"
+
+msgid "Reply to the Last Tell"
+msgstr "Respuesta a la última Tell"
+
+msgid "Resign"
+msgstr "Renunciar"
+
+msgid "Restore Defaults"
+msgstr "Restaurar los valores predeterminados"
+
+msgid "Result"
+msgstr "Resultado"
+
+msgid "Resume"
+msgstr "Reanudar"
+
+msgid "Reverse Board Orientation"
+msgstr "Invertir Orientación de la Junta"
+
+msgid "Round"
+msgstr "Redondo"
+
+msgid "Save Match &As..."
+msgstr "G&uardar Como Partido..."
+
+msgid "Save Match on Close?"
+msgstr "Guardar Partido en Cerrar?"
+
+msgid "Save Match..."
+msgstr "Guardar Partido..."
+
+msgid "Save Match?"
+msgstr "Guardar partido?"
+
+msgid "Saving complete"
+msgstr "Guardando completa"
+
+msgid "Seconds Between Seek Updates"
+msgstr "Busque segundos entre actualizaciones"
+
+msgid "Seek Matches"
+msgstr "Busque Partidos"
+
+msgid "Select &All"
+msgstr "Seleccionar &todo"
+
+msgid "Select Computer Player"
+msgstr "Seleccione la computadora del jugador"
+
+msgid "Select Email Address"
+msgstr "Seleccionar dirección email"
+
+msgid "Select Server"
+msgstr "Seleccionar servidor"
+
+msgid "Select this to pause the clock for this match."
+msgstr "Seleccione esta opción para hacer una pausa en el reloj para este partido."
+
+msgid "Select this to retract your last move."
+msgstr "Seleccione esta opción para retraer el último movimiento."
+
+msgid "Send Email?"
+msgstr "¿Enviar email?"
+
+msgid "Server Name"
+msgstr "Nombre del servidor"
+
+msgid "Server Port"
+msgstr "Puerto de servicio"
+
+msgid "Server URL"
+msgstr "URL del servidor"
+
+msgid "Servers"
+msgstr "Servidores"
+
+msgid "Setup Complete"
+msgstr "Instalación completa"
+
+msgid "Shout"
+msgstr "Gritar"
+
+msgid "Shout Font..."
+msgstr "Fuentes gritar..."
+
+msgid "Show Coordinates"
+msgstr "Mostrar Coordenadas"
+
+msgid "Show Last Move"
+msgstr "La última jugada"
+
+msgid "Singular move"
+msgstr "Movimiento singular"
+
+msgid "Site"
+msgstr "Sitio"
+
+msgid "Small"
+msgstr "Pequeña"
+
+msgid "Sought Matches Graph"
+msgstr "Partidos buscado Gráfico"
+
+msgid "Sought Matches List"
+msgstr "Lista de mucha demanda Partidos"
+
+msgid "Specify the location of your Knights data directory."
+msgstr "Especificar la ubicación del directorio de datos de Knights."
+
+msgid "Speculative move"
+msgstr "Movimiento especulativo"
+
+msgid "Standard"
+msgstr "Estándar"
+
+msgid "Standard Font..."
+msgstr "Fuente estándar..."
+
+msgid "Start a Match vs. PC"
+msgstr "Comenzar un partido vs PC"
+
+msgid "Start a New Match"
+msgstr "Comenzar una nueva partida"
+
+msgid "Starting computer players, please wait"
+msgstr "Partiendo jugadores de la computadora, por favor espere"
+
+msgid "Strong"
+msgstr "Fuerte"
+
+msgid "Swedish FICS"
+msgstr "FICS sueca"
+
+msgid "TQtopia port and patches"
+msgstr "El puerto y los parches TQtopia"
+
+msgid "Tell All"
+msgstr "Dile Todos"
+
+msgid "Tell Opponent"
+msgstr "Dile Rival"
+
+msgid "Tell User"
+msgstr "Dile usuario"
+
+msgid "Tell User Error"
+msgstr "Dile a un error del usuario"
+
+msgid "Tell..."
+msgstr "Contar..."
+
+msgid "Thank you for installing Knights, the graphical chess interface for TDE. To help you get started quickly, there are a few things Knights will need to setup. You should click 'Next' to see what they are."
+msgstr "Gracias por la instalación de Knights, la interfaz gráfica de ajedrez para que TDE. Para ayudarle a empezar rápidamente, hay algunas cosas Knights tendrá que configurar. Debe hacer clic en 'Siguiente' para ver lo que son."
+
+msgid "The Knights Chess Interface\n\nKnights is a chess interface\nfor the Trinity Desktop Environment."
+msgstr "La interfaz de Ajedrez Knights.\n\nKnights es una interfaz de ajedrez\nde la Trinity Desktop Environment."
+
+msgid "The Load command will allow you to select a previously saved match and play it again."
+msgstr "El comando de carga le permitirá seleccionar un juego guardado previamente y reproducirlo de nuevo."
+
+msgid "The Print command will allow you to print this game's notation on your printer."
+msgstr "El comando de impresión le permitirá imprimir la notación de este juego en su impresora."
+
+msgid "The Quit command will stop all matches and exit Knights."
+msgstr "El comando Dejar se detendrá todos los partidos y salir de Knights."
+
+msgid "The Save command will allow you to store a copy of your current match for later use."
+msgstr "El comando Guardar le permitirá almacenar una copia de su partida actual para su uso posterior."
+
+msgid "The computer opponent assigned to play %1 has crashed"
+msgstr "El opositor de la computadora asignada para jugar %1 se ha estrellado"
+
+msgid "The theme could not be installed:\n%1"
+msgstr "El tema no se puede instalar:\n%1"
+
+msgid "Theme Size"
+msgstr "Tamaño tema"
+
+msgid "There are no servers configured.\nPlease make sure you have at least one server configured."
+msgstr "No hay servidores configurados.\nPor favor asegúrese de que ha configurado al menos un servidor."
+
+msgid "There was an error while loading the file"
+msgstr "Se ha producido un error al cargar el archivo"
+
+msgid "There was an error while saving the file"
+msgstr "Se ha producido un error al guardar el archivo"
+
+msgid "These settings determine how Knights displays itself to you."
+msgstr "Estos ajustes determinan la forma Knights muestra ante ti."
+
+msgid "These settings determine what Knights sounds like."
+msgstr "Estos valores determinan lo que suena como Knights."
+
+msgid "This allows you to begin a new match."
+msgstr "Esto le permite comenzar una nueva partida."
+
+msgid "This command removes the current match."
+msgstr "Este comando elimina la partida actual."
+
+msgid "This command will remove all matches that are currently loaded."
+msgstr "Este comando eliminará todos los partidos que se cargan actualmente."
+
+msgid "This lets you install downloaded themes into Knights."
+msgstr "Esto le permite instalar temas descargados en Knights."
+
+msgid "This opens a new window which allows you to customize Knights to your particular tastes."
+msgstr "Esto abre una nueva ventana que le permite personalizar los Knights a sus gustos particulares."
+
+msgid "This toggles your opponent's ability to think while it's your turn."
+msgstr "Esto cambia la capacidad de su rival para pensar mientras que es su turno."
+
+msgid "This will ask your opponent for a hint."
+msgstr "Esto le pregunte a su oponente para obtener una pista."
+
+msgid "This will reverse the chessboard's orientation by 180 degrees."
+msgstr "Esto invertirá la orientación del tablero de ajedrez 180 grados."
+
+msgid "Time"
+msgstr "Hora"
+
+msgid "Time Controls"
+msgstr "Controles de tiempo"
+
+msgid "Time Odds Match"
+msgstr "Hora del partido de Apuestas"
+
+msgid "Timeseal"
+msgstr "Timeseal"
+
+msgid "URL"
+msgstr "URL"
+
+msgid "Unclear position"
+msgstr "Posición poco clara"
+
+msgid "Unknown"
+msgstr "Desconocido"
+
+msgid "Unrated"
+msgstr "Sin valoración"
+
+msgid "Use this to concede the match to your opponent."
+msgstr "Utilice esta opción para conceder el partido a su oponente."
+
+msgid "Use this to declare the match over, due to your opponent being out of time."
+msgstr "Use esto para declarar el partido más, debido a que su oponente está fuera de tiempo."
+
+msgid "User info"
+msgstr "Información de usuario"
+
+msgid "Username"
+msgstr "Nombre de usuario"
+
+msgid "Various aspects of Knights get configured here."
+msgstr "Diversos aspectos de Knights quedan configurados aquí."
+
+msgid "Very good move"
+msgstr "Muy buen movimiento"
+
+msgid "Very poor move"
+msgstr "Muy mala jugada"
+
+msgid "Volume"
+msgstr "Volumen"
+
+msgid "Weak"
+msgstr "Débiles"
+
+msgid "Weak point"
+msgstr "Punto débil"
+
+msgid "Welcome to Knights v%1!"
+msgstr "Bienvenido a Knights v%1!"
+
+msgid "When Knights Begins It Should:"
+msgstr "Empieza cuando los Knights debería:"
+
+msgid "When Knights saves a match to disk, it uses Portable Game Notation (PGN) to store the match. Several other computer chess games use PGN too. If you like, Knights can be the default PGN viewer on this system."
+msgstr "Cuando los Knights ahorra un partido en el disco, se utiliza Portable Game Notation (PGN) para almacenar el partido. Varios otros juegos de ajedrez de ordenador utilizan PGN también. Si lo desea, puede haber Knights del visor PGN por defecto en este sistema."
+
+msgid "Whisper"
+msgstr "Susurro"
+
+msgid "Whisper Font..."
+msgstr "Whisper Fuente..."
+
+msgid "White"
+msgstr "Blanco"
+
+msgid "White Book Engine Problem"
+msgstr "Libro Blanco de problema del motor"
+
+msgid "White Engine Problem"
+msgstr "Problema del motor de blanco"
+
+msgid "White has a crushing advantage ( Black should resign )"
+msgstr "Blanco tiene una ventaja de trituración (Negro debería renunciar)"
+
+msgid "White has a decisive advantage"
+msgstr "Blanco tiene una ventaja decisiva"
+
+msgid "White has a decisive center control advantage"
+msgstr "Blanco tiene una decisiva ventaja del control central"
+
+msgid "White has a decisive kingside control advantage"
+msgstr "Blanco tiene una ventaja decisiva de control flanco de rey"
+
+msgid "White has a decisive queenside control advantage"
+msgstr "Blanco tiene una ventaja decisiva de control flanco de dama"
+
+msgid "White has a decisive space advantage"
+msgstr "Blanco tiene una ventaja decisiva espacio"
+
+msgid "White has a decisive time ( development ) advantage"
+msgstr "Blanco tiene un momento decisivo ventaja (desarrollo)"
+
+msgid "White has a lasting initiative"
+msgstr "Blanco tiene una iniciativa duradera"
+
+msgid "White has a moderate advantage"
+msgstr "Blanco tiene una ventaja moderada"
+
+msgid "White has a moderate center control advantage"
+msgstr "Blanco tiene una ventaja de control de centro moderado"
+
+msgid "White has a moderate kingside control advantage"
+msgstr "Blanco tiene una ventaja de control flanco de rey moderada"
+
+msgid "White has a moderate queenside control advantage"
+msgstr "Blanco tiene una ventaja de control de dama moderada"
+
+msgid "White has a moderate space advantage"
+msgstr "Blanco tiene una ventaja de espacio moderada"
+
+msgid "White has a moderate time ( development ) advantage"
+msgstr "Blanco tiene un tiempo moderado ventaja (desarrollo)"
+
+msgid "White has a moderately strong pawn structure"
+msgstr "Blanco tiene una estructura de peones moderadamente fuerte"
+
+msgid "White has a moderately weak pawn structure"
+msgstr "Blanco tiene una estructura de peones moderadamente débil"
+
+msgid "White has a pair of Bishops"
+msgstr "Blanco tiene un par de Alfiles"
+
+msgid "White has a poorly placed king"
+msgstr "Blanco tiene un rey mal colocada"
+
+msgid "White has a poorly protected king"
+msgstr "Blanco tiene un rey mal protegido"
+
+msgid "White has a slight advantage"
+msgstr "Blanco tiene una ligera ventaja"
+
+msgid "White has a slight center control advantage"
+msgstr "Blanco tiene una ligera ventaja del control central"
+
+msgid "White has a slight kingside control advantage"
+msgstr "Blanco tiene una ligera ventaja de control flanco de rey"
+
+msgid "White has a slight queenside control advantage"
+msgstr "Blanco tiene una ligera ventaja de control de dama"
+
+msgid "White has a slight space advantage"
+msgstr "Blanco tiene una ligera ventaja de espacio"
+
+msgid "White has a slight time ( development ) advantage"
+msgstr "Blanco tiene una ligera ventaja de tiempo (desarrollo)"
+
+msgid "White has a very strong pawn structure"
+msgstr "Blanco tiene una estructura de peones muy fuerte"
+
+msgid "White has a very weak pawn structure"
+msgstr "Blanco tiene una estructura muy débil peón"
+
+msgid "White has a vulnerable first rank"
+msgstr "Blanco tiene un primer rango vulnerables"
+
+msgid "White has a well placed king"
+msgstr "Blanco tiene un rey bien colocada"
+
+msgid "White has a well protected first rank"
+msgstr "Blanco tiene un primer rango bien protegido"
+
+msgid "White has a well protected king"
+msgstr "Blanco tiene un rey bien protegido"
+
+msgid "White has decisive counterplay"
+msgstr "Blanco tiene contrajuego decisiva"
+
+msgid "White has good bishop placement"
+msgstr "Blanco tiene buena colocación alfil"
+
+msgid "White has good knight placement"
+msgstr "Blanco tiene buena colocación caballo"
+
+msgid "White has good piece coordination"
+msgstr "Blanco tiene una buena coordinación pieza"
+
+msgid "White has good queen placement"
+msgstr "Blanco tiene buena colocación reina"
+
+msgid "White has good rook placement"
+msgstr "Blanco tiene una buena colocación de torres"
+
+msgid "White has insufficient compensation for material deficit"
+msgstr "Blanco tiene una compensación insuficiente para déficit de materia"
+
+msgid "White has moderate counterplay"
+msgstr "Blanco tiene contrajuego moderada"
+
+msgid "White has moderate time control pressure"
+msgstr "Blanco tiene la presión de control de tiempo moderado"
+
+msgid "White has more than adequate compensation for material deficit"
+msgstr "Blanco tiene más de una compensación adecuada por déficit de materia"
+
+msgid "White has offered a draw"
+msgstr "Blanco ha ofrecido en tablas"
+
+msgid "White has played the ending poorly"
+msgstr "Blanco ha jugado el que termina mal"
+
+msgid "White has played the ending very poorly"
+msgstr "Blanco ha jugado el que termina muy mal"
+
+msgid "White has played the ending very well"
+msgstr "Blanco ha jugado muy bien el final"
+
+msgid "White has played the ending well"
+msgstr "Blanco ha jugado el final así"
+
+msgid "White has played the middlegame poorly"
+msgstr "Blanco ha jugado el medio juego mal"
+
+msgid "White has played the middlegame very poorly"
+msgstr "Blanco ha jugado el medio juego muy mal"
+
+msgid "White has played the middlegame very well"
+msgstr "Blanco ha jugado muy bien el medio juego"
+
+msgid "White has played the middlegame well"
+msgstr "Blanco ha jugado bien el medio juego"
+
+msgid "White has played the opening poorly"
+msgstr "Blanco ha jugado la apertura mal"
+
+msgid "White has played the opening very poorly"
+msgstr "Blanco ha jugado la apertura muy mal"
+
+msgid "White has played the opening very well"
+msgstr "Blanco ha jugado muy bien la apertura"
+
+msgid "White has played the opening well"
+msgstr "Blanco ha jugado bien la apertura"
+
+msgid "White has poor bishop placement"
+msgstr "Blanco tiene la colocación alfil pobres"
+
+msgid "White has poor knight placement"
+msgstr "Blanco tiene la colocación caballo pobre"
+
+msgid "White has poor piece coordination"
+msgstr "Blanco tiene mala coordinación pieza"
+
+msgid "White has poor queen placement"
+msgstr "Blanco tiene la colocación reina pobres"
+
+msgid "White has poor rook placement"
+msgstr "Blanco tiene la colocación de torres pobres"
+
+msgid "White has severe time control pressure"
+msgstr "Blanco tiene severa presión de control de tiempo"
+
+msgid "White has slight counterplay"
+msgstr "Blanco tiene una ligera contrajuego"
+
+msgid "White has sufficient compensation for material deficit"
+msgstr "Blanco tiene suficiente compensación por déficit de materia"
+
+msgid "White has the attack"
+msgstr "Blanco tiene el ataque"
+
+msgid "White has the initiative"
+msgstr "Blanco tiene la iniciativa"
+
+msgid "White is in zugzwang"
+msgstr "Blanco es en Zugzwang"
+
+msgid "White resigns"
+msgstr "Blanco renuncia"
+
+msgid "White wins"
+msgstr "Las blanco ganan"
+
+msgid "White's flag fell"
+msgstr "La bandera de blanco cayó"
+
+msgid "White's flag was called, Black wins"
+msgstr "La bandera de color blanco se llama, Negro gana"
+
+msgid "White's turn"
+msgstr "El turno de blanco"
+
+msgid "Wins"
+msgstr "Victorias"
+
+msgid "With the idea..."
+msgstr "Con la idea..."
+
+msgid "Worse Move"
+msgstr "Mover peor"
+
+msgid "Worst move"
+msgstr "Peor movimiento"
+
+msgid "Would you like to email this move?"
+msgstr "¿Le gustaría envía este movimiento?"
+
+msgid "Would you like to save this match?"
+msgstr "¿Le gustaría guardar este partido?"
+
+msgid "XBoard protocol"
+msgstr "Protocolo XBoard"
+
+msgid "Yes"
+msgstr "Sí"
+
+msgid "You do not have permission to install this theme systemwide, so Knights installed it locally."
+msgstr "Usted no tiene permiso para instalar este tema en todo el sistema, por lo que los Knights instalado localmente."
+
+msgid "You selected %1 to play black's book,\nbut it can only be used as a regular engine.\nPlease select another engine to play black's book."
+msgstr "Seleccionó %1 para jugar el libro de negro,\npero sólo se puede utilizar como un motor normal.\nPor favor seleccione otro motor de jugar el libro de negro."
+
+msgid "You selected %1 to play black,\nbut it can only be used as a book engine.\nPlease select another engine to play black."
+msgstr "Seleccionó %1 para jugar negro,\npero sólo se puede utilizar como un motor de libro.\nPor favor seleccione otro motor para jugar negro."
+
+msgid "You selected %1 to play white's book,\nbut it can only be used as a regular engine.\nPlease select another engine to play white's book."
+msgstr "Seleccionó %1 para jugar el libro de blanco,\npero sólo se puede utilizar como un motor normal.\nPor favor seleccione otro motor de jugar el libro de blanco."
+
+msgid "You selected %1 to play white,\nbut it can only be used as a book engine.\nPlease select another engine to play white."
+msgstr "Seleccionó %1 para jugar blanco,\npero sólo se puede utilizar como un motor de libro.\nPor favor seleccione otro motor para jugar blanco."
+
+msgid "You've Been Challenged:"
+msgstr "Usted ha sido puesta en duda:"
+
+msgid "Your Name:"
+msgstr "Tu nombre:"
+
+msgid "Zoom &In"
+msgstr "&Acercarse"
+
+msgid "Zoom &Out"
+msgstr "&Disminuir el zoom"

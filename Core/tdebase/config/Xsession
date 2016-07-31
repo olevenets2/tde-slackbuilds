@@ -78,7 +78,7 @@ case $session in
     exec $HOME/.xsession
     ;;
   default)
-    exec /usr/bin/startkde
+    exec ${INSTALL_TDE}/bin/starttde
     ;;
   *)
     eval exec "$session"

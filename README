@@ -1,9 +1,38 @@
-THIS WILL MOST LIKELY INTERFERE WITH KDE
+Run ./BUILD-TDE.sh - a dialog based script with a series of screens for user input.
 
-Build the Deps first, then the Core.
-You can choose to build optional packages from Apps
+=============================================================
 
-Has build scripts that automate the build process
+Any package, or set of packages, can be built by running BUILD-TDE.sh and selecting them from the 'TDE Packages Selection' screen.
+The TDE mandatory packages can be pre-selected.
+Some packages also require other packages to be pre-installed - see notes at the bottom of the dialog screen.
 
-For Slackware 14.2 =]
+The directory structure for the SlackBuild scripts is in line with the Trinity source repositories:
+Deps [dependencies/]
+Core []
+Libs [libraries/]
+Apps [applications/]
+
+Other directories are:
+Misc - for non-Trinity package builds
+src - to hold all the source tarballs, either pre-downloaded or downloaded during the build.
+
+Other scripts:
+get-source.sh - a chunk of common code for the SBs - used for getting the source archive, setting FLAGS, creating build directories.
+
+There is an override in the SB for non-trinity source archive URLs. Non-trinity builds have been included where a TDE package requires a dependency that is not in Slackware Current. Or, where it might be an alternative to a TDE package.
+
+Required packages for a basic working TDE are:
+  Deps/tqt3
+  Deps/tqtinterface
+  Deps/arts
+  Deps/dbus-tqt
+  Deps/dbus-1-tqt
+  Deps/tqca-tls
+  Deps/libart_lgpl
+  Core/tdelibs
+  Core/tdebase
+
+i18n support [locale and html/help docs] in the packages is restricted to whatever is selected in BUILD-TDE.sh and, of that, to whatever is available in the package source.
+
+See https://wiki.trinitydesktop.org/How_to_Build_TDE_Core_Modules for more information
 

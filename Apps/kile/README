@@ -1,0 +1,30 @@
+Type `kile` and enjoy the power of LaTeX together with the joy of using Kile :)
+
+Using Kile
+
+To use Kile you (obviously) need some external programs.
+The following list is divided into basic, advanced and additional usage.
+
+Basic:
+
+- TeTeX 2.0/3.0 or TeXLive 2005/2007 (Including "AMS"-Packages and the documentation)
+- KDVI
+
+Advanced:
+
+- KPDF, KGhostView (Viewing PS and PDF)
+- Acroread (Viewing PDF)
+- Imagemagick, DVIPNG 1.7 (Bottom bar preview)
+
+By default there are also tools for the following programs defined:
+
+- Tar/zip/gzip/bzip2 (Archive)
+- DBlatex (Docbook to LaTeX)
+- Metapost and Asymptote
+- Latex2html (LaTeX to Web)
+- Tex4ht (LaTeX to Web)
+- Lilypond (Music Typesetting)
+- Konqueror/Mozilla/Firefox (Viewing HTML)
+- Kbibtex, KBib, JabRef, pybliographer, gbib (View Bibtex files)
+
+

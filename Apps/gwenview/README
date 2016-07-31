@@ -1,6 +1,3 @@
 If Gwenview is to be built with Kipi Plugins support,
 build and install kipi-plugins first.
 
-gwenview-i18n
--------------
-Set the 'lang' variable to the language(s) required.

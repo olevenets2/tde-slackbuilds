@@ -1,0 +1,55 @@
+--- src/mainwidget.cpp	2015-09-23 06:31:02.000000000 +0100
++++ src/mainwidget.cpp	2016-06-20 20:42:56.519172594 +0100
+@@ -919,7 +919,7 @@
+     else
+     {
+       emit(signalChangeStatusbar(i18n("Output format not recognized")));
+-      previewLabel->setText(i18n("Sorry, but the image format which you are working with\nis not recognized by TDE.\nThe image will be correctly saved if you want to,\nbut to see a preview try working with another image format (EPS and PGM showld work well)\nand only when you are satisfied with the result revert to the format\nof your choiche and save the result."));
++      previewLabel->setText(i18n("Sorry, but the image format which you are working\nwith is not recognized by TDE.\nThe image will be correctly saved if you want to,\nbut to see a preview try working with another image\nformat (EPS and PGM should work well) and only\nwhen you are satisfied with the result revert to\nthe format of your choice and save the result."));
+       imagesTabs->setCurrentPage(1);
+       setCursor(ArrowCursor);
+       return;
+--- po/potracegui.pot	2015-09-23 06:31:02.000000000 +0100
++++ po/potracegui.pot	2016-06-20 20:46:04.586821425 +0100
+@@ -209,13 +209,13 @@
+ 
+ #: mainwidget.cpp:896
+ msgid ""
+-"Sorry, but the image format which you are working with\n"
+-"is not recognized by TDE.\n"
++"Sorry, but the image format which you are working\n"
++"with is not recognized by TDE.\n"
+ "The image will be correctly saved if you want to,\n"
+-"but to see a preview try working with another image format (EPS and PGM "
+-"showld work well)\n"
+-"and only when you are satisfied with the result revert to the format\n"
+-"of your choiche and save the result."
++"but to see a preview try working with another image\n"
++"format (EPS and PGM should work well) and only\n"
++"when you are satisfied with the result revert to\n"
++"the format of your choice and save the result."
+ msgstr ""
+ 
+ #: mainwidget.cpp:913
+--- po/de.po	2015-09-23 06:31:02.000000000 +0100
++++ po/de.po	2016-06-20 20:46:13.183713949 +0100
+@@ -210,13 +210,13 @@
+ 
+ #: mainwidget.cpp:896
+ msgid ""
+-"Sorry, but the image format which you are working with\n"
+-"is not recognized by TDE.\n"
++"Sorry, but the image format which you are working\n"
++"with is not recognized by TDE.\n"
+ "The image will be correctly saved if you want to,\n"
+-"but to see a preview try working with another image format (EPS and PGM "
+-"showld work well)\n"
+-"and only when you are satisfied with the result revert to the format\n"
+-"of your choiche and save the result."
++"but to see a preview try working with another image\n"
++"format (EPS and PGM should work well) and only\n"
++"when you are satisfied with the result revert to\n"
++"the format of your choice and save the result."
+ msgstr ""
+ 
+ #: mainwidget.cpp:913

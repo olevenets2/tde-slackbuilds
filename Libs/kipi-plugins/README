@@ -1,0 +1,8 @@
+Kipi Plugins are additional functions for the TDE Images Management
+Host Programs (digikam, ksquirrel and gwenview).
+
+exiv2, libkdcraw, libkexiv2, and libkipi are required to build Kipi Plugins.
+
+Install exiv2, and build and install libkdcraw, libkexiv2, and libkipi
+in that order.
+

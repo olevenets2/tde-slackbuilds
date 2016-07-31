@@ -4,3 +4,25 @@ Add this to  /etc/rc.d/rc.4 to start tdm
 if [ -x /usr/bin/tdm ]; then
   exec /usr/bin/tdm -nodaemon
 fi
+
+--------------------
+
+Konqueror file manager as-built defaults to 'Icon View' when starting.
+Setting 'Tree View' and saving that view profile should then default
+to 'Tree View' when starting kfm or opening it in a new tab - the former
+works but not the latter.
+
+The problem seems to be that TDE lacks the entry in konquerorrc that exists in KDE3:
+[MainView Settings]
+ToggableViewsShown=konq_sidebartng
+ViewMode=konq_treeview
+
+Until this is sorted out in the source code, this hack works:
+
+1] Start kfm to generate the ~/.trinity/share/config/konquerorrc file.
+
+2] Close kfm
+
+3] echo -e "\n\n[MainView Settings]\nViewMode=konq_treeview" >> ~/.trinity/share/config/konquerorrc
+
+That's it.

@@ -1,5 +1,3 @@
 If ksquirrel is to be built with exif and Kipi Plugins support, build and install kipi-plugins first.
 
 Needs libksquirrel.
-
-The default build is for [US] English only - additional language support can be set by the 'lang' variable.

@@ -30,112 +30,12 @@ PKGNAME=libart_lgpl
 
 DOCS="AUTHORS ChangeLog* COPYING NEWS README*"
 
-# Where do we look for sources?
-SRCDIR=$(cd $(dirname $0); pwd)
-
-TMP=${TMP:-/tmp/build}
-PKG=$TMP/package-$PRGNAM
-OUTPUT=${OUTPUT:-/tmp}
-
-SOURCE="$SRCDIR/${PRGNAM}-${VERSION}.tar.bz2"
-SRCURL="http://tde-mirror.yosemite.net/trinity/releases/${VERSION}/dependencies/${PRGNAM}-${VERSION}.tar.bz2"
-
-# You can use your own private machine.conf file to overrule machine defaults:
-if [ -e $SRCDIR/machine.conf ]; then
-  . $SRCDIR/machine.conf
-elif [ -e /etc/slackbuild/machine.conf ]; then
-  . /etc/slackbuild/machine.conf
-else
-  # Automatically determine the architecture we're building on:
-  MARCH=$( uname -m )
-  if [ -z "$ARCH" ]; then
-    case "$MARCH" in
-      i?86)    export ARCH=i486 ;;
-      armv7hl) export ARCH=$MARCH ;;
-      armv6hl) export ARCH=$MARCH ;;
-      arm*)    export ARCH=arm ;;
-      # Unless $ARCH is already set, use uname -m for all other archs:
-      *)       export ARCH=$MARCH ;;
-    esac
-  fi
-  # Set CFLAGS/CXXFLAGS and LIBDIRSUFFIX:
-  case "$ARCH" in
-    i486)      SLKCFLAGS="-O2 -march=i486 -mtune=i686"
-               SLKLDFLAGS=""; LIBDIRSUFFIX=""
-               ;;
-    x86_64)    SLKCFLAGS="-O2 -fPIC"
-               SLKLDFLAGS="-L/usr/lib64"; LIBDIRSUFFIX="64"
-               ;;
-    armv7hl)   SLKCFLAGS="-O2 -march=armv7-a -mfpu=vfpv3-d16"
-               SLKLDFLAGS=""; LIBDIRSUFFIX=""
-               ;;
-    armv6hl)   SLKCFLAGS="-O2 -march=armv6 -mfpu=vfp -mfloat-abi=hard"
-               SLKLDFLAGS=""; LIBDIRSUFFIX=""
-               ;;
-    *)         SLKCFLAGS=${SLKCFLAGS:-"O2"}
-               SLKLDFLAGS=${SLKLDFLAGS:-""}; LIBDIRSUFFIX=${LIBDIRSUFFIX:-""}
-               ;;
-  esac
-fi
-
-case "$ARCH" in
-    arm*)    TARGET=$ARCH-slackware-linux-gnueabi ;;
-    *)       TARGET=$ARCH-slackware-linux ;;
-esac
-
-# Exit the script on errors:
-set -e
-trap 'echo "$0 FAILED at line ${LINENO}" | tee $OUTPUT/error-${PRGNAM}.log' ERR
-# Catch unitialized variables:
-set -u
-P1=${1:-1}
-
-# Save old umask and set to 0022:
-_UMASK_=$(umask)
-umask 0022
-
-# Create working directories:
-mkdir -p $OUTPUT         
-mkdir -p $TMP/tmp-$PRGNAM 
-mkdir -p $PKG            
-rm -rf $PKG/*             
-rm -rf $TMP/tmp-$PRGNAM/* 
-rm -rf $OUTPUT/{checkout,configure,make,install,error,makepkg,patch}-$PRGNAM.log
-
-# Source file availability:
-if ! [ -f ${SOURCE} ]; then
-  echo "Source '$(basename ${SOURCE})' not available yet..."
-  # Check if the $SRCDIR is writable at all - if not, download to $OUTPUT
-  [ -w "$SRCDIR" ] || SOURCE="$OUTPUT/$(basename $SOURCE)"
-  if [ -f ${SOURCE} ]; then echo "Ah, found it!"; continue; fi
-  if ! [ "x${SRCURL}" == "x" ]; then
-    echo "Will download file to $(dirname $SOURCE)"
-    wget -nv -T 20 -O "${SOURCE}" "${SRCURL}" || true
-    if [ $? -ne 0 -o ! -s "${SOURCE}" ]; then
-      echo "Downloading '$(basename ${SOURCE})' failed... aborting the build."
-      mv -f "${SOURCE}" "${SOURCE}".FAIL
-      exit 1
-    fi
-  else
-    echo "File '$(basename ${SOURCE})' not available... aborting the build."
-    exit 1
-  fi
-fi
-
-if [ "$P1" == "--download" ]; then
-  echo "Download complete."
-  exit 0
-fi
+source ../../get-source.sh
 
 cd $TMP/tmp-$PRGNAM
-echo "Extracting the source archive(s) for $PRGNAM..."
-if $(file ${SOURCE} | grep -qi ": 7-zip"); then
-  7za x ${SOURCE}
-elif $(file ${SOURCE} | grep -qi ": zip"); then
-  unzip ${SOURCE}
-else
-  tar -xvf ${SOURCE}
-fi
+echo "
+Extracting the source from the ${PRGNAM} archive ..."
+tar -xf ${SOURCE}
 
 cd dependencies
 cd ${PRGNAM}
@@ -153,7 +53,7 @@ CFLAGS="$SLKCFLAGS" \
   --disable-static \
   --build=$ARCH-slackware-linux \
 
-make || exit 1
+make $NUMJOBS || exit 1
 make DESTDIR=$PKG install || exit 1
 
 mkdir -p $PKG/usr/doc/$PKGNAME-$VERSION

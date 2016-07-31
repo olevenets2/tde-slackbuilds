@@ -6,6 +6,4 @@ Showfoto is an image editor.
 
 If Digikam is to be built with Kipi Plugins support, build and install kipi-plugins first.
 
-The default build is for [US] English only - additional language support can be set by the 'lang' variable.
-
 Added work-around for showfoto language support.
