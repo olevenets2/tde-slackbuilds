@@ -111,7 +111,7 @@ if ! [ -f ${SOURCE} ]; then
   if [ -f ${SOURCE} ]; then echo "Ah, found it!"; continue; fi
   if ! [ "x${SRCURL}" == "x" ]; then
     echo "Will download file to $(dirname $SOURCE)"
-    wget -nv -T 20 -O "${SOURCE}" "${SRCURL}" || true
+    wget -nv -T 20 -O "${SOURCE}" "${SRCURL}" 
     if [ $? -ne 0 -o ! -s "${SOURCE}" ]; then
       echo "Downloading '$(basename ${SOURCE})' failed... aborting the build."
       mv -f "${SOURCE}" "${SOURCE}".FAIL
