@@ -22,6 +22,7 @@
 #   OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 #   SUCH DAMAGE.
 
+PKGNAM=tdelibkipi
 PRGNAM=libkipi
 VERSION=${VERSION:-R14.0.3}
 BUILD=${BUILD:-1}
@@ -39,17 +40,17 @@ echo "
 # leave one space after the ':'.
 
        |-----handy-ruler------------------------------------------------------|
-libkipi: libKipi (KDE Image Plugin Interface) for TDE
-libkipi:
-libkipi: Kipi is an effort to develop a common plugin structure for digiKam,
-libkipi: and other kipi host programs. Its aim is to share image plugins
-libkipi: among graphic applications. Kipi is based on the old digiKam plugins
-libkipi: implementation and is maintained by the digiKam team.
-libkipi:
-libkipi: With language support for:
-libkipi:
-libkipi: en $(echo $langs)
-libkipi:
+tdelibkipi: tdelibKipi (KDE Image Plugin Interface) for TDE
+tdelibkipi:
+tdelibkipi: Kipi is an effort to develop a common plugin structure for digiKam,
+tdelibkipi: and other kipi host programs. Its aim is to share image plugins
+tdelibkipi: among graphic applications. Kipi is based on the old digiKam plugins
+tdelibkipi: implementation and is maintained by the digiKam team.
+tdelibkipi:
+tdelibkipi: With language support for:
+tdelibkipi:
+tdelibkipi: en $(echo $langs)
+tdelibkipi:
 " > $PKG/install/slack-desc
 }
 
@@ -114,11 +115,11 @@ SlackDesc
 
 
 cd $PKG
-makepkg --linkadd y --chown n $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} 
+makepkg --linkadd y --chown n $OUTPUT/${PKGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} 
 cd $OUTPUT
-md5sum ${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} > ${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz}.md5
+md5sum ${PKGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} > ${PKGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz}.md5
 cd -
-cat $PKG/install/slack-desc | grep "^${PRGNAM}" > $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.txt
+cat $PKG/install/slack-desc | grep "^${PKGNAM}" > $OUTPUT/${PKGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.txt
 
 # Restore the original umask:
 umask ${_UMASK_}

@@ -7,7 +7,7 @@ fi
 
 dialog --no-shadow --colors --title " Introduction " --msgbox \
 "\n
- This is the set up script for TDE R14.0.3 SlackBuilds on Slackware Current for setting user preferences and options.
+ This is the set up script for TDE R14.0.3 SlackBuilds on Slackware 14.2 for setting user preferences and options.
 \n\n
  Source archives can be stored locally or downloaded during the build from a selected TDE mirror site.
 \n\n
@@ -238,20 +238,20 @@ Non-TDE apps are in the Misc category and don't need the \Zb\Zr\Z4R\Znequired TD
 " Misc/speex" "Audio compression format designed for speech" off "\Zb\Z6 Requires l/speexdsp  \Zn" \
 "Core/tdenetwork" "Networking applications for TDE" off "\Zb\Z6 Optional dependency - speex \Zn" \
 "Core/tde-i18n" "Additional language support for TDE" off "\Zb\Z6 Required when \Zb\Z3Additional language support\Zb\Z6 has been selected \Zn" \
-"Libs/libkdcraw" "Decode RAW picture files" off "\Zb\Z6 Required for digikam, gwenview and ksquirrel \Zn" \
-"Libs/libkexiv2" "Library to manipulate picture metadata" off "\Zb\Z6 Required for digikam, gwenview and ksquirrel. Needs l/exiv2... \Zn" \
-"Libs/libkipi" "A common plugin structure" off "\Zb\Z6 Required for digikam, gwenview and ksquirrel \Zn" \
-"Libs/kipi-plugins" "Additional functions for digiKam, ksquirrel and gwenview" off "\Zb\Z6 Required for digikam, gwenview and ksquirrel. Requires libkdcraw libkexiv2 libkipi. \Zn" \
+"Libs/tdelibkdcraw" "Decode RAW picture files" off "\Zb\Z6 Required for digikam, tdegwenview and ksquirrel \Zn" \
+"Libs/tdelibkexiv2" "Library to manipulate picture metadata" off "\Zb\Z6 Required for digikam, tdegwenview and ksquirrel. Needs l/exiv2... \Zn" \
+"Libs/tdelibkipi" "A common plugin structure" off "\Zb\Z6 Required for digikam, tdegwenview and ksquirrel \Zn" \
+"Libs/kipi-plugins" "Additional functions for digiKam, ksquirrel and gwenview" off "\Zb\Z6 Required for digikam, tdegwenview and ksquirrel. Requires tdelibkdcraw tdelibkexiv2 tdelibkipi. \Zn" \
 "Libs/libksquirrel" "A set of image codecs for KSquirrel" off "\Zb\Z6 Required for ksquirrel \Zn" \
-"Apps/digikam" "A digital photo management application + Showfoto viewer" off "\Zb\Z6 Requires kipi-plugins libkdcraw libkexiv2 libkipi.  \Zn" \
-"Apps/ksquirrel" "An image viewer with OpenGL and KIPI support." off "\Zb\Z6 Requires kipi-plugins libkdcraw libkexiv2 libkipi libksquirrel. \Zn" \
-"Apps/gwenview" "An image viewer" off "\Zb\Z6 Requires kipi-plugins libkdcraw libkexiv2 libkipi.  \Zn" \
-"Apps/gwenview-i18n" "Internationalization files for gwenview." off "\Zb\Z6 Required for gwenview when \Zb\Z3Additional language support\Zb\Z6 has been selected  \Zn" \
-" Misc/mp4v2" "Create and modify mp4 files" off "\Zb\Z6   \Zn" \
-"Apps/amarok" "A Music Player" off "\Zb\Z6  Optional dependencies - mp4v2, speex \Zn" \
-"Apps/k3b" "The CD Creator" off "\Zb\Z6   \Zn" \
-"Apps/k3b-i18n" "Internationalization files for k3b." off "\Zb\Z6 Required for k3b when \Zb\Z3Additional language support\Zb\Z6 has been selected  \Zn" \
-"Apps/k9copy" "A DVD backup utility" off "\Zb\Z6 Requires k3b \Zn" \
+"Apps/digikam" "A digital photo management application + Showfoto viewer" off "\Zb\Z6 Requires kipi-plugins tdelibkdcraw tdelibkexiv2 tdelibkipi.  \Zn" \
+"Apps/ksquirrel" "An image viewer with OpenGL and KIPI support." off "\Zb\Z6 Requires kipi-plugins tdelibkdcraw tdelibkexiv2 tdelibkipi libksquirrel. \Zn" \
+"Apps/tdegwenview" "An image viewer" off "\Zb\Z6 Requires kipi-plugins tdelibkdcraw tdelibkexiv2 tdelibkipi.  \Zn" \
+"Apps/tdegwenview-i18n" "Internationalization files for gwenview." off "\Zb\Z6 Required for tdegwenview when \Zb\Z3Additional language support\Zb\Z6 has been selected  \Zn" \
+" Misc/libmp4v2" "Create and modify mp4 files" off "\Zb\Z6   \Zn" \
+"Apps/tdeamarok" "A Music Player" off "\Zb\Z6  Optional dependencies - libmp4v2, speex \Zn" \
+"Apps/tdek3b" "The CD Creator" off "\Zb\Z6   \Zn" \
+"Apps/tdek3b-i18n" "Internationalization files for tdek3b." off "\Zb\Z6 Required for tdek3b when \Zb\Z3Additional language support\Zb\Z6 has been selected  \Zn" \
+"Apps/k9copy" "A DVD backup utility" off "\Zb\Z6 Requires tdek3b and ffmpeg \Zn" \
 "Apps/knemo" "The TDE Network Monitor" off "\Zb\Z6   \Zn" \
 "Apps/knights" "A graphical chess interface" off "\Zb\Z6   \Zn" \
 "Apps/dolphin" "Dolphin file manager for TDE" off "\Zb\Z6   \Zn" \
@@ -369,11 +369,10 @@ do
   sed -ri "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g" $TMP/${package}-build-log || ${EXIT_FAIL:-"true"}
 
 # tde-i18n package installation is handled in tde-i18n.SlackBuild because if more than one i18n package is being built, only the last one will be installed by upgradepkg
-if [[ $INST == 1 ]]
-then
-[[ ${package} != tde-i18n ]] && upgradepkg --install-new --reinstall $TMP/${package}-${version}-*-${build}*.txz
-if [[ $(ls /var/log/packages/${package}-*${version}-*-${build}*) ]]
-then
+# Note to self: this alteration appears to fix the problem (Erroing and refusing to compile) BUT makes the script recomnpile it if you run the
+# script with re-use even though it is installed
+if [[ $INST == 1 ]] && [[ ${package} != tde-i18n ]]; then upgradepkg --install-new --reinstall $TMP/${package}-${version}-*-${build}*.txz
+if [[ $(ls /var/log/packages/${package}-*${version}-*-${build}*) ]]; then
 sed -i "s|$dir ||" $TMPVARS/TDEbuilds
 else
 echo "

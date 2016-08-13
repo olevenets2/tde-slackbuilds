@@ -22,7 +22,8 @@
 #   OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 #   SUCH DAMAGE.
 
-PRGNAM=libkexiv2
+PKGNAM=tdek3b-i18n
+PRGNAM=k3b-i18n
 VERSION=${VERSION:-R14.0.3}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_tde}
@@ -38,18 +39,18 @@ echo "
 # exactly 11 lines for the formatting to be correct.  It's also customary to
 # leave one space after the ':'.
 
-         |-----handy-ruler------------------------------------------------------|
-libkexiv2: Libkexiv2 (Exiv2 Library Wrapper)
-libkexiv2:
-libkexiv2: Libkexiv2 is a wrapper around Exiv2 library to manipulate picture
-libkexiv2: metadata. This library is used by kipi-plugins, digiKam and other
-libkexiv2: kipi host programs. The library documentation is available in the
-libkexiv2: kexiv2.h header file.
-libkexiv2:
-libkexiv2: Homepage: http://www.kipi-plugins.org/
-libkexiv2:
-libkexiv2:
-libkexiv2:
+        |-----handy-ruler------------------------------------------------------|
+tdek3b-i18n: tdek3b-i18n (internationalization files for the CD Creator).
+tdek3b-i18n:
+tdek3b-i18n: For languages:
+tdek3b-i18n: 
+tdek3b-i18n: $(echo $langs)
+tdek3b-i18n: 
+tdek3b-i18n: 
+tdek3b-i18n: 
+tdek3b-i18n: 
+tdek3b-i18n: 
+tdek3b-i18n: 
 " > $PKG/install/slack-desc
 }
 
@@ -60,13 +61,11 @@ echo "
 Extracting the source from the ${PRGNAM} archive ..."
 tar -xf ${SOURCE}
 
-cd libraries
+cd applications
 cd ${PRGNAM}
-
 
 # list only files > zero bytes
 DOCS=$(for file in AUTHORS* ChangeLog* COPYING* FAQ* INSTALL* KNOWNBUGS* NEWS* README* TODO* *.lsm;do [[ -s $file ]] && ls -1 $file;done ) || true
-
 
 # update admin for installed version of libtool
 cp /$(grep -h ltmain.sh /var/log/packages/libtool*) admin/
@@ -77,6 +76,10 @@ make -f admin/Makefile.common
 chown -R root:root .
 chmod -R u+w,go+r-w,a+rX-st .
 
+# set support for additional language(s) as per I18N variable
+# but only for languages available with this package
+langs="";for Lang in $I18N;do [[ -d $Lang ]] && langs="$langs $Lang";done
+sed -i "s|SUBDIRS=.*$|SUBDIRS=$langs|" Makefile.am
 
 mkdir -p build-${PRGNAM}
 cd build-${PRGNAM}
@@ -108,13 +111,13 @@ find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
 mkdir -p $PKG/install
 SlackDesc
 
-
+ARCH="noarch"
 cd $PKG
-makepkg --linkadd y --chown n $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} 
+makepkg --linkadd y --chown n $OUTPUT/${PKGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} 
 cd $OUTPUT
-md5sum ${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} > ${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz}.md5
+md5sum ${PKGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} > ${PKGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz}.md5
 cd -
-cat $PKG/install/slack-desc | grep "^${PRGNAM}" > $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.txt
+cat $PKG/install/slack-desc | grep "^${PKGNAM}" > $OUTPUT/${PKGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.txt
 
 # Restore the original umask:
 umask ${_UMASK_}

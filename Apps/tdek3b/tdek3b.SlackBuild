@@ -22,6 +22,7 @@
 #   OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 #   SUCH DAMAGE.
 
+PKGNAM=tdek3b
 PRGNAM=k3b
 VERSION=${VERSION:-R14.0.3}
 BUILD=${BUILD:-1}
@@ -39,17 +40,17 @@ echo "
 # customary to leave one space after the ':'.
 
    |-----handy-ruler------------------------------------------------------|
-k3b: k3b (The CD Creator, TDE R14.0.3 version)
-k3b:
-k3b: K3b makes writing cds under Linux easy.  It has an easy to use
-k3b: interface and supports CD burning (including on-the-fly), copying,
-k3b: erasing, ripping, and more.
-k3b:
-k3b: K3b was written by Sebastian Trueg, Thomas Froescher,
-k3b: Christian Kvasny, and Klaus-Dieter Krannich.
-k3b:
-k3b: For more information, visit:  http://www.k3b.org
-k3b:
+tdek3b: tdek3b (The CD Creator, TDE R14.0.3 version)
+tdek3b:
+tdek3b: K3b makes writing cds under Linux easy.  It has an easy to use
+tdek3b: interface and supports CD burning (including on-the-fly), copying,
+tdek3b: erasing, ripping, and more.
+tdek3b:
+tdek3b: K3b was written by Sebastian Trueg, Thomas Froescher,
+tdek3b: Christian Kvasny, and Klaus-Dieter Krannich.
+tdek3b:
+tdek3b: For more information, visit:  http://www.k3b.org
+tdek3b:
 " > $PKG/install/slack-desc
 }
 
@@ -109,11 +110,11 @@ SlackDesc
 
 
 cd $PKG
-makepkg --linkadd y --chown n $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} 
+makepkg --linkadd y --chown n $OUTPUT/${PKGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} 
 cd $OUTPUT
-md5sum ${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} > ${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz}.md5
+md5sum ${PKGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} > ${PKGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz}.md5
 cd -
-cat $PKG/install/slack-desc | grep "^${PRGNAM}" > $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.txt
+cat $PKG/install/slack-desc | grep "^${PKGNAM}" > $OUTPUT/${PKGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.txt
 
 # Restore the original umask:
 umask ${_UMASK_}

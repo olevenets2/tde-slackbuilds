@@ -22,6 +22,7 @@
 #   OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 #   SUCH DAMAGE.
 
+PKGNAM=tdeamarok
 PRGNAM=amarok
 VERSION=${VERSION:-R14.0.3}
 BUILD=${BUILD:-1}
@@ -39,17 +40,17 @@ echo "
 # leave one space after the ':'.
 
       |-----handy-ruler------------------------------------------------------|
-amarok: amarok (Amarok Music Player)
-amarok:
-amarok: Amarok music player for TDE
-amarok:
-amarok:
-amarok: With language support for:
-amarok:
-amarok: en $(echo $langs)
-amarok:
-amarok:
-amarok: Home: https://www.trinitydesktop.org/index.php
+tdeamarok: tdeamarok (Amarok Music Player)
+tdeamarok:
+tdeamarok: Amarok music player for TDE
+tdeamarok:
+tdeamarok:
+tdeamarok: With language support for:
+tdeamarok:
+tdeamarok: en $(echo $langs)
+tdeamarok:
+tdeamarok:
+tdeamarok: Home: https://www.trinitydesktop.org/index.php
 " > $PKG/install/slack-desc
 }
 
@@ -132,11 +133,11 @@ mkdir -p $PKG/install
 SlackDesc
 
 cd $PKG
-makepkg --linkadd y --chown n $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} 
+makepkg --linkadd y --chown n $OUTPUT/${PKGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} 
 cd $OUTPUT
-md5sum ${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} > ${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz}.md5
+md5sum ${PKGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} > ${PKGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz}.md5
 cd -
-cat $PKG/install/slack-desc | grep "^${PRGNAM}" > $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.txt
+cat $PKG/install/slack-desc | grep "^${PKGNAM}" > $OUTPUT/${PKGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.txt
 
 # Restore the original umask:
 umask ${_UMASK_}

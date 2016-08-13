@@ -1,1 +1,2 @@
 12/29/2015 Removed Avahi and krb5 as deps
+08/01/2016 Overhaul to entire build process using a dialog script - Thanks Ray-V
