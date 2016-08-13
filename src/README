@@ -1,2 +1,4 @@
-Place the TDE tarballs here
-(Note to self: redo this readme)
+If you place the source code for TDE here, the scripts will use them instead of downloading them individually
+
+For Version R14.0.3:
+http://tde-mirror.yosemite.net/trinity/releases/R14.0.3/downloads.html
