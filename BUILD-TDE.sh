@@ -271,6 +271,9 @@ Non-TDE apps are in the Misc category and don't need the \Zb\Zr\Z4R\Znequired TD
 # successful builds are removed from the TDEbuilds list by '$dir ' so add a space to the last entry
 # and the " needs to be removed because the Misc entries are double-quoted
 sed -i -e 's|$| |' -e 's|"||g' $TMPVARS/TDEbuilds
+#
+# Pretty sure the checks for existing packages will be here. If the packages exist then will use sed to remove them.
+#
 }
 
 [[ ! -e $TMPVARS/TDEbuilds ]] && run_dialog
