@@ -41,9 +41,6 @@ cd ${PRGNAM}
 chown -R root:root .
 chmod -R u+w,go+r-w,a+rX-st .
 
-# Optional deps have been turned off as they mainly affect tdefile plugins which wont even build.
-# Kpdf has been turned off because I've yet to even get it to open anything. If you want to try any 
-# of them feel free to turn the switches to "ON"
 # If imlib is installed, include Kuickshow:
 [[ $(ls /var/log/packages/imlib-*) ]] && KUICKSHOW=ON
 mkdir -p build-${PRGNAM}
