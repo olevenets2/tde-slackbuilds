@@ -259,6 +259,7 @@ Non-TDE apps are in the Misc category and don't need the \Zb\Zr\Z4R\Znequired TD
 "Apps/gtk3-tqt-engine" "A GTK+3 theme engine" off "\Zb\Z6   \Zn" \
 "Apps/kbookreader" "Twin-panel text files viewer esp. for reading e-books." off "\Zb\Z6   \Zn" \
 "Apps/tde-style-qtcurve" "QtCurve theme" off "\Zb\Z6   \Zn" \
+"Apps/tde-style-lipstik" "lipstik theme" off "\Zb\Z6   \Zn" \
 "Apps/twin-style-crystal" "twin theme" off "\Zb\Z6   \Zn" \
 "Apps/tdeio-locate" "TDE frontend for the locate command" off "\Zb\Z6   \Zn" \
 "Apps/kile" "A TEX and LATEX source editor and shell" off "\Zb\Z6   \Zn" \
