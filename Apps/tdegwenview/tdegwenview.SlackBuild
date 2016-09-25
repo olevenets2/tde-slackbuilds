@@ -91,7 +91,6 @@ CXXFLAGS="${SLKCFLAGS}" \
    --sysconfdir="/etc/trinity" \
    --mandir=${INSTALL_TDE}/man \
    --disable-rpath \
-   --without-kipi \
    --enable-closure
 
   make $NUMJOBS || exit 1
