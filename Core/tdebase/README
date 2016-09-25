@@ -5,6 +5,9 @@ if [ -x /usr/bin/tdm ]; then
   exec /usr/bin/tdm -nodaemon
 fi
 
+If you installed with a different prefix than /usr then you need to
+adjust the path to the tdm binary.
+
 --------------------
 
 Konqueror file manager as-built defaults to 'Icon View' when starting.
