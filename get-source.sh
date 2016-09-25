@@ -62,16 +62,16 @@ else
   # Set CFLAGS/CXXFLAGS and LIBDIRSUFFIX:
   case "$ARCH" in
     i586)      SLKCFLAGS="-O2 -march=i586 -mtune=i686"
-               SLKLDFLAGS=""
+               SLKLDFLAGS="-L$INSTALL_TDE/lib$LIBDIRSUFFIX"
                ;;
     x86_64)    SLKCFLAGS="-O2 -fPIC"
-               SLKLDFLAGS="-L/usr/lib64"
+               SLKLDFLAGS="-L$INSTALL_TDE/lib$LIBDIRSUFFIX -L/usr/lib64"
                ;;
     armv7hl)   SLKCFLAGS="-O2 -march=armv7-a -mfpu=vfpv3-d16"
-               SLKLDFLAGS=""
+               SLKLDFLAGS="-L$INSTALL_TDE/lib$LIBDIRSUFFIX"
                ;;
     armv6hl)   SLKCFLAGS="-O2 -march=armv6 -mfpu=vfp -mfloat-abi=hard"
-               SLKLDFLAGS=""
+               SLKLDFLAGS="-L$INSTALL_TDE/lib$LIBDIRSUFFIX"
                ;;
     *)         SLKCFLAGS=${SLKCFLAGS:-"O2"}
                SLKLDFLAGS=${SLKLDFLAGS:-""}; LIBDIRSUFFIX=${LIBDIRSUFFIX:-""}
