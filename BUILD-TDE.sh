@@ -264,6 +264,7 @@ Non-TDE apps are in the Misc category and don't need the \Zb\Zr\Z4R\Znequired TD
 "Apps/twin-style-crystal" "twin theme" off "\Zb\Z6   \Zn" \
 "Apps/tdeio-locate" "TDE frontend for the locate command" off "\Zb\Z6   \Zn" \
 "Apps/kile" "A TEX and LATEX source editor and shell" off "\Zb\Z6   \Zn" \
+"Apps/kshutdown" "Shutdown utility for TDE" off "\Zb\Z6   \Zn" \
 " Misc/potrace" "For tracing bitmaps to a vector graphics format" off "\Zb\Z6 Required for potracegui \Zn" \
 "Apps/potracegui" "A GUI for potrace" off "\Zb\Z6 Requires potrace \Zn" \
 " Misc/GraphicsMagick" "Swiss army knife of image processing" off "\Zb\Z6   \Zn" \
