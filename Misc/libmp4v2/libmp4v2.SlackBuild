@@ -30,7 +30,7 @@ TAG=${TAG:-}
 
 DOCS="COPYING README*"
 
-SRCURL="http://mp4v2.googlecode.com/files/${PRGNAM}-${VERSION}.tar.bz2"
+SRCURL="https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/${PRGNAM}/${PRGNAM}-${VERSION}.tar.bz2"
 source ../../get-source.sh
 
 cd $TMP/tmp-$PRGNAM

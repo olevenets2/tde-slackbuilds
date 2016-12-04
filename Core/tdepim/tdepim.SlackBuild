@@ -23,7 +23,7 @@
 #   SUCH DAMAGE.
 
 PRGNAM=tdepim
-VERSION=${VERSION:-R14.0.3}
+VERSION=${VERSION:-$TDEVERSION}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_tde}
 
@@ -55,7 +55,7 @@ cd build-${PRGNAM}
     -DMAN_INSTALL_DIR=${INSTALL_TDE}/man \
     -DWITH_ALL_OPTIONS="ON" \
     -DWITH_GNOKII="OFF" \
-    -DWITH_CALDAV="OFF" \
+    -DWITH_CALDAV=${LCALDAV:-"OFF"} \
     -DWITH_CARDDAV="OFF" \
     -DBUILD_ALL="ON" \
     -Wno-dev \

@@ -25,7 +25,7 @@
 # Thanks to Slackware 12.2 SlackBuild for kdebase
 
 PRGNAM=tdebase
-VERSION=${VERSION:-R14.0.3}
+VERSION=${VERSION:-$TDEVERSION}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_tde}
 

@@ -25,7 +25,7 @@
 # Much help from the 12.2 SlackBuild script of qt3. And from SBo qt3 script
 
 PRGNAM=tqt3
-VERSION=${VERSION:-R14.0.3}
+VERSION=${VERSION:-$TDEVERSION}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_tde}
 

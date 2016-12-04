@@ -23,7 +23,7 @@
 #   SUCH DAMAGE.
 
 PRGNAM=ksquirrel
-VERSION=${VERSION:-R14.0.3}
+VERSION=${VERSION:-$TDEVERSION}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_tde}
 
@@ -68,7 +68,7 @@ cd ${PRGNAM}
 DOCS=$(for file in AUTHORS* ChangeLog* COPYING* FAQ* INSTALL* KNOWNBUGS* LICEN?E* NEWS* *README* TODO* *.lsm;do [[ -s $file ]] && ls -1 $file;done ) || true
 
 # add English help documentation
-tar xf $SRCDIR/ksquirrel-R14.0.3-en-docs.tar.xz
+tar xf $SRCDIR/ksquirrel-en-docs.tar.xz
 cp doc/ru/*png doc/en
 
 # set support for additional language(s) as per I18N variable

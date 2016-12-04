@@ -23,7 +23,7 @@
 #   SUCH DAMAGE.
 
 PRGNAM=libcaldav
-VERSION=${VERSION:-R14.0.3}
+VERSION=${VERSION:-$TDEVERSION}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_tde}
 
@@ -47,6 +47,7 @@ CFLAGS="${SLKCFLAGS} $TQT_INCLUDE_PATH" \
 CXXFLAGS="${SLKCFLAGS}" \
 ./autogen.sh \
    --prefix=${INSTALL_TDE} \
+   --libdir=${INSTALL_TDE}/lib${LIBDIRSUFFIX} \
    --sysconfdir="/etc/trinity" \
    --mandir=${INSTALL_TDE}/man \
    --disable-rpath \

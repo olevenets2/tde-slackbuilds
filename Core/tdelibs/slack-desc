@@ -8,7 +8,7 @@
        |-----handy-ruler------------------------------------------------------|
 tdelibs: tdelibs (TDE libraries)
 tdelibs:
-tdelibs: This is version R14.0.3 of the Trinity Desktop Environment [TDE]
+tdelibs: These are the Trinity Desktop Environment [TDE]
 tdelibs: libraries. This package includes libraries that are central
 tdelibs: to the development and execution of a KDE program, as well
 tdelibs: as internationalization files for these libraries, misc HTML

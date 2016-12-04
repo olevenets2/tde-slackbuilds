@@ -24,7 +24,7 @@
 
 PKGNAM=tdegwenview-i18n
 PRGNAM=gwenview-i18n
-VERSION=${VERSION:-R14.0.3}
+VERSION=${VERSION:-$TDEVERSION}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_tde}
 

@@ -1,2 +1,3 @@
 12/29/2015 Removed Avahi and krb5 as deps
 08/01/2016 Overhaul to entire build process using a dialog script - Thanks Ray-V
+2016-12-04 Issue 21 - Added TDEVERSION variable. Changed libcaldav to optional dependency. Updated mp4v2 URL.

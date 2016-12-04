@@ -7,7 +7,7 @@ fi
 
 dialog --no-shadow --colors --title " Introduction " --msgbox \
 "\n
- This is the set up script for TDE R14.0.3 SlackBuilds on Slackware 14.2 for setting user preferences and options.
+ This is the set up script for TDE SlackBuilds on Slackware 14.2 for setting user preferences and options.
 \n\n
  Source archives can be stored locally or downloaded during the build from a selected TDE mirror site.
 \n\n
@@ -77,6 +77,15 @@ ROOT=$(pwd)
 
 run_dialog()
 {
+rm -f $TMPVARS/TDEVERSION
+dialog --nocancel --no-shadow --colors --title " TDE Version " --inputbox \
+"\n
+Set the version of TDE to be built.
+\n\n" \
+10 75 R14.0.4 \
+2> $TMPVARS/TDEVERSION
+
+
 rm -f $TMPVARS/INSTALL_TDE
 dialog --nocancel --no-shadow --colors --title " TDE Installation Directory " --inputbox \
 "\n
@@ -222,7 +231,6 @@ Non-TDE apps are in the Misc category and don't need the \Zb\Zr\Z4R\Znequired TD
 "Deps/dbus-1-tqt" "\Zb\Zr\Z4R\Zn D-Bus bindings" ${SELECT:-off} "\Zb\Z6   \Zn" \
 "Deps/libart_lgpl" "\Zb\Zr\Z4R\Zn The LGPL'd component of libart" ${SELECT:-off} "\Zb\Z6   \Zn" \
 "Deps/tqca-tls" "\Zb\Zr\Z4R\Zn Plugin to provide SSL/TLS capability" ${SELECT:-off} "\Zb\Z6   \Zn" \
-"Deps/libcaldav" "\Zb\Zr\Z4R\Zn Calendaring Extensions to WebDAV" ${SELECT:-off}  "\Zb\Z6   \Zn" \
 "Core/tdelibs" "\Zb\Zr\Z4R\Zn TDE libraries" ${SELECT:-off} "\Zb\Z6   \Zn" \
 "Core/tdebase" "\Zb\Zr\Z4R\Zn TDE base" ${SELECT:-off} "\Zb\Z6   \Zn" \
 "Core/tdeutils" "Collection of utilities including ark" off "\Zb\Z6   \Zn" \
@@ -231,6 +239,7 @@ Non-TDE apps are in the Misc category and don't need the \Zb\Zr\Z4R\Znequired TD
 "Core/tdegraphics" "Misc graphics apps" off "\Zb\Z6   \Zn" \
 "Core/tdeaddons" "Additional plugins and scripts" off "\Zb\Z6   \Zn" \
 "Core/tdegames" "Games for TDE - atlantik, kasteroids, katomic, etc." off "\Zb\Z6   \Zn" \
+"Deps/libcaldav" "Calendaring Extensions to WebDAV" off "\Zb\Z6 Optional dependency for korganizer [tdepim] \Zn" \
 "Core/tdepim" "Personal Information Management" off "\Zb\Z6   \Zn" \
 "Core/tdesdk" "Tools used by TDE developers" off "\Zb\Z6 Requires tdepim \Zn" \
 "Core/tdevelop" "TDE development programs" off "\Zb\Z6 Requires tdesdk  \Zn" \
@@ -280,8 +289,15 @@ sed -i -e 's|$| |' -e 's|"||g' $TMPVARS/TDEbuilds
 [[ ! -e $TMPVARS/TDEbuilds ]] && run_dialog
 
 
+## These are changes to the default SlackBuild where an optional dependency is selected
+# If libcaldav is installed, or if building libcaldav for korganizer,
+# change option in tdepim.SlackBuild to "ON"
+[[ $(ls /var/log/packages/libcaldav*) || $(grep libcaldav $TMPVARS/TDEbuilds) ]] && \
+export LCALDAV="ON"
+
+
 # option to change to stop the build when it fails
-if [[ $(cat $TMPVARS/build-new) == no ]] ; then
+if [[ $(cat $TMPVARS/build-new) == no ]] 2> /dev/null ; then
 if [[ $(cat $TMPVARS/EXIT_FAIL) == "" ]] ; then
 if [[ $(cat $TMPVARS/KEEP_BUILD) == no ]] ; then
 dialog --defaultno --yes-label "Continue" --no-label "Stop" --no-shadow --colors --title " Action on failure - 2 " --yesno \
@@ -311,6 +327,7 @@ echo
 ######################
 # there should be no need to make any changes below
 
+export TDEVERSION=$(cat $TMPVARS/TDEVERSION)
 export INSTALL_TDE=$(cat $TMPVARS/INSTALL_TDE)
 export TDE_MIRROR=$(cat $TMPVARS/TDE_MIRROR)
 export NUMJOBS=$(cat $TMPVARS/NUMJOBS)
@@ -375,8 +392,8 @@ do
 # tde-i18n package installation is handled in tde-i18n.SlackBuild because if more than one i18n package is being built, only the last one will be installed by upgradepkg
 # Note to self: this alteration appears to fix the problem (Erroing and refusing to compile) BUT makes the script recomnpile it if you run the
 # script with re-use even though it is installed
-if [[ $INST == 1 ]] && [[ ${package} != tde-i18n ]]; then upgradepkg --install-new --reinstall $TMP/${package}-${version}-*-${build}*.txz
-if [[ $(ls /var/log/packages/${package}-*${version}-*-${build}*) ]]; then
+if [[ $INST == 1 ]] && [[ ${package} != tde-i18n ]]; then upgradepkg --install-new --reinstall $TMP/${package}-$(eval echo $version)-*-${build}*.txz
+if [[ $(ls /var/log/packages/${package}-*$(eval echo $version)-*-${build}*) ]]; then
 sed -i "s|$dir ||" $TMPVARS/TDEbuilds
 else
 echo "

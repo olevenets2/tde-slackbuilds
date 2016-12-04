@@ -24,7 +24,7 @@
 
 PKGNAM=tdek3b
 PRGNAM=k3b
-VERSION=${VERSION:-R14.0.3}
+VERSION=${VERSION:-$TDEVERSION}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_tde}
 
@@ -40,7 +40,7 @@ echo "
 # customary to leave one space after the ':'.
 
    |-----handy-ruler------------------------------------------------------|
-tdek3b: tdek3b (The CD Creator, TDE R14.0.3 version)
+tdek3b: tdek3b (The CD Creator, TDE $TDEVERSION version)
 tdek3b:
 tdek3b: K3b makes writing cds under Linux easy.  It has an easy to use
 tdek3b: interface and supports CD burning (including on-the-fly), copying,
