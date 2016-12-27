@@ -1,7 +1,8 @@
 12/29/2015 Removed Avahi and krb5 as deps
 08/01/2016 Overhaul to entire build process using a dialog script - Thanks Ray-V
 2016-12-04 Issue 21 - Added TDEVERSION variable. Changed libcaldav to optional dependency. Updated mp4v2 URL.
-2016-12-xx Updated dolphin, amarok, tdenetwork, k3b[-i18n], tdegames to cmake build.
+2016-12-27 Updated dolphin, amarok, tdenetwork, k3b[-i18n], tdegames to cmake build.
            Added Apps/abakus and Apps/filelight. Put Apps in program name order in BUILD-TDE.sh
-2016-12-xx Added Apps/{knmap,kscope,tdesudo} and Misc/graphviz
+2016-12-27 Added Apps/{knmap,kscope,tdesudo} and Misc/graphviz
            Modified BUILD-TDE.sh and tqt3.SlackBuild for ld.so.conf option
+12/27/2016 Added moodbar in Misc, as optional dep for {tde}amarok           
