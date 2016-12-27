@@ -44,7 +44,7 @@ tdek3b-i18n: tdek3b-i18n (internationalization files for the CD Creator).
 tdek3b-i18n:
 tdek3b-i18n: For languages:
 tdek3b-i18n: 
-tdek3b-i18n: $(echo $langs)
+tdek3b-i18n: $langs
 tdek3b-i18n: 
 tdek3b-i18n: 
 tdek3b-i18n: 
@@ -67,33 +67,24 @@ cd ${PRGNAM}
 # list only files > zero bytes
 DOCS=$(for file in AUTHORS* ChangeLog* COPYING* FAQ* INSTALL* KNOWNBUGS* NEWS* README* TODO* *.lsm;do [[ -s $file ]] && ls -1 $file;done ) || true
 
-# update admin for installed version of libtool
-cp /$(grep -h ltmain.sh /var/log/packages/libtool*) admin/
-cp /$(grep -h libtool.m4 /var/log/packages/libtool*) admin/libtool.m4.in
-
-make -f admin/Makefile.common
-
 chown -R root:root .
 chmod -R u+w,go+r-w,a+rX-st .
 
 # set support for additional language(s) as per I18N variable
 # but only for languages available with this package
-langs="";for Lang in $I18N;do [[ -d $Lang ]] && langs="$langs $Lang";done
-sed -i "s|SUBDIRS=.*$|SUBDIRS=$langs|" Makefile.am
+langs="";for Lang in $I18N;do [[ $(grep $Lang subdirs) ]] && langs="$langs $Lang";done
+## remove wanted locales from subdirs file ...
+for loca in $langs;do sed -i "/$loca/d" subdirs;done
+## ... and use modified subdirs to remove unwanted locale directories
+while read dir;do rm -rf $dir;done < subdirs
+
 
 mkdir -p build-${PRGNAM}
 cd build-${PRGNAM}
 
-# Configure the package
-LDFLAGS="${SLKLDFLAGS}" \
-CFLAGS="${SLKCFLAGS} $TQT_INCLUDE_PATH" \
-CXXFLAGS="${SLKCFLAGS}" \
-../configure \
-   --prefix=${INSTALL_TDE} \
-   --sysconfdir="/etc/trinity" \
-   --mandir=${INSTALL_TDE}/man \
-   --disable-rpath \
-   --enable-closure
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=${INSTALL_TDE} \
+    ..
 
   make $NUMJOBS || exit 1
   make DESTDIR=$PKG install || exit 1

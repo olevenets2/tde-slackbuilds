@@ -20,7 +20,7 @@ dialog --no-shadow --colors --title " Introduction " --msgbox \
 
 
 rm -f $TMPVARS/build-new
-dialog --yes-label "New" --no-label "Re-use" --no-shadow --colors --title " TDE Build " --yesno \
+dialog --yes-label "Re-use" --no-label "New" --defaultno --no-shadow --colors --title " TDE Build " --yesno \
 "\n
 Select \Zr\Z4\ZbNew\Zn if:
 \n
@@ -32,8 +32,9 @@ Additional packages are being built
 \n\n
 Selecting \Z1R\Zb\Z0e-use\Zn avoids having to create the build list again when re-running the build for any SlackBuilds that failed." \
 13 75
-[[ $(echo $?) == 0 ]] && rm $TMPVARS/TDEbuilds 2> /dev/null
-[[ $(echo $?) == 1 ]] && echo no > $TMPVARS/build-new
+[[ $(echo $?) == 0 ]] && echo no > $TMPVARS/build-new
+[[ $(echo $?) == 1 ]] && rm $TMPVARS/TDEbuilds 2> /dev/null
+
 
 build_core()
 {
@@ -213,6 +214,34 @@ Select \Zr\Zb\Z4No\Zn here if they have already been built and installed and you
 export SELECT=$(cat $TMPVARS/SELECT)
 
 
+rm $TMPVARS/PREPEND
+EXITVAL=2
+until [[ $EXITVAL -lt 2 ]] ; do
+dialog --no-shadow --yes-label "Prepend" --help-button --help-label "README" --no-label "Default" --colors --defaultno --title " Libraries Search Path " --yesno \
+"\n
+Select \Z1P\Zb\Z0repend\Zn to add the TDE libs paths to the beginning of the search path.
+\n\n
+Try \Zr\Zb\Z4Default\Zn first - in most cases this will work.
+\n\n" \
+10 75
+EXITVAL=$?
+[[ $EXITVAL == 0 ]] && echo yes > $TMPVARS/PREPEND
+[[ $EXITVAL == 1 ]] && 2> $TMPVARS/PREPEND
+[[ $EXITVAL == 2 ]] && dialog --no-shadow --colors --msgbox \
+"\n
+The default with the tqt3 build is to append the TDE lib paths to /etc/ld.so.conf.
+\n\n
+This means that TDE libs will be at the end of the search path. If the package configuration sets up the search path without using the shell variables set up in this script, those TDE libs will not be used if a library of the same name exists - a conflict which could arise if another DE is installed.
+\n\n
+If you experience any problems of this nature, then try the \Z1P\Zb\Z0repend\Zn option, which will set up doinst.sh for tqt3 to add the TDE libs paths to the beginning of the search path.
+\n\n
+ Then \Zb\Z2rebuild tqt3\Zn. This build option only applies to that package.
+\n\n" \
+ 20 75
+done
+export PREPEND=$(cat $TMPVARS/PREPEND)
+
+
 rm -f $TMPVARS/TDEbuilds
 dialog --nocancel --no-shadow --colors --title " TDE Packages Selection " --item-help --checklist \
 "\n
@@ -253,33 +282,40 @@ Non-TDE apps are in the Misc category and don't need the \Zb\Zr\Z4R\Znequired TD
 "Libs/tdelibkipi" "A common plugin structure" off "\Zb\Z6 Required for digikam, tdegwenview and ksquirrel \Zn" \
 "Libs/kipi-plugins" "Additional functions for digiKam, ksquirrel and gwenview" off "\Zb\Z6 Required for digikam, tdegwenview and ksquirrel. Requires tdelibkdcraw tdelibkexiv2 tdelibkipi. \Zn" \
 "Libs/libksquirrel" "A set of image codecs for KSquirrel" off "\Zb\Z6 Required for ksquirrel \Zn" \
-"Apps/digikam" "A digital photo management application + Showfoto viewer" off "\Zb\Z6 Requires kipi-plugins tdelibkdcraw tdelibkexiv2 tdelibkipi.  \Zn" \
-"Apps/ksquirrel" "An image viewer with OpenGL and KIPI support." off "\Zb\Z6 Requires kipi-plugins tdelibkdcraw tdelibkexiv2 tdelibkipi libksquirrel. \Zn" \
-"Apps/tdegwenview" "An image viewer" off "\Zb\Z6 Requires kipi-plugins tdelibkdcraw tdelibkexiv2 tdelibkipi.  \Zn" \
-"Apps/tdegwenview-i18n" "Internationalization files for gwenview." off "\Zb\Z6 Required for tdegwenview when \Zb\Z3Additional language support\Zb\Z6 has been selected  \Zn" \
+"Apps/abakus" "PC calculator" off "\Zb\Z6 optional dependency l/mpfr which requires l/gmp \Zn" \
 " Misc/libmp4v2" "Create and modify mp4 files" off "\Zb\Z6   \Zn" \
 "Apps/tdeamarok" "A Music Player" off "\Zb\Z6  Optional dependencies - libmp4v2, speex \Zn" \
+"Apps/digikam" "A digital photo management application + Showfoto viewer" off "\Zb\Z6 Requires kipi-plugins tdelibkdcraw tdelibkexiv2 tdelibkipi.  \Zn" \
+"Apps/dolphin" "Dolphin file manager for TDE" off "\Zb\Z6   \Zn" \
+"Apps/filelight" "Graphical diskspace display" off "\Zb\Z6 requires x/xdpyinfo in use \Zn" \
+"Apps/gtk-qt-engine" "A GTK+2 theme engine" off "\Zb\Z6   \Zn" \
+"Apps/gtk3-tqt-engine" "A GTK+3 theme engine" off "\Zb\Z6   \Zn" \
+"Apps/tdegwenview" "An image viewer" off "\Zb\Z6 Requires kipi-plugins tdelibkdcraw tdelibkexiv2 tdelibkipi.  \Zn" \
+"Apps/tdegwenview-i18n" "Internationalization files for gwenview." off "\Zb\Z6 Required for tdegwenview when \Zb\Z3Additional language support\Zb\Z6 has been selected  \Zn" \
 "Apps/tdek3b" "The CD Creator" off "\Zb\Z6   \Zn" \
 "Apps/tdek3b-i18n" "Internationalization files for tdek3b." off "\Zb\Z6 Required for tdek3b when \Zb\Z3Additional language support\Zb\Z6 has been selected  \Zn" \
 "Apps/k9copy" "A DVD backup utility" off "\Zb\Z6 Requires tdek3b and ffmpeg \Zn" \
+"Apps/kbookreader" "Twin-panel text files viewer esp. for reading e-books." off "\Zb\Z6   \Zn" \
+"Apps/kile" "A TEX and LATEX source editor and shell" off "\Zb\Z6   \Zn" \
 "Apps/knemo" "The TDE Network Monitor" off "\Zb\Z6   \Zn" \
 "Apps/knights" "A graphical chess interface" off "\Zb\Z6   \Zn" \
-"Apps/dolphin" "Dolphin file manager for TDE" off "\Zb\Z6   \Zn" \
-"Apps/gtk-qt-engine" "A GTK+2 theme engine" off "\Zb\Z6   \Zn" \
-"Apps/gtk3-tqt-engine" "A GTK+3 theme engine" off "\Zb\Z6   \Zn" \
-"Apps/kbookreader" "Twin-panel text files viewer esp. for reading e-books." off "\Zb\Z6   \Zn" \
-"Apps/tde-style-qtcurve" "QtCurve theme" off "\Zb\Z6   \Zn" \
-"Apps/tde-style-lipstik" "lipstik theme" off "\Zb\Z6   \Zn" \
-"Apps/twin-style-crystal" "twin theme" off "\Zb\Z6   \Zn" \
-"Apps/tdeio-locate" "TDE frontend for the locate command" off "\Zb\Z6   \Zn" \
-"Apps/kile" "A TEX and LATEX source editor and shell" off "\Zb\Z6   \Zn" \
+"Apps/knmap" "A graphical nmap interface" off "\Zb\Z6 Might need tdesudo \Zn" \
+"Apps/kscope" "A source-editing environment for C and C-style languages." off "\Zb\Z6 Runtime options cscope [d/cscope], ctags [ap/vim], dot [graphviz] \Zn" \
 "Apps/kshutdown" "Shutdown utility for TDE" off "\Zb\Z6   \Zn" \
+"Apps/ksquirrel" "An image viewer with OpenGL and KIPI support." off "\Zb\Z6 Requires kipi-plugins tdelibkdcraw tdelibkexiv2 tdelibkipi libksquirrel. \Zn" \
 " Misc/potrace" "For tracing bitmaps to a vector graphics format" off "\Zb\Z6 Required for potracegui \Zn" \
 "Apps/potracegui" "A GUI for potrace" off "\Zb\Z6 Requires potrace \Zn" \
+"Apps/tde-style-lipstik" "lipstik theme" off "\Zb\Z6   \Zn" \
+"Apps/tde-style-qtcurve" "QtCurve theme" off "\Zb\Z6   \Zn" \
+"Apps/tdeio-locate" "TDE frontend for the locate command" off "\Zb\Z6   \Zn" \
+"Apps/tdesudo" "Graphical frontend for the sudo command" off "\Zb\Z6   \Zn" \
+"Apps/twin-style-crystal" "twin theme" off "\Zb\Z6   \Zn" \
 " Misc/GraphicsMagick" "Swiss army knife of image processing" off "\Zb\Z6   \Zn" \
+" Misc/graphviz" "Graph Visualization" off "\Zb\Z6 Optional for kscope. pdf/html docs not built by default  \Zn" \
 " Misc/tidy-html5" "Corrects and cleans up HTML and XML documents" off "\Zb\Z6 Optional for Quanta+ [tdewebdev] \Zn" \
 " Misc/inkscape" "SVG editor" off "\Zb\Z6 Requires lxml if online help facility is required. \Zn" \
 " Misc/lxml" "Python bindings for libxml2 and libxslt" off "\Zb\Z6 Required to use Inkscape online help \Zn" \
+" Misc/moodbar" "GStreamer plugin for Amarok for moodbar feature" off "\Zb\Z6 Optional for Amarok \Zn" \
 2> $TMPVARS/TDEbuilds
 # successful builds are removed from the TDEbuilds list by '$dir ' so add a space to the last entry
 # and the " needs to be removed because the Misc entries are double-quoted
@@ -289,29 +325,22 @@ sed -i -e 's|$| |' -e 's|"||g' $TMPVARS/TDEbuilds
 [[ ! -e $TMPVARS/TDEbuilds ]] && run_dialog
 
 
-## These are changes to the default SlackBuild where an optional dependency is selected
-# If libcaldav is installed, or if building libcaldav for korganizer,
-# change option in tdepim.SlackBuild to "ON"
-[[ $(ls /var/log/packages/libcaldav*) || $(grep libcaldav $TMPVARS/TDEbuilds) ]] && \
-export LCALDAV="ON"
-
-
 # option to change to stop the build when it fails
 if [[ $(cat $TMPVARS/build-new) == no ]] 2> /dev/null ; then
 if [[ $(cat $TMPVARS/EXIT_FAIL) == "" ]] ; then
 if [[ $(cat $TMPVARS/KEEP_BUILD) == no ]] ; then
-dialog --defaultno --yes-label "Continue" --no-label "Stop" --no-shadow --colors --title " Action on failure - 2 " --yesno \
+dialog --defaultno --yes-label "Stop" --no-label "Continue" --no-shadow --colors --title " Action on failure - 2 " --yesno \
 "\n
 You have chosen to re-use the TDE build list, which now contains only those programs that failed to build.
 \n\n
-But this script is set to Continue in the event of a failure, which will delete all but the last build record. Each failure should now be investigated which requires that the build be stopped when it fails.
+But this script is set to Continue in the event of a failure, which will delete all but the last build record. It will be easier to investigate each failure if the build is stopped when it fails.
 \n\n
-Do you still want the build to \Z1C\Zb\Z0ontinue\Zn at a failure
+Do you still want the build to \Zr\Z4\ZbContinue\Zn at a failure
 \n
- or change to \Zr\Z4\ZbStop\Zn ?
+ or change to \Z1S\Zb\Z0top\Zn ?
 \n " \
 15 75
-[[ $(echo $?) == 1 ]] && echo "exit 1" > $TMPVARS/EXIT_FAIL
+[[ $(echo $?) == 0 ]] && echo "exit 1" > $TMPVARS/EXIT_FAIL
 fi;fi;fi
 
 

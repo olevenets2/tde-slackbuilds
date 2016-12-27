@@ -39,18 +39,18 @@ echo "
 # exactly 11 lines for the formatting to be correct.  It's also customary to
 # leave one space after the ':'.
 
-      |-----handy-ruler------------------------------------------------------|
-tdeamarok: tdeamarok (Amarok Music Player)
-tdeamarok:
-tdeamarok: Amarok music player for TDE
-tdeamarok:
-tdeamarok:
-tdeamarok: With language support for:
-tdeamarok:
-tdeamarok: en $(echo $langs)
-tdeamarok:
-tdeamarok:
-tdeamarok: Home: https://www.trinitydesktop.org/index.php
+$PKGNAM|-----handy-ruler------------------------------------------------------|
+$PKGNAM: $PKGNAM (Amarok Music Player)
+$PKGNAM:
+$PKGNAM: Amarok music player for TDE
+$PKGNAM:
+$PKGNAM:
+$PKGNAM: With language support for:
+$PKGNAM:
+$PKGNAM: en$langs
+$PKGNAM:
+$PKGNAM:
+$PKGNAM: Home: https://www.trinitydesktop.org/index.php
 " > $PKG/install/slack-desc
 }
 
@@ -64,39 +64,73 @@ tar -xf ${SOURCE}
 cd applications
 cd ${PRGNAM}
 
+## speex patches to cmake:
+## [1] new speex/CMakeLists.txt using aac/CMakeLists.txt as a template
+cat amarok/src/metadata/aac/CMakeLists.txt | \
+sed 's|tagaac|tagspeex|g;s|aacfile.*$|taglib_speexfiletyperesolver.cpp speexfile.cpp speexproperties.cpp|' \
+> amarok/src/metadata/speex/CMakeLists.txt
+#
+## [2] patch metadata/CMakeLists.txt
+sed -i -e 's|wav )|wav )\nadd_subdirectory( speex )|' \
+-e 's|tagaac-static|tagaac-static tagspeex-static|' amarok/src/metadata/CMakeLists.txt
+
+# If libmp4v2 is installed, use mp4 metadata sources in build, otherwise use m4a ..
+[[ $(grep -E "mp4.h|mp4v2.h" /var/log/packages/*) ]] && LMP4V2="ON" || sed -i 's|tagmp4|tagm4a|' amarok/src/metadata/CMakeLists.txt
+
+
 # list only files > zero bytes
 DOCS=$(for file in AUTHORS* ChangeLog* COPYING* FAQ* INSTALL* KNOWNBUGS* NEWS* README* TODO* *.lsm;do [[ -s $file ]] && ls -1 $file;done ) || true
-
 
 # set support for additional language(s) as per I18N variable
 # but only for languages available with this package
 langs="";for Lang in $I18N;do [[ -d po/$Lang ]] && langs="$langs $Lang";done
-sed -i "s|SUBDIRS =.*$|SUBDIRS =$langs|" po/Makefile.am
 #
-langdoc="amarok";for Lang in $I18N;do [[ -d doc/$Lang ]] && langdoc="$langdoc $Lang";done
-sed -i "s|SUBDIRS =.*$|SUBDIRS = $langdoc|" doc/Makefile.am
+## output list of available locales ...
+ls -1 po | while read line
+do
+## ... and compare to selected locales & remove those not required
+[[ -d po/$line ]] && [[ $langs != *$line* ]] && rm -rf po/$line
+done 
+#
+## output list of available locale documentation ...
+ldocs="amarok $langs"
+ls -1 doc | while read line
+do
+## ... and compare to docs for selected locales & remove those not required
+[[ -d doc/$line ]] && [[ $ldocs != *$line* ]] && rm -rf doc/$line
+done
 
-
-# update admin for installed version of libtool
-cp /$(grep -h ltmain.sh /var/log/packages/libtool*) admin/
-cp /$(grep -h libtool.m4 /var/log/packages/libtool*) admin/libtool.m4.in
-
-make -f admin/Makefile.common
 
 chown -R root:root .
 chmod -R u+w,go+r-w,a+rX-st .
 
 
-# Configure the package
-LDFLAGS="${SLKLDFLAGS}" \
-CFLAGS="${SLKCFLAGS} $TQT_INCLUDE_PATH" \
-CXXFLAGS="${SLKCFLAGS}" \
-./configure \
-   --prefix=${INSTALL_TDE} \
-   --sysconfdir="/etc/trinity" \
-   --mandir=${INSTALL_TDE}/man \
-   --disable-rpath \
-   --enable-closure
+mkdir -p build-${PRGNAM}
+cd build-${PRGNAM}
+
+  cmake \
+    -DCMAKE_C_FLAGS:STRING="$SLKCFLAGS $TQT_INCLUDE_PATH" \
+    -DCMAKE_CXX_FLAGS:STRING="$SLKCFLAGS" \
+    -DCMAKE_INSTALL_PREFIX=${INSTALL_TDE} \
+    -DLIB_SUFFIX=${LIBDIRSUFFIX} \
+    -DSYSCONF_INSTALL_DIR="/etc/trinity" \
+    -DMAN_INSTALL_DIR=${INSTALL_TDE}/man \
+    -DWITH_MP4V2=${LMP4V2:-"OFF"} \
+    -DWITH_LIBVISUAL="OFF" \
+    -DWITH_KONQSIDEBAR="OFF" \
+    -DWITH_XINE="ON" \
+    -DWITH_YAUAP="OFF" \
+    -DWITH_AKODE="OFF" \
+    -DWITH_IPOD="OFF" \
+    -DWITH_IFP="OFF" \
+    -DWITH_NJB="OFF" \
+    -DWITH_MTP="OFF" \
+    -DWITH_RIOKARMA="OFF" \
+    -DWITH_DAAP="OFF" \
+    -DWITH_INOTIFY="OFF" \
+    -DBUILD_DOC="ON" \
+    -DBUILD_TRANSLATIONS="ON" \
+    ..
 
 
   make $NUMJOBS || exit 1
@@ -121,7 +155,7 @@ fi
 EOINS
 
 mkdir -p $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
-(cd ${PRGNAM};cp -a $DOCS $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION) || true
+cp -a $DOCS $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION || true
 cat $SRCDIR/$(basename $0) > $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 chown -R root:root $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
 find $PKG${INSTALL_TDE}/doc -type f -exec chmod 644 {} \;
@@ -137,7 +171,7 @@ makepkg --linkadd y --chown n $OUTPUT/${PKGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG
 cd $OUTPUT
 md5sum ${PKGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} > ${PKGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz}.md5
 cd -
-cat $PKG/install/slack-desc | grep "^${PKGNAM}" > $OUTPUT/${PKGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.txt
+cat $PKG/install/slack-desc | grep "^${PKGNAM}" | grep -v handy > $OUTPUT/${PKGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.txt
 
 # Restore the original umask:
 umask ${_UMASK_}

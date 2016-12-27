@@ -28,34 +28,6 @@ BUILD=${BUILD:-1}
 TAG=${TAG:-_tde}
 
 
-Options()
-{
-# if tdemultimedia has been built with cmake, only kmix has been built and without libartsmodules
-#  - in that case, remove it's requirement for kolf.
-[[ ! $(grep -h libartsmodules.so /var/log/packages/tdemultimedia-* 2>/dev/null) ]] && sed -i 's| -lartsmodules||' kolf/Makefile.am
-return 0
-}
-
-
-ChooseGames()
-{
-# Uncomment to choose the games to be built - otherwise the default is all
-#CHOOSE="y"
-#
-if [ "${CHOOSE:-}" == "y" ]
-then
-# edit for games required
-CHOICE="atlantik kasteroids katomic kbackgammon kbattleship kblackbox kbounce kenolaba kgoldrunner kjumpingcube klines kmahjongg kmines knetwalk kolf konquest kpat kpoker kreversi ksame kshisen ksmiletris ksnake ksokoban kspaceduel ktron ktuberling lskat twin4 klickety kfouleggs ksirtet"
-sed -i "s|TOPSUBDIRS =  .*$|TOPSUBDIRS =  libtdegames doc libksirtet $CHOICE|" Makefile
-# don't package carddecks if they're not needed for chosen games
-[[ ! $(echo $CHOICE|grep -E "kpat|kpoker|lskat") ]] && sed -i 's|carddecks||' libtdegames/Makefile
-# docs for chosen games only
-sed -i "s|SUBDIRS =.*$|SUBDIRS =. $CHOICE|" doc/Makefile
-fi
-return
-}
-
-
 SlackDesc()
 {
 echo "
@@ -92,13 +64,6 @@ Extracting the source from the ${PRGNAM} archive ..."
 tar -xf ${SOURCE}
 
 cd ${PRGNAM}
-Options
-
-# update admin for installed version of libtool
-cp /$(grep -h ltmain.sh /var/log/packages/libtool*) admin/
-cp /$(grep -h libtool.m4 /var/log/packages/libtool*) admin/libtool.m4.in
-
-make -f admin/Makefile.common
 
 chown -R root:root .
 chmod -R u+w,go+r-w,a+rX-st .
@@ -106,19 +71,63 @@ chmod -R u+w,go+r-w,a+rX-st .
 mkdir -p build-${PRGNAM}
 cd build-${PRGNAM}
 
+  cmake \
+    -DCMAKE_C_FLAGS:STRING="$SLKCFLAGS $TQT_INCLUDE_PATH" \
+    -DCMAKE_CXX_FLAGS:STRING="$SLKCFLAGS" \
+    -DCMAKE_INSTALL_PREFIX=${INSTALL_TDE} \
+    -DLIB_SUFFIX=${LIBDIRSUFFIX} \
+    -DSYSCONF_INSTALL_DIR="/etc/trinity" \
+    -DMAN_INSTALL_DIR=${INSTALL_TDE}/man \
+    -DWITH_ARTS="ON" \
+    -DBUILD_ATLANTIK="ON" \
+    -DBUILD_DOC="ON" \
+    -DBUILD_KASTEROIDS="ON" \
+    -DBUILD_KATOMIC="ON" \
+    -DBUILD_KBACKGAMMON="ON" \
+    -DBUILD_KBATTLESHIP="ON" \
+    -DBUILD_KBLACKBOX="ON" \
+    -DBUILD_KBOUNCE="ON" \
+    -DBUILD_KENOLABA="ON" \
+    -DBUILD_KFOULEGGS="ON" \
+    -DBUILD_KGOLDRUNNER="ON" \
+    -DBUILD_KJUMPINGCUBE="ON" \
+    -DBUILD_KLICKETY="ON" \
+    -DBUILD_KLINES="ON" \
+    -DBUILD_KMAHJONGG="ON" \
+    -DBUILD_KMINES="ON" \
+    -DBUILD_KNETWALK="ON" \
+    -DBUILD_KOLF="ON" \
+    -DBUILD_KONQUEST="ON" \
+    -DBUILD_KPAT="ON" \
+    -DBUILD_KPOKER="ON" \
+    -DBUILD_KREVERSI="ON" \
+    -DBUILD_KSAME="ON" \
+    -DBUILD_KSHISEN="ON" \
+    -DBUILD_KSIRTET="ON" \
+    -DBUILD_KSMILETRIS="ON" \
+    -DBUILD_KSNAKE="ON" \
+    -DBUILD_KSOKOBAN="ON" \
+    -DBUILD_KSPACEDUEL="ON" \
+    -DBUILD_KTRON="ON" \
+    -DBUILD_KTUBERLING="ON" \
+    -DBUILD_LIBTDEGAMES="ON" \
+    -DBUILD_LSKAT="ON" \
+    -DBUILD_TWIN4="ON" \
+    ..
 
-# Configure the package
-LDFLAGS="${SLKLDFLAGS}" \
-CFLAGS="${SLKCFLAGS} $TQT_INCLUDE_PATH" \
-CXXFLAGS="${SLKCFLAGS}" \
-../configure \
-   --prefix=${INSTALL_TDE} \
-   --sysconfdir="/etc/trinity" \
-   --mandir=${INSTALL_TDE}/man \
-   --disable-rpath \
-   --enable-closure
 
-ChooseGames
+# don't package carddecks if they're not needed for chosen games:
+[[ ! $(grep -E "kpat|kpoker|lskat" cmake_install.cmake) ]] && sed -i '/carddecks/d' libtdegames/cmake_install.cmake
+# docs for chosen games only:
+## output list of available docs
+grep include doc/cmake_install.cmake |rev |cut -d "/" -f 2|rev | while read line
+do
+## compare to selected packages & remove available docs if not in list
+[[ ! $(grep $line cmake_install.cmake) ]] && sed -i "/$line/d" doc/cmake_install.cmake
+: # need something here to prevent exit 1
+done
+
+
   make $NUMJOBS || exit 1
   make DESTDIR=$PKG install || exit 1
 cd -

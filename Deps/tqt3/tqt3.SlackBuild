@@ -93,6 +93,7 @@ make install INSTALL_ROOT=$PKG || exit 1
 
 # Add this to the doinst.sh:
 mkdir -p $PKG/install
+[[ $PREPEND != yes ]] && \
 cat <<EOINS >> $PKG/install/doinst.sh
 # Add TQt library directories to /etc/ld.so.conf:
 if ! grep ${INSTALL_TDE}/lib${LIBDIRSUFFIX} /etc/ld.so.conf 1> /dev/null 2> /dev/null ; then
@@ -112,6 +113,28 @@ sed -i "s|pkgconfig$|pkgconfig:${INSTALL_TDE}/lib${LIBDIRSUFFIX}/pkgconfig|g" /e
 sed -i "s|pkgconfig$|pkgconfig:${INSTALL_TDE}/lib${LIBDIRSUFFIX}/pkgconfig|g" /etc/profile.d/pkgconfig.csh
 fi
 
+EOINS
+
+## Removing any existing TDE libs paths and re-installing prevents duplication -
+## upgradepkg runs installpkg, and hence doinst.sh, twice, also generating the double colon.
+[[ $PREPEND == yes ]] && \
+cat <<EOINS >> $PKG/install/doinst.sh
+# Add TQt library directories to /etc/ld.so.conf:
+sed -i "\|${INSTALL_TDE}/lib${LIBDIRSUFFIX}|d" /etc/ld.so.conf
+sed -i "1i ${INSTALL_TDE}/lib${LIBDIRSUFFIX}" /etc/ld.so.conf
+sed -i "1i $TQTDIR-$VERSION/lib" /etc/ld.so.conf
+if [ -x /sbin/ldconfig ]; then
+  /sbin/ldconfig 2> /dev/null
+fi
+
+# Update PKG_CONFIG_PATH:
+sed -i "s|${INSTALL_TDE}/lib${LIBDIRSUFFIX}/pkgconfig||g;s|:$||g" /etc/profile.d/pkgconfig.{,c}sh
+sed -i "s|PKG_CONFIG_PATH=|PKG_CONFIG_PATH=${INSTALL_TDE}/lib${LIBDIRSUFFIX}/pkgconfig:|g;s|::|:|g" /etc/profile.d/pkgconfig.sh
+sed -i "s|PKG_CONFIG_PATH |PKG_CONFIG_PATH ${INSTALL_TDE}/lib${LIBDIRSUFFIX}/pkgconfig:|g;s|::|:|g" /etc/profile.d/pkgconfig.csh
+
+EOINS
+
+cat <<EOINS >> $PKG/install/doinst.sh
 # Update the desktop database:
 if [ -x usr/bin/update-desktop-database ]; then
   chroot . /usr/bin/update-desktop-database usr/share/applications > /dev/null 2>&1

@@ -38,18 +38,18 @@ echo "
 # exactly 11 lines for the formatting to be correct.  It's also customary to
 # leave one space after the ':'.
 
-          |-----handy-ruler------------------------------------------------------|
-tdenetwork: tdenetwork (networking applications)
-tdenetwork:
-tdenetwork: Networking applications for TDE
-tdenetwork:
-tdenetwork:
-tdenetwork:
-tdenetwork:
-tdenetwork:
-tdenetwork:
-tdenetwork:
-tdenetwork: Home: https://www.trinitydesktop.org/index.php
+$PRGNAM|-----handy-ruler------------------------------------------------------|
+$PRGNAM: $PRGNAM (networking applications)
+$PRGNAM:
+$PRGNAM: Networking applications for TDE
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM: Home: https://www.trinitydesktop.org/index.php
 " > $PKG/install/slack-desc
 }
 
@@ -62,29 +62,80 @@ tar -xf ${SOURCE}
 
 cd ${PRGNAM}
 
+# If speex is installed, include it in the build for jingle
+[[ $(grep speex.h /var/log/packages/*speex*) ]] 2>/dev/null && SPX="ON"
+
 # list only files > zero bytes
 DOCS=$(for file in AUTHORS* ChangeLog* COPYING* FAQ* INSTALL* KNOWNBUGS* NEWS* README* TODO* *.lsm;do [[ -s $file ]] && ls -1 $file;done ) || true
-
-
-# update admin for installed version of libtool
-cp /$(grep -h ltmain.sh /var/log/packages/libtool*) admin/
-cp /$(grep -h libtool.m4 /var/log/packages/libtool*) admin/libtool.m4.in
-
-make -f admin/Makefile.common
 
 chown -R root:root .
 chmod -R u+w,go+r-w,a+rX-st .
 
-# Configure the package
-LDFLAGS="${SLKLDFLAGS}" \
-CFLAGS="${SLKCFLAGS} $TQT_INCLUDE_PATH" \
-CXXFLAGS="${SLKCFLAGS}" \
-./configure \
-   --prefix=${INSTALL_TDE} \
-   --sysconfdir="/etc/trinity" \
-   --mandir=${INSTALL_TDE}/man \
-   --disable-rpath \
-   --enable-closure
+mkdir -p build-${PRGNAM}
+cd build-${PRGNAM}
+
+## If changing any of these options, READ CMakeLists.txt for info on interdependencies ..
+  cmake \
+    -DCMAKE_C_FLAGS:STRING="$SLKCFLAGS $TQT_INCLUDE_PATH" \
+    -DCMAKE_CXX_FLAGS:STRING="$SLKCFLAGS" \
+    -DCMAKE_INSTALL_PREFIX=${INSTALL_TDE} \
+    -DLIB_SUFFIX=${LIBDIRSUFFIX} \
+    -DSYSCONF_INSTALL_DIR="/etc/trinity" \
+    -DMAN_INSTALL_DIR=${INSTALL_TDE}/man \
+    -DWITH_ARTS="ON" \
+    -DWITH_JINGLE="ON" \
+    -DWITH_SPEEX=${SPX:-"OFF"} \
+    -DWITH_GSM="OFF" \
+    -DWITH_XMMS="OFF" \
+    -DWITH_SLP="OFF" \
+    -DBUILD_DCOPRSS="ON" \
+    -DBUILD_DOC="ON" \
+    -DBUILD_FILESHARING="ON" \
+    -DBUILD_KDICT="ON" \
+    -DBUILD_TDEDNSSD="ON" \
+    -DBUILD_TDEFILE_PLUGINS="ON" \
+    -DBUILD_KGET="ON" \
+    -DBUILD_KNEWSTICKER="ON" \
+    -DBUILD_KPF="ON" \
+    -DBUILD_KPPP="OFF" \
+    -DBUILD_KRDC="ON" \
+    -DBUILD_KRFB="ON" \
+    -DBUILD_KSIRC="ON" \
+    -DBUILD_KTALKD="ON" \
+    -DBUILD_LANBROWSING="ON" \
+    -DBUILD_LIBRSS="ON" \
+    -DBUILD_WIFI="ON" \
+    -DBUILD_KOPETE="ON" \
+    -DBUILD_KOPETE_PROTOCOL_TESTBED="ON" \
+    -DBUILD_KOPETE_PROTOCOL_GROUPWISE="ON" \
+    -DBUILD_KOPETE_PROTOCOL_MSN="ON" \
+    -DBUILD_KOPETE_PROTOCOL_IRC="ON" \
+    -DBUILD_KOPETE_PROTOCOL_OSCAR="ON" \
+    -DBUILD_KOPETE_PROTOCOL_YAHOO="ON" \
+    -DBUILD_KOPETE_PROTOCOL_WINPOPUP="ON" \
+    -DBUILD_KOPETE_PROTOCOL_SMS="ON" \
+    -DBUILD_KOPETE_PROTOCOL_JABBER="ON" \
+    -DBUILD_KOPETE_PROTOCOL_GADU="OFF" \
+    -DBUILD_KOPETE_PROTOCOL_MEANWHILE="OFF" \
+    -DBUILD_KOPETE_PLUGIN_LATEX="ON" \
+    -DBUILD_KOPETE_PLUGIN_AUTOREPLACE="ON" \
+    -DBUILD_KOPETE_PLUGIN_HISTORY="ON" \
+    -DBUILD_KOPETE_PLUGIN_CONTACTNOTES="ON" \
+    -DBUILD_KOPETE_PLUGIN_CRYPTOGRAPHY="ON" \
+    -DBUILD_KOPETE_PLUGIN_CONNECTIONSTATUS="ON" \
+    -DBUILD_KOPETE_PLUGIN_TRANSLATOR="ON" \
+    -DBUILD_KOPETE_PLUGIN_NOWLISTENING="ON" \
+    -DBUILD_KOPETE_PLUGIN_WEBPRESENCE="ON" \
+    -DBUILD_KOPETE_PLUGIN_TEXTEFFECT="ON" \
+    -DBUILD_KOPETE_PLUGIN_HIGHLIGHT="ON" \
+    -DBUILD_KOPETE_PLUGIN_ALIAS="ON" \
+    -DBUILD_KOPETE_PLUGIN_MOTIONAUTOAWAY="ON" \
+    -DBUILD_KOPETE_PLUGIN_NETMEETING="ON" \
+    -DBUILD_KOPETE_PLUGIN_ADDBOOKMARKS="ON" \
+    -DBUILD_KOPETE_PLUGIN_STATISTICS="ON" \
+    -DBUILD_KOPETE_PLUGIN_SMPPPDCS="ON" \
+    -Wno-dev \
+    ..
 
 
   make $NUMJOBS || exit 1
@@ -114,7 +165,7 @@ fi
 EOINS
 
 mkdir -p $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
-(cd ${PRGNAM};cp -a $DOCS $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION) || true
+cp -a $DOCS $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION || true
 cat $SRCDIR/$(basename $0) > $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 chown -R root:root $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
 find $PKG${INSTALL_TDE}/doc -type f -exec chmod 644 {} \;
@@ -130,8 +181,7 @@ makepkg --linkadd y --chown n $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG
 cd $OUTPUT
 md5sum ${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} > ${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz}.md5
 cd -
-cat $PKG/install/slack-desc | grep "^${PRGNAM}" > $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.txt
+cat $PKG/install/slack-desc | grep "^${PRGNAM}" | grep -v handy > $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.txt
 
 # Restore the original umask:
 umask ${_UMASK_}
- 

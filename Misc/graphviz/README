@@ -1,0 +1,14 @@
+Graphviz is open source graph visualization software.  It has several
+main graph layout programs.  It also has web and interactive graphical
+interfaces, and auxiliary tools, libraries, and language bindings.
+
+Graph visualization is a way of representing structural information as
+diagrams of abstract graphs and networks.  Automatic graph drawing has
+many important applications in software engineering, database and web
+design, networking, and in visual interfaces for many other domains.
+
+gts is an optional dependency.
+
+------------------------------
+pdf and html documentation is not built by default in the SB.
+To build it, comment out 'source $SRCDIR/patches && rmdoc' in the script [c. line 97].
