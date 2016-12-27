@@ -77,6 +77,8 @@ sed -i -e 's|wav )|wav )\nadd_subdirectory( speex )|' \
 # If libmp4v2 is installed, use mp4 metadata sources in build, otherwise use m4a ..
 [[ $(grep -E "mp4.h|mp4v2.h" /var/log/packages/*) ]] && LMP4V2="ON" || sed -i 's|tagmp4|tagm4a|' amarok/src/metadata/CMakeLists.txt
 
+# See if xine-lib package from Slackware is installed. (Need this to play music so hopefully it is.)
+[[ $(grep -E "xine.h" /var/log/packages/*) ]] && XINE="ON"
 
 # list only files > zero bytes
 DOCS=$(for file in AUTHORS* ChangeLog* COPYING* FAQ* INSTALL* KNOWNBUGS* NEWS* README* TODO* *.lsm;do [[ -s $file ]] && ls -1 $file;done ) || true
@@ -118,7 +120,7 @@ cd build-${PRGNAM}
     -DWITH_MP4V2=${LMP4V2:-"OFF"} \
     -DWITH_LIBVISUAL="OFF" \
     -DWITH_KONQSIDEBAR="OFF" \
-    -DWITH_XINE="ON" \
+    -DWITH_XINE=${XINE:-"OFF"} \
     -DWITH_YAUAP="OFF" \
     -DWITH_AKODE="OFF" \
     -DWITH_IPOD="OFF" \
