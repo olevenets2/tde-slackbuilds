@@ -284,7 +284,7 @@ Non-TDE apps are in the Misc category and don't need the \Zb\Zr\Z4R\Znequired TD
 "Libs/libksquirrel" "A set of image codecs for KSquirrel" off "\Zb\Z6 Required for ksquirrel \Zn" \
 "Apps/abakus" "PC calculator" off "\Zb\Z6 optional dependency l/mpfr which requires l/gmp \Zn" \
 " Misc/libmp4v2" "Create and modify mp4 files" off "\Zb\Z6   \Zn" \
-"Apps/tdeamarok" "A Music Player" off "\Zb\Z6  Optional dependencies - libmp4v2, speex \Zn" \
+"Apps/tdeamarok" "A Music Player" off "\Zb\Z6 Optional dependencies - xine-lib, libmp4v2, speex, moodbar \Zn" \
 "Apps/digikam" "A digital photo management application + Showfoto viewer" off "\Zb\Z6 Requires kipi-plugins tdelibkdcraw tdelibkexiv2 tdelibkipi.  \Zn" \
 "Apps/dolphin" "Dolphin file manager for TDE" off "\Zb\Z6   \Zn" \
 "Apps/filelight" "Graphical diskspace display" off "\Zb\Z6 requires x/xdpyinfo in use \Zn" \
