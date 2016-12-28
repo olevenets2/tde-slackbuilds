@@ -6,3 +6,6 @@
 2016-12-27 Added Apps/{knmap,kscope,tdesudo} and Misc/graphviz
            Modified BUILD-TDE.sh and tqt3.SlackBuild for ld.so.conf option
 12/27/2016 Added moodbar in Misc, as optional dep for {tde}amarok           
+12/27/2016 Added libcarddav. Added an alternate dektop file for dolphin that just changes 
+           the icon name from d3lphin to dolphin. You can undo this in the SlackBuild if this is undesired.
+                   

@@ -169,6 +169,13 @@ find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
 mkdir -p $PKG/install
 SlackDesc
 
+# Replace the desktop file, with an alternate one. This one changes the 
+# icon name from d3lphin to dolphin. To allow easy system-wide icon 
+# themeing changes. No other alterations made.
+mv -v $PKG/opt/trinity/share/applications/tde/d3lphin.desktop \
+$PKG/opt/trinity/share/applications/tde/d3lphine.desktop.orig
+cp -v $SRCDIR/d3lphin.desktop $PKG/opt/trinity/share/applications/tde/d3lphin.desktop
+
 cd $PKG
 makepkg --linkadd y --chown n $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} 
 cd $OUTPUT
