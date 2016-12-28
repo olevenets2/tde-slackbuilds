@@ -28,15 +28,17 @@ BUILD=${BUILD:-1}
 TAG=${TAG:-}
 
 SRCURL="http://pkgs.fedoraproject.org/repo/pkgs/${PRGNAM}/${PRGNAM}-${VERSION}.tar.gz/28c8eb65e83b30f71b84be4fab949360/${PRGNAM}-${VERSION}.tar.gz"
+ARCHIVE_TYPE="tar.gz"
 source ../../get-source.sh
 
 cd $TMP/tmp-$PRGNAM
 tar -xf ${SOURCE}
 
+cd ${PRGNAM}-${VERSION}
+
 # list only files > zero bytes
 DOCS=$(for file in AUTHORS* ChangeLog* COPYING* FAQ* INSTALL* KNOWNBUGS* NEWS* README* TODO* *.lsm;do [[ -s $file ]] && ls -1 $file;done ) || true
 
-cd ${PRGNAM}-${VERSION}
 chown -R root:root .
 chmod -R u+w,go+r-w,a+rX-st .
 
