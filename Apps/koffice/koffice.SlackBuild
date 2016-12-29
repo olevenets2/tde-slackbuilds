@@ -49,7 +49,6 @@ chmod -R u+w,go+r-w,a+rX-st .
 mkdir -p build-${PRGNAM}
 cd build-${PRGNAM}
 
-# This will not compile if Slackware's imagemagick package is installed
 LDFLAGS="${SLKLDFLAGS} $($(which Magick++-config) --libs)" \
 CFLAGS="${SLKCFLAGS} $TQT_INCLUDE_PATH" \
 CXXFLAGS="${SLKCFLAGS}" \
