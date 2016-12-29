@@ -22,7 +22,7 @@
 #   OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 #   SUCH DAMAGE.
 
-PRGNAM=kscope
+PRGNAM=ksensors
 VERSION=${VERSION:-$TDEVERSION}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_tde}
@@ -39,15 +39,15 @@ echo "
 
 $PRGNAM|-----handy-ruler------------------------------------------------------|
 $PRGNAM:
-$PRGNAM: $PRGNAM is a TDE-based source-editing environment for C and C-style
-$PRGNAM: languages. Primarily, it is a front-end to the veteran Cscope,
-$PRGNAM: a source-code browser originally developed at Bell Labs.
+$PRGNAM: $PRGNAM is a sensors frontend for TDE.
 $PRGNAM:
+$PRGNAM: lm_sensors:
+$PRGNAM: Read the 'sensors-detect' man page for warnings on usage, then
+$PRGNAM: run 'sensors-detect' to scan for hardware monitoring chips.
 $PRGNAM:
 $PRGNAM: With language support for:
 $PRGNAM:
 $PRGNAM: en $langs
-$PRGNAM:
 $PRGNAM:
 " > $PKG/install/slack-desc
 }

@@ -288,7 +288,7 @@ Non-TDE apps are in the Misc category and don't need the \Zb\Zr\Z4R\Znequired TD
 "Apps/tdeamarok" "A Music Player" off "\Zb\Z6 Optional dependencies - xine-lib, libmp4v2, speex, moodbar \Zn" \
 "Apps/digikam" "A digital photo management application + Showfoto viewer" off "\Zb\Z6 Requires kipi-plugins tdelibkdcraw tdelibkexiv2 tdelibkipi.  \Zn" \
 "Apps/dolphin" "Dolphin file manager for TDE" off "\Zb\Z6   \Zn" \
-"Apps/filelight" "Graphical diskspace display" off "\Zb\Z6 requires x/xdpyinfo in use \Zn" \
+"Apps/filelight" "Graphical diskspace display" off "\Zb\Z6 Runtime requirement x/xdpyinfo \Zn" \
 "Apps/gtk-qt-engine" "A GTK+2 theme engine" off "\Zb\Z6   \Zn" \
 "Apps/gtk3-tqt-engine" "A GTK+3 theme engine" off "\Zb\Z6   \Zn" \
 "Apps/tdegwenview" "An image viewer" off "\Zb\Z6 Requires kipi-plugins tdelibkdcraw tdelibkexiv2 tdelibkipi.  \Zn" \
@@ -301,9 +301,11 @@ Non-TDE apps are in the Misc category and don't need the \Zb\Zr\Z4R\Znequired TD
 "Apps/knemo" "The TDE Network Monitor" off "\Zb\Z6   \Zn" \
 "Apps/knights" "A graphical chess interface" off "\Zb\Z6   \Zn" \
 "Apps/knmap" "A graphical nmap interface" off "\Zb\Z6 Might need tdesudo \Zn" \
+"Apps/ksensors" "A graphical interface for sensors" off "\Zb\Z6 Runtime requirement ap/lm_sensors \Zn" \
 "Apps/kscope" "A source-editing environment for C and C-style languages." off "\Zb\Z6 Runtime options cscope [d/cscope], ctags [ap/vim], dot [graphviz] \Zn" \
 "Apps/kshutdown" "Shutdown utility for TDE" off "\Zb\Z6   \Zn" \
 "Apps/ksquirrel" "An image viewer with OpenGL and KIPI support." off "\Zb\Z6 Requires kipi-plugins tdelibkdcraw tdelibkexiv2 tdelibkipi libksquirrel. \Zn" \
+"Apps/kvpnc" "TDE frontend for various vpn clients" off "\Zb\Z6 Miscellaneous documentation will be in $(cat $TMPVARS/INSTALL_TDE)/doc/kvpnc-$(cat $TMPVARS/TDEVERSION)  \Zn" \
 " Misc/potrace" "For tracing bitmaps to a vector graphics format" off "\Zb\Z6 Required for potracegui \Zn" \
 "Apps/potracegui" "A GUI for potrace" off "\Zb\Z6 Requires potrace \Zn" \
 "Apps/tde-style-lipstik" "lipstik theme" off "\Zb\Z6   \Zn" \
