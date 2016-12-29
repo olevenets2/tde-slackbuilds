@@ -311,6 +311,7 @@ Non-TDE apps are in the Misc category and don't need the \Zb\Zr\Z4R\Znequired TD
 "Apps/tdeio-locate" "TDE frontend for the locate command" off "\Zb\Z6   \Zn" \
 "Apps/tdesudo" "Graphical frontend for the sudo command" off "\Zb\Z6   \Zn" \
 "Apps/twin-style-crystal" "twin theme" off "\Zb\Z6   \Zn" \
+"Apps/koffice" "Office Suite" off "\Zb\Z6   \Zn" \
 " Misc/GraphicsMagick" "Swiss army knife of image processing" off "\Zb\Z6   \Zn" \
 " Misc/graphviz" "Graph Visualization" off "\Zb\Z6 Optional for kscope. pdf/html docs not built by default  \Zn" \
 " Misc/tidy-html5" "Corrects and cleans up HTML and XML documents" off "\Zb\Z6 Optional for Quanta+ [tdewebdev] \Zn" \
