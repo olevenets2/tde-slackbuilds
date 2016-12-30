@@ -77,7 +77,6 @@ cd build-${PRGNAM}
     -DWITH_TDEHWLIB="ON" \
     -DWITH_UPOWER="ON" \
     -DWITH_PCRE="ON" \
-    -DWITH_ASPELL="OFF" \
     -DBUILD_ALL="ON" \
     -Wno-dev \
     ..
