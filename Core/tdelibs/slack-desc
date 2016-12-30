@@ -10,7 +10,7 @@ tdelibs: tdelibs (TDE libraries)
 tdelibs:
 tdelibs: These are the Trinity Desktop Environment [TDE]
 tdelibs: libraries. This package includes libraries that are central
-tdelibs: to the development and execution of a KDE program, as well
+tdelibs: to the development and execution of a TDE program, as well
 tdelibs: as internationalization files for these libraries, misc HTML
 tdelibs: documentation, theme modules, and regression tests.
 tdelibs:
