@@ -72,7 +72,7 @@ cd build-${PRGNAM}
     -DWITH_LIBART="ON" \
     -DWITH_LIBUSB="OFF" \
     -DWITH_XDMCP="ON" \
-    -DWITH_XINERAMA="OFF" \
+    -DWITH_XINERAMA="ON" \
     -DWITH_ARTS="ON" \
     -DWITH_TDEHWLIB="ON" \
     -DWITH_UPOWER="ON" \

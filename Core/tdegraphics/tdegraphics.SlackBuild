@@ -57,7 +57,7 @@ cd build-${PRGNAM}
     -DWITH_T1LIB="OFF" \
     -DWITH_TIFF="OFF" \
     -DWITH_OPENEXR="OFF" \
-    -DWITH_PDF="OFF" \
+    -DWITH_PDF="ON" \
     -DBUILD_ALL="ON" \
     -DBUILD_TDEFILE_PLUGINS="ON" \
     -DBUILD_KUICKSHOW=${KUICKSHOW:-OFF} \
