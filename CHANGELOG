@@ -10,3 +10,6 @@
            the icon name from d3lphin to dolphin. You can undo this in the SlackBuild if this is undesired.
 
 2016-12-29 Added Apps/{kvpnc,ksensors}
+01/01/2017 Update license year and add tde-slackbuild project as I no longer do this alone.
+           Commented out the desktop file change to d3lphin I previously made. Will leave it for an option
+           for the users who want it, like me. -Thorn Inurcide
