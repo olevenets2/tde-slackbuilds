@@ -45,7 +45,7 @@ build_core()
 # All rights reserved.
 #
 # Copyright 2015-2017 Thorn Inurcide
-# Copyright 2016-2017 Ray-V
+# Copyright 2015-2017 tde-slackbuilds project on GitHub
 #
 # Based on the xfce-build-all.sh script by Patrick J. Volkerding
 #
