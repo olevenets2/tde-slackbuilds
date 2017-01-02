@@ -141,18 +141,17 @@ cd build-${PRGNAM}
   make DESTDIR=$PKG install || exit 1
 cd -
 
-# Add this to the doinst.sh:
 mkdir -p $PKG/install
 cat <<EOINS >> $PKG/install/doinst.sh
 # Update the desktop database:
 if [ -x usr/bin/update-desktop-database ]; then
-  chroot . /usr/bin/update-desktop-database usr/share/applications > /dev/null 2>&1
+  chroot . /usr/bin/update-desktop-database ${INSTALL_TDE}/applications > /dev/null 2>&1
 fi
 
 # Update hicolor theme cache:
 if [ -d usr/share/icons/hicolor ]; then
   if [ -x /usr/bin/gtk-update-icon-cache ]; then
-    chroot . /usr/bin/gtk-update-icon-cache -f -t usr/share/icons/hicolor 1> /dev/null 2> /dev/null
+    chroot . /usr/bin/gtk-update-icon-cache -f -t ${INSTALL_TDE}/icons/hicolor 1> /dev/null 2> /dev/null
   fi
 fi
 
@@ -175,9 +174,9 @@ SlackDesc
 # themeing changes. No other alterations made. I've decided this shouldn't
 # be default. I will uncomment this when I build, and others can do the 
 # the same if they wish =]
-#mv -v $PKG/opt/trinity/share/applications/tde/d3lphin.desktop \
-#$PKG/opt/trinity/share/applications/tde/d3lphine.desktop.orig
-#cp -v $SRCDIR/d3lphin.desktop $PKG/opt/trinity/share/applications/tde/d3lphin.desktop
+#mv -v $PKG/${INSTALL_TDE}/share/applications/tde/d3lphin.desktop \
+#$PKG/${INSTALL_TDE}/share/applications/tde/d3lphine.desktop.orig
+#cp -v $SRCDIR/d3lphin.desktop $PKG/${INSTALL_TDE}/share/applications/tde/d3lphin.desktop
 
 cd $PKG
 makepkg --linkadd y --chown n $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} 
