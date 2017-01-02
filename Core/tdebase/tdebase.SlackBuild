@@ -30,16 +30,15 @@ VERSION=${VERSION:-$TDEVERSION}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_tde}
 
-DOCS="AUTHORS COPYING* README*"
-
 source ../../get-source.sh
 
 cd $TMP/tmp-$PRGNAM
-echo "
-Extracting the source from the ${PRGNAM} archive ..."
 tar -xf ${SOURCE}
 
 cd ${PRGNAM}
+
+# list only files > zero bytes
+DOCS=$(for file in AUTHORS* ChangeLog* COPYING* FAQ* INSTALL* KNOWNBUGS* LICEN?E* NEWS* *README* TODO* *.lsm;do [[ -s $file ]] && ls -1 $file;done ) || true
 
 chown -R root:root .
 chmod -R u+w,go+r-w,a+rX-st .
@@ -52,6 +51,8 @@ cd build-${PRGNAM}
     -DCMAKE_CXX_FLAGS:STRING="$SLKCFLAGS" \
     -DCMAKE_C_FLAGS_RELEASE:STRING="$SLKCFLAGS" \
     -DCMAKE_CXX_FLAGS_RELEASE:STRING="$SLKCFLAGS" \
+    -DCMAKE_C_COMPILER=${COMPILER} \
+    -DCMAKE_CXX_COMPILER=${COMPILER_CXX} \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=${INSTALL_TDE} \
     -DSYSCONF_INSTALL_DIR="/etc/trinity" \
@@ -123,9 +124,35 @@ mkdir -p $PKG/etc/tde
 mv $PKG${INSTALL_TDE}/share/config/tdm $PKG/etc/tde
 ( cd $PKG${INSTALL_TDE}/share/config ; ln -sf ../../../etc/tde/tdm . )
 
+SlackDesc()
+{
+echo "
+# HOW TO EDIT THIS FILE:
+# The 'handy ruler' below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|'
+# on the right side marks the last column you can put a character in.  You must
+# make exactly 11 lines for the formatting to be correct.  It's also
+# customary to leave one space after the ':'.
+
+       |-----handy-ruler------------------------------------------------------|
+tdebase: tdebase (The Trinity Desktop base)
+tdebase:
+tdebase: tdebase is the second mandatory package (besides tdelibs) for the
+tdebase: Trinity Desktop Environment. Here we have various applications and
+tdebase: infrastructure files and libraries.
+tdebase:
+tdebase:
+tdebase:
+tdebase:
+tdebase:
+tdebase: Home: https://www.trinitydesktop.org/index.php
+" > $PKG/install/slack-desc
+}
+
 mkdir -p $PKG/install
-cat $SRCDIR/slack-desc > $PKG/install/slack-desc
 sed -e "s|\${INSTALL_TDE}|${INSTALL_TDE}|g" -e "s|\$TQTDIR|$TQTDIR|g" < $SRCDIR/doinst.sh > $PKG/install/doinst.sh
+
+SlackDesc
 
 cd $PKG
 makepkg --linkadd y --chown n $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz}

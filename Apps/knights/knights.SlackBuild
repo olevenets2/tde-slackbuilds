@@ -28,6 +28,65 @@ VERSION=${VERSION:-$TDEVERSION}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_tde}
 
+source ../../get-source.sh
+
+cd $TMP/tmp-$PRGNAM
+tar -xf ${SOURCE}
+
+cd applications
+cd ${PRGNAM}
+
+# list only files > zero bytes
+DOCS=$(for file in AUTHORS* ChangeLog* COPYING* CreatingThemes FAQ* INSTALL* KNOWNBUGS* LICEN?E* NEWS* *README* TODO* *.lsm;do [[ -s $file ]] && ls -1 $file;done ) || true
+
+# there is a Spanish language file in the source, but it has no translations in it ..
+# the included es.po file is a Google translation - if you're happy to use it,
+# then to include it in the build, put it in the same directory as this SB script
+cp $SRCDIR/es.po po || true
+#
+# set support for additional language(s) as per I18N variable
+# but only for languages available with this package
+langs="";for Lang in $I18N;do [[ -e po/$Lang".po" ]] && langs="$langs $Lang"".po";done
+sed -i "s|POFILES =.*$|POFILES =$langs|" po/Makefile.am
+langs=$(echo $langs | sed 's|.po||g')
+#
+# Only French and English help documents are in the source,
+# if French is not required, only package English docs
+[[ $langs != *fr* ]] && sed -i "s|LANGUAGES = en fr|LANGUAGES = en|" doc/Makefile.am
+
+# update admin for installed version of libtool
+cp /$(grep -h ltmain.sh /var/log/packages/libtool*) admin/
+cp /$(grep -h libtool.m4 /var/log/packages/libtool*) admin/libtool.m4.in
+
+make -f admin/Makefile.common
+
+chown -R root:root .
+chmod -R u+w,go+r-w,a+rX-st .
+
+LDFLAGS="${SLKLDFLAGS}" \
+CFLAGS="${SLKCFLAGS} $TQT_INCLUDE_PATH" \
+CXXFLAGS="${SLKCFLAGS}" \
+CC=${COMPILER} \
+CXX=${COMPILER_CXX} \
+./configure \
+   --prefix=${INSTALL_TDE} \
+   --sysconfdir="/etc/trinity" \
+   --mandir=${INSTALL_TDE}/man \
+   --disable-rpath \
+   --enable-closure
+
+  make $NUMJOBS || exit 1
+  make DESTDIR=$PKG install || exit 1
+cd -
+
+mkdir -p $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
+(cd ${PRGNAM};cp -a $DOCS $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION) || true
+cat $SRCDIR/$(basename $0) > $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
+chown -R root:root $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
+find $PKG${INSTALL_TDE}/doc -type f -exec chmod 644 {} \;
+
+find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
+  | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
 
 SlackDesc()
 {
@@ -54,75 +113,8 @@ knights:
 " > $PKG/install/slack-desc
 }
 
-source ../../get-source.sh
-
-cd $TMP/tmp-$PRGNAM
-echo "
-Extracting the source from the ${PRGNAM} archive ..."
-tar -xf ${SOURCE}
-
-cd applications
-cd ${PRGNAM}
-
-
-# list only files > zero bytes
-DOCS=$(for file in AUTHORS* ChangeLog* COPYING* CreatingThemes FAQ* INSTALL* KNOWNBUGS* LICEN?E* NEWS* *README* TODO* *.lsm;do [[ -s $file ]] && ls -1 $file;done ) || true
-
-
-# there is a Spanish language file in the source, but it has no translations in it ..
-# the included es.po file is a Google translation - if you're happy to use it,
-# then to include it in the build, put it in the same directory as this SB script
-cp $SRCDIR/es.po po || true
-#
-# set support for additional language(s) as per I18N variable
-# but only for languages available with this package
-langs="";for Lang in $I18N;do [[ -e po/$Lang".po" ]] && langs="$langs $Lang"".po";done
-sed -i "s|POFILES =.*$|POFILES =$langs|" po/Makefile.am
-langs=$(echo $langs | sed 's|.po||g')
-#
-# Only French and English help documents are in the source,
-# if French is not required, only package English docs
-[[ $langs != *fr* ]] && sed -i "s|LANGUAGES = en fr|LANGUAGES = en|" doc/Makefile.am
-
-
-# update admin for installed version of libtool
-cp /$(grep -h ltmain.sh /var/log/packages/libtool*) admin/
-cp /$(grep -h libtool.m4 /var/log/packages/libtool*) admin/libtool.m4.in
-
-make -f admin/Makefile.common
-
-chown -R root:root .
-chmod -R u+w,go+r-w,a+rX-st .
-
-
-# Configure the package
-LDFLAGS="${SLKLDFLAGS}" \
-CFLAGS="${SLKCFLAGS} $TQT_INCLUDE_PATH" \
-CXXFLAGS="${SLKCFLAGS}" \
-./configure \
-   --prefix=${INSTALL_TDE} \
-   --sysconfdir="/etc/trinity" \
-   --mandir=${INSTALL_TDE}/man \
-   --disable-rpath \
-   --enable-closure
-
-
-  make $NUMJOBS || exit 1
-  make DESTDIR=$PKG install || exit 1
-cd -
-
-mkdir -p $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
-(cd ${PRGNAM};cp -a $DOCS $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION) || true
-cat $SRCDIR/$(basename $0) > $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
-chown -R root:root $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
-find $PKG${INSTALL_TDE}/doc -type f -exec chmod 644 {} \;
-
-find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
-  | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
-
 mkdir -p $PKG/install
 SlackDesc
-
 
 cd $PKG
 makepkg --linkadd y --chown n $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} 

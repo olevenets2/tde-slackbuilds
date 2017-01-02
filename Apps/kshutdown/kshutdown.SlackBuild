@@ -31,7 +31,6 @@ TAG=${TAG:-_tde}
 source ../../get-source.sh
 
 cd $TMP/tmp-$PRGNAM
-echo -e "\nExtracting the source from the ${PRGNAM} archive ..."
 tar -xf ${SOURCE}
 
 cd applications
@@ -53,10 +52,11 @@ chmod -R u+w,go+r-w,a+rX-st .
 mkdir -p build-${PRGNAM}
 cd build-${PRGNAM}
 
-# Configure the package
 LDFLAGS="${SLKLDFLAGS}" \
 CFLAGS="${SLKCFLAGS} $TQT_INCLUDE_PATH" \
 CXXFLAGS="${SLKCFLAGS}" \
+CC=${COMPILER} \
+CXX=${COMPILER_CXX} \
 ../configure \
    --prefix=${INSTALL_TDE} \
    --sysconfdir="/etc/trinity" \
@@ -64,10 +64,8 @@ CXXFLAGS="${SLKCFLAGS}" \
    --disable-rpath \
    --enable-closure
 
-
   make ${NUMJOBS:-} || exit 1
   make DESTDIR=$PKG install || exit 1
-
 
 mkdir -p $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
 (cd ../;cp -a $DOCS $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION) || true

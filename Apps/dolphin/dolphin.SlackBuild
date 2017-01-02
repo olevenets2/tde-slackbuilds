@@ -28,32 +28,6 @@ VERSION=${VERSION:-$TDEVERSION}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_tde}
 
-
-SlackDesc()
-{
-echo "
-# HOW TO EDIT THIS FILE:
-# The 'handy ruler' below makes it easier to edit a package description.  Line
-# up the first '|' above the ':' following the base package name, and the '|' on
-# the right side marks the last column you can put a character in.  You must make
-# exactly 11 lines for the formatting to be correct.  It's also customary to
-# leave one space after the ':'.
-
-$PRGNAM|-----handy-ruler------------------------------------------------------|
-$PRGNAM: $PRGNAM (Dolphin file manager for TDE)
-$PRGNAM:
-$PRGNAM: Dolphin file manager for TDE
-$PRGNAM:
-$PRGNAM:
-$PRGNAM: With language support for:
-$PRGNAM:
-$PRGNAM: en $langs
-$PRGNAM:
-$PRGNAM:
-$PRGNAM: Home: https://www.trinitydesktop.org/index.php 
-" > $PKG/install/slack-desc
-}
-
 source ../../get-source.sh
 
 cd $TMP/tmp-$PRGNAM
@@ -130,16 +104,51 @@ cd build-${PRGNAM}
   cmake \
     -DCMAKE_C_FLAGS:STRING="$SLKCFLAGS $TQT_INCLUDE_PATH" \
     -DCMAKE_CXX_FLAGS:STRING="$SLKCFLAGS" \
+    -DCMAKE_C_COMPILER=${COMPILER} \
+    -DCMAKE_CXX_COMPILER=${COMPILER_CXX} \
     -DCMAKE_INSTALL_PREFIX=${INSTALL_TDE} \
     -DLIB_SUFFIX=${LIBDIRSUFFIX} \
     -DSYSCONF_INSTALL_DIR="/etc/trinity" \
     -DMAN_INSTALL_DIR=${INSTALL_TDE}/man \
     ..
 
-
   make $NUMJOBS || exit 1
   make DESTDIR=$PKG install || exit 1
 cd -
+
+mkdir -p $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
+cp -a $DOCS $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION || true
+cat $SRCDIR/$(basename $0) > $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
+chown -R root:root $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
+find $PKG${INSTALL_TDE}/doc -type f -exec chmod 644 {} \;
+
+find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
+  | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
+
+SlackDesc()
+{
+echo "
+# HOW TO EDIT THIS FILE:
+# The 'handy ruler' below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|' on
+# the right side marks the last column you can put a character in.  You must make
+# exactly 11 lines for the formatting to be correct.  It's also customary to
+# leave one space after the ':'.
+
+$PRGNAM|-----handy-ruler------------------------------------------------------|
+$PRGNAM: $PRGNAM (Dolphin file manager for TDE)
+$PRGNAM:
+$PRGNAM: Dolphin file manager for TDE
+$PRGNAM:
+$PRGNAM:
+$PRGNAM: With language support for:
+$PRGNAM:
+$PRGNAM: en $langs
+$PRGNAM:
+$PRGNAM:
+$PRGNAM: Home: https://www.trinitydesktop.org/index.php 
+" > $PKG/install/slack-desc
+}
 
 mkdir -p $PKG/install
 cat <<EOINS >> $PKG/install/doinst.sh
@@ -157,16 +166,6 @@ fi
 
 EOINS
 
-mkdir -p $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
-cp -a $DOCS $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION || true
-cat $SRCDIR/$(basename $0) > $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
-chown -R root:root $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
-find $PKG${INSTALL_TDE}/doc -type f -exec chmod 644 {} \;
-
-find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
-  | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
-
-mkdir -p $PKG/install
 SlackDesc
 
 # Replace the desktop file, with an alternate one. This one changes the 

@@ -8,5 +8,8 @@ Will look in to this when I have more free time. My apologies.
 Chalk crashes when trying to launch it. (At least for me) The rest of Koffice
 seems to work fine.
 
+Koffice and kaffeine aren't compiling with Clang. So even if you select to build 
+with Clang, GCC is used.
+
 THE BUG REPORTS FOR EVERYTHING IF YOU'RE INTERESTED
 https://bugs.trinitydesktop.org/buglist.cgi?quicksearch=ALL

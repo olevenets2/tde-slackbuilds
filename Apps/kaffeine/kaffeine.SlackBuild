@@ -50,9 +50,12 @@ chmod -R u+w,go+r-w,a+rX-st .
 mkdir -p build-${PRGNAM}
 cd build-${PRGNAM}
 
+# Refusing to compile with Clang 
 LDFLAGS="${SLKLDFLAGS}" \
 CFLAGS="${SLKCFLAGS} $TQT_INCLUDE_PATH" \
 CXXFLAGS="${SLKCFLAGS}" \
+CC="gcc" \
+CXX="g++" \
 ../configure \
    --prefix=${INSTALL_TDE} \
    --sysconfdir="/etc/trinity" \

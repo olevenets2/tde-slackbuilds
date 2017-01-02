@@ -32,6 +32,43 @@ VERSION=${VERSION:-3.5.0}
 BUILD=${BUILD:-1}
 TAG=${TAG:-}
 
+SRCURL="http://pypi.python.org/packages/source/l/$PRGNAM/$PRGNAM-$VERSION.tar.gz"
+ARCHIVE_TYPE="tar.gz"
+source ../../get-source.sh
+
+cd $TMP/tmp-$PRGNAM
+tar -xf ${SOURCE}
+
+cd ${PRGNAM}-${VERSION}
+
+# list only files > zero bytes
+DOCS=$(for file in *.txt PKG-INFO doc/licenses/* doc/FAQ.txt;do [[ -s $file ]] && ls -1 $file;done ) || true
+
+chown -R root:root .
+chmod -R u+w,go+r-w,a+rX-st .
+
+python setup.py build --with-unicode-strings || exit 1
+python setup.py install --skip-build --root=$PKG || exit 1
+
+if $(python3 -c 'import os' 2>/dev/null); then
+  python3 setup.py build --with-unicode-strings || exit 1
+  python3 setup.py install --skip-build --root=$PKG || exit 1
+fi
+
+mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a $DOCS $PKG/usr/doc/$PRGNAM-$VERSION || true
+cat $SRCDIR/$(basename $0) > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
+chown -R root:root $PKG/usr/doc/$PRGNAM-$VERSION
+find $PKG/usr/doc -type f -exec chmod 644 {} \;
+
+if [ -d $PKG/usr/man ]; then
+  find $PKG/usr/man -type f -name "*.?" -exec gzip -9f {} \;
+  for i in $(find $PKG/usr/man -type l -name "*.?") ; do ln -s $( readlink $i ).gz $i.gz ; rm $i ; done
+fi
+
+find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
+  | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
+
 SlackDesc()
 {
 echo "
@@ -56,46 +93,6 @@ $PRGNAM:
 $PRGNAM:
 " > $PKG/install/slack-desc
 }
-
-SRCURL="http://pypi.python.org/packages/source/l/$PRGNAM/$PRGNAM-$VERSION.tar.gz"
-ARCHIVE_TYPE="tar.gz"
-source ../../get-source.sh
-
-cd $TMP/tmp-$PRGNAM
-echo "
-Extracting the source from the ${PRGNAM} archive ..."
-tar -xf ${SOURCE}
-
-cd ${PRGNAM}-${VERSION}
-chown -R root:root .
-chmod -R u+w,go+r-w,a+rX-st .
-
-# list only files > zero bytes
-DOCS=$(for file in *.txt PKG-INFO doc/licenses/* doc/FAQ.txt;do [[ -s $file ]] && ls -1 $file;done ) || true
-
-python setup.py build --with-unicode-strings || exit 1
-python setup.py install --skip-build --root=$PKG || exit 1
-
-if $(python3 -c 'import os' 2>/dev/null); then
-  python3 setup.py build --with-unicode-strings || exit 1
-  python3 setup.py install --skip-build --root=$PKG || exit 1
-fi
-
-
-mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a $DOCS $PKG/usr/doc/$PRGNAM-$VERSION || true
-cat $SRCDIR/$(basename $0) > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
-chown -R root:root $PKG/usr/doc/$PRGNAM-$VERSION
-find $PKG/usr/doc -type f -exec chmod 644 {} \;
-
-if [ -d $PKG/usr/man ]; then
-  find $PKG/usr/man -type f -name "*.?" -exec gzip -9f {} \;
-  for i in $(find $PKG/usr/man -type l -name "*.?") ; do ln -s $( readlink $i ).gz $i.gz ; rm $i ; done
-fi
-
-
-find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
-  | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
 
 mkdir -p $PKG/install
 SlackDesc

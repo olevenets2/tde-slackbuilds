@@ -29,6 +29,74 @@ VERSION=${VERSION:-$TDEVERSION}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_tde}
 
+source ../../get-source.sh
+
+cd $TMP/tmp-$PRGNAM
+tar -xf ${SOURCE}
+
+cd applications
+cd ${PRGNAM}
+
+# Add missing files for Spanish TDE handbook docs
+if [[ $I18N == *es* ]]
+then
+sed -i 's|SUBDIRS= messages|SUBDIRS= messages doc|' es/Makefile.am
+echo "KDE_LANG = es
+KDE_DOCS=gwenview
+" > es/doc/Makefile.am
+# use the German index.docbook as a template
+cp de/doc/index.docbook es/doc/index.docbook
+# these index.docbook 'translations' have been made from the gwenview [US] English original,
+# the other 'es' *.docbook files are the original translations in the source code
+# any corrections from a Spanish speaker will be welcome
+sed -i -e 's|German|Spanish|' -e 's|Das Handbuch zu Gwenview|Manual del usuario Gwenview|' -e 's|Deutsche Übersetzung|Traducción Española|' -e 's|ist ein Bildbetrachter für &kde;|es un visor de imágenes para TDE|' -e '85s|Bild|imagen|' -e '87s|Betrachter|visionador|' -e 's|Künstler|artista|' -e 's|Photo|foto|' -e '93s|Bild|dibujo|' -e 's|Tipps|Consejos|' -e 's|Thomas||' -e 's|Reitelbach||' -e 's|tr@erdfunkstelle.de||' es/doc/index.docbook
+fi
+
+# list only files > zero bytes
+DOCS=$(for file in AUTHORS* ChangeLog* COPYING* FAQ* INSTALL* KNOWNBUGS* NEWS* README* TODO* *.lsm;do [[ -s $file ]] && ls -1 $file;done ) || true
+
+# set support for additional language(s) as per I18N variable
+# but only for languages available with this package
+langs="";for Lang in $I18N;do [[ -d $Lang ]] && langs="$langs $Lang";done
+sed -i "s|SUBDIRS=.*$|SUBDIRS=$langs|" Makefile.am
+
+
+# update admin for installed version of libtool
+cp /$(grep -h ltmain.sh /var/log/packages/libtool*) admin/
+cp /$(grep -h libtool.m4 /var/log/packages/libtool*) admin/libtool.m4.in
+
+make -f admin/Makefile.common
+
+chown -R root:root .
+chmod -R u+w,go+r-w,a+rX-st .
+
+mkdir -p build-${PRGNAM}
+cd build-${PRGNAM}
+
+LDFLAGS="${SLKLDFLAGS}" \
+CFLAGS="${SLKCFLAGS} $TQT_INCLUDE_PATH" \
+CXXFLAGS="${SLKCFLAGS}" \
+CC=${COMPILER} \
+CXX=${COMPILER_CXX} \
+../configure \
+   --prefix=${INSTALL_TDE} \
+   --sysconfdir="/etc/trinity" \
+   --mandir=${INSTALL_TDE}/man \
+   --disable-rpath \
+   --enable-closure
+
+  make $NUMJOBS || exit 1
+  make DESTDIR=$PKG install || exit 1
+cd -
+
+mkdir -p $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
+cp -a $DOCS $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION || true
+cat $SRCDIR/$(basename $0) > $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
+chown -R root:root $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
+find $PKG${INSTALL_TDE}/doc -type f -exec chmod 644 {} \;
+
+find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
+  | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
 
 SlackDesc()
 {
@@ -54,78 +122,6 @@ tdegwenview-i18n:
 tdegwenview-i18n:
 " > $PKG/install/slack-desc
 }
-
-source ../../get-source.sh
-
-cd $TMP/tmp-$PRGNAM
-echo "
-Extracting the source from the ${PRGNAM} archive ..."
-tar -xf ${SOURCE}
-
-cd applications
-cd ${PRGNAM}
-
-# Add missing files for Spanish TDE handbook docs
-if [[ $I18N == *es* ]]
-then
-sed -i 's|SUBDIRS= messages|SUBDIRS= messages doc|' es/Makefile.am
-echo "KDE_LANG = es
-KDE_DOCS=gwenview
-" > es/doc/Makefile.am
-# use the German index.docbook as a template
-cp de/doc/index.docbook es/doc/index.docbook
-# these index.docbook 'translations' have been made from the gwenview [US] English original,
-# the other 'es' *.docbook files are the original translations in the source code
-# any corrections from a Spanish speaker will be welcome
-sed -i -e 's|German|Spanish|' -e 's|Das Handbuch zu Gwenview|Manual del usuario Gwenview|' -e 's|Deutsche Übersetzung|Traducción Española|' -e 's|ist ein Bildbetrachter für &kde;|es un visor de imágenes para TDE|' -e '85s|Bild|imagen|' -e '87s|Betrachter|visionador|' -e 's|Künstler|artista|' -e 's|Photo|foto|' -e '93s|Bild|dibujo|' -e 's|Tipps|Consejos|' -e 's|Thomas||' -e 's|Reitelbach||' -e 's|tr@erdfunkstelle.de||' es/doc/index.docbook
-fi
-
-# list only files > zero bytes
-DOCS=$(for file in AUTHORS* ChangeLog* COPYING* FAQ* INSTALL* KNOWNBUGS* NEWS* README* TODO* *.lsm;do [[ -s $file ]] && ls -1 $file;done ) || true
-
-
-# set support for additional language(s) as per I18N variable
-# but only for languages available with this package
-langs="";for Lang in $I18N;do [[ -d $Lang ]] && langs="$langs $Lang";done
-sed -i "s|SUBDIRS=.*$|SUBDIRS=$langs|" Makefile.am
-
-
-# update admin for installed version of libtool
-cp /$(grep -h ltmain.sh /var/log/packages/libtool*) admin/
-cp /$(grep -h libtool.m4 /var/log/packages/libtool*) admin/libtool.m4.in
-
-make -f admin/Makefile.common
-
-chown -R root:root .
-chmod -R u+w,go+r-w,a+rX-st .
-
-
-mkdir -p build-${PRGNAM}
-cd build-${PRGNAM}
-
-# Configure the package
-LDFLAGS="${SLKLDFLAGS}" \
-CFLAGS="${SLKCFLAGS} $TQT_INCLUDE_PATH" \
-CXXFLAGS="${SLKCFLAGS}" \
-../configure \
-   --prefix=${INSTALL_TDE} \
-   --sysconfdir="/etc/trinity" \
-   --mandir=${INSTALL_TDE}/man \
-   --disable-rpath \
-   --enable-closure
-
-  make $NUMJOBS || exit 1
-  make DESTDIR=$PKG install || exit 1
-cd -
-
-mkdir -p $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
-cp -a $DOCS $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION || true
-cat $SRCDIR/$(basename $0) > $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
-chown -R root:root $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
-find $PKG${INSTALL_TDE}/doc -type f -exec chmod 644 {} \;
-
-find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
-  | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
 
 mkdir -p $PKG/install
 SlackDesc

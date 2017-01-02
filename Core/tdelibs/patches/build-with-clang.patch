@@ -1,0 +1,13 @@
+diff --git a/tdeabc/tests/testaddresseelist.cpp b/tdeabc/tests/testaddresseelist.cpp
+index 12964a6..20617ba 100644
+--- a/tdeabc/tests/testaddresseelist.cpp
++++ b/tdeabc/tests/testaddresseelist.cpp
+@@ -17,7 +17,7 @@ static const TDECmdLineOptions options[] =
+   TDECmdLineLastOption
+ };
+ 
+-int main(int /*argc*/,char /* **argv*/)
++int main(int /*argc*/, char** /*argv*/)
+ {
+ /*  TDEAboutData aboutData("testaddresseelist","TestAddresseeList","0.1");
+   TDECmdLineArgs::init(argc, argv, &aboutData); 

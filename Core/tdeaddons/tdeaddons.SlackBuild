@@ -28,16 +28,16 @@ VERSION=${VERSION:-$TDEVERSION}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_tde}
 
-DOCS="COPYING* README*"
-
 source ../../get-source.sh
 
 cd $TMP/tmp-$PRGNAM
-echo "
-Extracting the source from the ${PRGNAM} archive ..."
 tar -xf ${SOURCE}
 
 cd ${PRGNAM}
+
+# list only files > zero bytes
+DOCS=$(for file in AUTHORS* ChangeLog* COPYING* FAQ* INSTALL* KNOWNBUGS* NEWS* README* TODO* *.lsm;do [[ -s $file ]] && ls -1 $file;done ) || true
+
 # patch for TDE bug 2043
 patch -p0 < $SRCDIR/arkplugin-diffs-1
 
@@ -51,6 +51,8 @@ cd build-${PRGNAM}
     -DCMAKE_CXX_FLAGS:STRING="$SLKCFLAGS" \
     -DCMAKE_C_FLAGS_RELEASE:STRING="$SLKCFLAGS" \
     -DCMAKE_CXX_FLAGS_RELEASE:STRING="$SLKCFLAGS" \
+    -DCMAKE_C_COMPILER=${COMPILER} \
+    -DCMAKE_CXX_COMPILER=${COMPILER_CXX} \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=${INSTALL_TDE} \
     -DSYSCONF_INSTALL_DIR="/etc/trinity" \
@@ -67,28 +69,6 @@ cd build-${PRGNAM}
   make DESTDIR=$PKG install || exit 1
 cd -
 
-# Add this to the doinst.sh:
-mkdir -p $PKG/install
-cat <<EOINS >> $PKG/install/doinst.sh
-# Update the desktop database:
-if [ -x usr/bin/update-desktop-database ]; then
-  chroot . /usr/bin/update-desktop-database usr/share/applications > /dev/null 2>&1
-fi
-
-# Update hicolor theme cache:
-if [ -d usr/share/icons/hicolor ]; then
-  if [ -x /usr/bin/gtk-update-icon-cache ]; then
-    chroot . /usr/bin/gtk-update-icon-cache -f -t usr/share/icons/hicolor 1> /dev/null 2> /dev/null
-  fi
-fi
-
-# Update the mime database:
-if [ -x usr/bin/update-mime-database ]; then
-  chroot . /usr/bin/update-mime-database usr/share/mime >/dev/null 2>&1
-fi
-
-EOINS
-
 mkdir -p $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
 cp -a $DOCS $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION || true
 cat $SRCDIR/$(basename $0) > $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
@@ -98,8 +78,53 @@ find $PKG${INSTALL_TDE}/doc -type f -exec chmod 644 {} \;
 find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
   | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
 
+SlackDesc()
+{
+echo "
+# HOW TO EDIT THIS FILE:
+# The 'handy ruler' below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|'
+# on the right side marks the last column you can put a character in.  You must
+# make exactly 11 lines for the formatting to be correct.  It's also
+# customary to leave one space after the ':'.
+
+         |-----handy-ruler------------------------------------------------------|
+tdeaddons: tdeaddons (additional plugins and scripts)
+tdeaddons:
+tdeaddons: tdeaddons contains additional plugins and scripts for some TDE
+tdeaddons: applications.
+tdeaddons:
+tdeaddons:
+tdeaddons:
+tdeaddons:
+tdeaddons:
+tdeaddons:
+tdeaddons: Home: http://www.trinitydesktop.org/ 
+" > $PKG/install/slack-desc
+}
+
 mkdir -p $PKG/install
-cat $SRCDIR/slack-desc > $PKG/install/slack-desc
+cat <<EOINS >> $PKG/install/doinst.sh
+# Update the desktop database:
+if [ -x usr/bin/update-desktop-database ]; then
+  chroot . /usr/bin/update-desktop-database ${INSTALL_TDE}/share/applications > /dev/null 2>&1
+fi
+
+# Update hicolor theme cache:
+if [ -d usr/share/icons/hicolor ]; then
+  if [ -x /usr/bin/gtk-update-icon-cache ]; then
+    chroot . /usr/bin/gtk-update-icon-cache -f -t ${INSTALL_TDE}/share/icons/hicolor 1> /dev/null 2> /dev/null
+  fi
+fi
+
+# Update the mime database:
+if [ -x usr/bin/update-mime-database ]; then
+  chroot . /usr/bin/update-mime-database ${INSTALL_TDE}/share/mime >/dev/null 2>&1
+fi
+
+EOINS
+
+SlackDesc
 
 cd $PKG
 makepkg --linkadd y --chown n $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz}

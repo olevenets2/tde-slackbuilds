@@ -33,6 +33,54 @@ TAG=${TAG:-}
 # override download option in get-source.sh because there is no version # in the file name
 [[ ! -s ../../src/tidy-html5-master.zip ]] && wget -nv -T 20 -O ../../src/tidy-html5-master.zip https://github.com/htacg/tidy-html5/archive/master.zip || true
 
+DOCS="README"
+
+ARCHIVE_TYPE="zip"
+source ../../get-source.sh
+
+cd $TMP/tmp-$PRGNAM
+unzip ${SOURCE}
+
+cd ${PRGNAM}-${VERSION}
+VERSION=$(head -n 1 version.txt)
+
+# don't build in other locales if tidy doesn't support those set as additional languages
+I18N=$(echo $I18N | tr '[:upper:]' '[:lower:]')
+for lang in $I18N
+do
+[[ $(ls -1 src/language_*.h|grep _$lang) != "" ]] && LOCALize="YES" && langs="$lang ${langs:-}"
+done
+[[ ${langs:-} != "" ]] && langs=$langs" + other locales"
+
+cd build/cmake
+
+cmake ../.. \
+-DCMAKE_C_COMPILER=${COMPILER} \
+-DCMAKE_CXX_COMPILER=${COMPILER_CXX} \
+-DCMAKE_BUILD_TYPE=Release \
+-DCMAKE_INSTALL_PREFIX=/usr/local \
+-DSUPPORT_LOCALIZATIONS=${LOCALize:-"NO"}
+
+chown -R root:root .
+chmod -R u+w,go+r-w,a+rX-st .
+
+make $NUMJOBS || exit 1
+make DESTDIR=$PKG install || exit 1
+
+mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a ../../$DOCS/* $PKG/usr/doc/$PRGNAM-$VERSION || true
+cat $SRCDIR/$(basename $0) > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
+chown -R root:root $PKG/usr/doc/$PRGNAM-$VERSION
+find $PKG/usr/doc -type f -exec chmod 644 {} \;
+
+if [ -d $PKG/usr/man ]; then
+  find $PKG/usr/man -type f -name "*.?" -exec gzip -9f {} \;
+  for i in $(find $PKG/usr/man -type l -name "*.?") ; do ln -s $( readlink $i ).gz $i.gz ; rm $i ; done
+fi
+
+find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
+  | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
+
 SlackDesc()
 {
 echo "
@@ -57,54 +105,6 @@ $PRGNAM: en $(echo ${langs:-})
 $PRGNAM:
 " > $PKG/install/slack-desc
 }
-
-DOCS="README"
-
-ARCHIVE_TYPE="zip"
-source ../../get-source.sh
-
-cd $TMP/tmp-$PRGNAM
-echo "
-Extracting the source from the ${PRGNAM} archive ..."
-unzip ${SOURCE}
-
-cd ${PRGNAM}-${VERSION}
-VERSION=$(head -n 1 version.txt)
-
-# don't build in other locales if tidy doesn't support those set as additional languages
-I18N=$(echo $I18N | tr '[:upper:]' '[:lower:]')
-for lang in $I18N
-do
-[[ $(ls -1 src/language_*.h|grep _$lang) != "" ]] && LOCALize="YES" && langs="$lang ${langs:-}"
-done
-[[ ${langs:-} != "" ]] && langs=$langs" + other locales"
-
-cd build/cmake
-
-cmake ../.. \
--DCMAKE_BUILD_TYPE=Release \
--DCMAKE_INSTALL_PREFIX=/usr/local \
--DSUPPORT_LOCALIZATIONS=${LOCALize:-"NO"}
-
-chown -R root:root .
-chmod -R u+w,go+r-w,a+rX-st .
-
-make $NUMJOBS || exit 1
-make DESTDIR=$PKG install || exit 1
-
-mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a ../../$DOCS/* $PKG/usr/doc/$PRGNAM-$VERSION || true
-cat $SRCDIR/$(basename $0) > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
-chown -R root:root $PKG/usr/doc/$PRGNAM-$VERSION
-find $PKG/usr/doc -type f -exec chmod 644 {} \;
-
-if [ -d $PKG/usr/man ]; then
-  find $PKG/usr/man -type f -name "*.?" -exec gzip -9f {} \;
-  for i in $(find $PKG/usr/man -type l -name "*.?") ; do ln -s $( readlink $i ).gz $i.gz ; rm $i ; done
-fi
-
-find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
-  | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
 
 mkdir -p $PKG/install
 SlackDesc

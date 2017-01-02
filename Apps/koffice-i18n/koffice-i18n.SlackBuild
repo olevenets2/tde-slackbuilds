@@ -28,37 +28,9 @@ VERSION=${VERSION:-$TDEVERSION}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_tde}
 
-
-SlackDesc()
-{
-echo "
-# HOW TO EDIT THIS FILE:
-# The 'handy ruler' below makes it easier to edit a package description.  Line
-# up the first '|' above the ':' following the base package name, and the '|' on
-# the right side marks the last column you can put a character in.  You must make
-# exactly 11 lines for the formatting to be correct.  It's also customary to
-# leave one space after the ':'.
-
-$PRGNAM|-----handy-ruler------------------------------------------------------|
-$PRGNAM: $PRGNAM (internationalization files for koffice).
-$PRGNAM:
-$PRGNAM: For languages:
-$PRGNAM:
-$PRGNAM: $langs
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-" > $PKG/install/slack-desc
-}
-
 source ../../get-source.sh
 
 cd $TMP/tmp-$PRGNAM
-echo "
-Extracting the source from the ${PRGNAM} archive ..."
 tar -xf ${SOURCE}
 
 cd applications
@@ -85,10 +57,11 @@ make -f admin/Makefile.common
 chown -R root:root .
 chmod -R u+w,go+r-w,a+rX-st .
 
-# Configure the package
 LDFLAGS="${SLKLDFLAGS}" \
 CFLAGS="${SLKCFLAGS} $TQT_INCLUDE_PATH" \
 CXXFLAGS="${SLKCFLAGS}" \
+CC=${COMPILER} \
+CXX=${COMPILER_CXX} \
 ./configure \
    --prefix=${INSTALL_TDE}
 
@@ -104,6 +77,31 @@ mkdir -p $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
 cat $SRCDIR/$(basename $0) > $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 chown -R root:root $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
 find $PKG${INSTALL_TDE}/doc -type f -exec chmod 644 {} \;
+
+SlackDesc()
+{
+echo "
+# HOW TO EDIT THIS FILE:
+# The 'handy ruler' below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|' on
+# the right side marks the last column you can put a character in.  You must make
+# exactly 11 lines for the formatting to be correct.  It's also customary to
+# leave one space after the ':'.
+
+$PRGNAM|-----handy-ruler------------------------------------------------------|
+$PRGNAM: $PRGNAM (internationalization files for koffice).
+$PRGNAM:
+$PRGNAM: For languages:
+$PRGNAM:
+$PRGNAM: $langs
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+" > $PKG/install/slack-desc
+}
 
 mkdir -p $PKG/install
 SlackDesc

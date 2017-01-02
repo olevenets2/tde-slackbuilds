@@ -97,30 +97,51 @@ Set the directory that TDE is to be installed in.
 2> $TMPVARS/INSTALL_TDE
 
 
-rm -f $TMPVARS/TDE_MIRROR
-dialog --nocancel --no-shadow --colors --title " TDE Source Mirror Site " --menu \
+rm -f $TMPVARS/COMPILER
+dialog --nocancel --no-shadow --colors --title " Select The Compiler You Wish To Use " --menu \
 "\n
-Source archives can be pre-downloaded and placed in the 'src' directory or downloaded as required during the build from a TDE mirror.
+Here you can select the compiler you wish to use to compile TDE. 
 \n
-The mirror will only be used if the source is not available in 'src'.
+Your choices are \Zb\Z3GCC\Zn and \Zb\Z3Clang\Zn
 \n\n
-[Non-TDE apps are included in \Zb\Z3TDE Packages Selection\Zn options under
-\n
- Misc and can also be downloaded during the build from their own
-\n
- source URLs which are embedded in the SlackBuild script.]
+This is a matter of personal preference and not a necessity, but the option exist.
 \n\n
-This list of mirrors, which could change, is @
-\n
-  https://www.trinitydesktop.org/mirrorstatus.php
+If you're not sure which to select, you should probably just use \Zb\Z3GCC\Zn.
+\n\n
+Please note: the corresponding \Zb\Z3C++\Zn compiler will be chosen for you based on your \Zb\Z3C\Zn compiler selection.
+\n\n	
+So if you choose \Zb\Z3GCC\Zn, the \Zb\Z3g++\Zn compiler will be used. And if you choose \Zb\Z3Clang\Zn then \Zb\Z3clang++\Zn will be used.
 \n\n" \
-23 75 5 \
-"tde-mirror.yosemite.net/trinity" "USA" \
-"mirrorservice.org/sites/trinitydesktop.org/trinity" "UK" \
-"mirror.ntmm.org/trinity" "Sweden" \
-"bg1.mirror.trinitydesktop.org/trinity" "Bulgaria" \
-"ftp.fau.de/trinity" "Germany" \
-2> $TMPVARS/TDE_MIRROR
+25 77 2 \
+"gcc" "GCC" \
+"clang" "Clang" \
+2> $TMPVARS/COMPILER
+
+# Lets try redirector
+#rm -f $TMPVARS/TDE_MIRROR
+#dialog --nocancel --no-shadow --colors --title " TDE Source Mirror Site " --menu \
+#"\n
+#Source archives can be pre-downloaded and placed in the 'src' directory or downloaded as required during the build from a TDE mirror.
+#\n
+#The mirror will only be used if the source is not available in 'src'.
+#\n\n
+#[Non-TDE apps are included in \Zb\Z3TDE Packages Selection\Zn options under
+#\n
+# Misc and can also be downloaded during the build from their own
+#\n
+# source URLs which are embedded in the SlackBuild script.]
+#\n\n
+#This list of mirrors, which could change, is @
+#\n
+#  https://www.trinitydesktop.org/mirrorstatus.php
+#\n\n" \
+#23 75 5 \
+#"tde-mirror.yosemite.net/trinity" "USA" \
+#"mirrorservice.org/sites/trinitydesktop.org/trinity" "UK" \
+#"mirror.ntmm.org/trinity" "Sweden" \
+#"bg1.mirror.trinitydesktop.org/trinity" "Bulgaria" \
+#"ftp.fau.de/trinity" "Germany" \
+#2> $TMPVARS/TDE_MIRROR
 
 
 rm -f $TMPVARS/NUMJOBS
@@ -366,12 +387,25 @@ echo
 
 export TDEVERSION=$(cat $TMPVARS/TDEVERSION)
 export INSTALL_TDE=$(cat $TMPVARS/INSTALL_TDE)
-export TDE_MIRROR=$(cat $TMPVARS/TDE_MIRROR)
+export COMPILER=$(cat $TMPVARS/COMPILER)
+# export TDE_MIRROR=$(cat $TMPVARS/TDE_MIRROR)
+export TDE_MIRROR=mirror.ppa.trinitydesktop.org/trinity
 export NUMJOBS=$(cat $TMPVARS/NUMJOBS)
 export I18N=$(cat $TMPVARS/I18N)
 export TQT_DOCS=$(cat $TMPVARS/TQT_DOCS)
 export EXIT_FAIL=$(cat $TMPVARS/EXIT_FAIL)
 export KEEP_BUILD=$(cat $TMPVARS/KEEP_BUILD)
+
+# See which compiler was selected and use the appropriate C++ compiler
+CXX1="g++"
+CXX2="clang++"
+if [[ $(cat $TMPVARS/COMPILER) == gcc ]] ; then
+   echo $CXX1 > $TMPVARS/COMPILER_CXX
+   else
+   echo $CXX2 > $TMPVARS/COMPILER_CXX
+fi
+
+export COMPILER_CXX=$(cat $TMPVARS/COMPILER_CXX)
 
 LIBDIRSUFFIX=""
 # Is this a 64 bit system?

@@ -28,6 +28,74 @@ VERSION=${VERSION:-0.91}
 BUILD=${BUILD:-1}
 TAG=${TAG:-}
 
+SRCURL="https://media.inkscape.org/dl/resources/file/$PRGNAM-$VERSION.tar.bz2"
+source ../../get-source.sh
+
+cd $TMP/tmp-$PRGNAM
+tar -xf ${SOURCE}
+
+cd ${PRGNAM}-${VERSION}
+
+langs=""
+# don't package non-english man pages in man/man.1 - add them during make install for required languages
+sed -i -e '556,559d' -e '550,554d'  -e '533,537d'  Makefile.in
+if [[ $I18N == "" ]]
+then
+# no locales
+NLS="--disable-nls"
+else
+# set support for additional language(s) as per I18N variable
+# but only for languages available with this package
+for Lang in $I18N;do [[ -e po/$Lang".po" ]] && langs="$langs $Lang";done
+sed -i "s|PO_LINGUAS=.*$|PO_LINGUAS=$langs|"  po/Makefile.in.in
+fi
+
+chown -R root:root .
+chmod -R u+w,go+r-w,a+rX-st .
+
+# only include README..txt for required languages
+RM_LIST=""
+for po in $I18N;do RM_LIST="$RM_LIST $(ls -1 README.$po.txt)";done || true # fails without true if no README.$po.txt
+
+# list only files > zero bytes
+DOCS=$(for file in AUTHORS ChangeLog COPYING* INSTALL NEWS README $RM_LIST;do [[ -s $file ]] && ls -1 $file;done ) || true
+
+LDFLAGS="$SLKLDFLAGS" \
+CFLAGS="$SLKCFLAGS" \
+CXXFLAGS="$SLKCFLAGS -std=c++11" \
+CC=${COMPILER} \
+CXX=${COMPILER_CXX} \
+./configure ${NLS:-} \
+  --prefix=/usr/local \
+  --libdir=/usr/lib${LIBDIRSUFFIX} \
+  --mandir=/usr/man \
+  --docdir=/usr/doc/$PRGNAM-$VERSION
+  
+make $NUMJOBS || exit 1
+make DESTDIR=$PKG install || exit 1
+# remove all man pages ..
+rm -rf $PKG/usr/man
+# .. and re-install those required
+# English always ..
+make DESTDIR=$PKG install-man1
+# .. and other languages when required
+for PO in $I18N; do [[ -s inkscape.$PO.1 ]] && make DESTDIR=$PKG install-man$(echo $PO|tr [:upper:] [:lower:] | tr -d "_")DATA;done
+
+mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a $DOCS $PKG/usr/doc/$PRGNAM-$VERSION || true
+cat $SRCDIR/$(basename $0) > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
+chown -R root:root $PKG/usr/doc/$PRGNAM-$VERSION
+find $PKG/usr/doc -type f -exec chmod 644 {} \;
+
+if [ -d $PKG/usr/man ]; then
+  find $PKG/usr/man -type f -name "*.?" -exec gzip -9f {} \;
+  for i in $(find $PKG/usr/man -type l -name "*.?") ; do ln -s $( readlink $i ).gz $i.gz ; rm $i ; done
+fi
+
+
+find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
+  | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
+
 SlackDesc()
 {
 echo "
@@ -53,92 +121,22 @@ $PRGNAM:
 " > $PKG/install/slack-desc
 }
 
-SRCURL="https://media.inkscape.org/dl/resources/file/$PRGNAM-$VERSION.tar.bz2"
-source ../../get-source.sh
-
-cd $TMP/tmp-$PRGNAM
-echo "
-Extracting the source from the ${PRGNAM} archive ..."
-tar -xf ${SOURCE}
-
-cd ${PRGNAM}-${VERSION}
-
-langs=""
-# don't package non-english man pages in man/man.1 - add them during make install for required languages
-sed -i -e '556,559d' -e '550,554d'  -e '533,537d'  Makefile.in
-if [[ $I18N == "" ]]
-then
-# no locales
-NLS="--disable-nls"
-else
-# set support for additional language(s) as per I18N variable
-# but only for languages available with this package
-for Lang in $I18N;do [[ -e po/$Lang".po" ]] && langs="$langs $Lang";done
-sed -i "s|PO_LINGUAS=.*$|PO_LINGUAS=$langs|"  po/Makefile.in.in
-fi
-
-
-chown -R root:root .
-chmod -R u+w,go+r-w,a+rX-st .
-
-# only include README..txt for required languages
-RM_LIST=""
-for po in $I18N;do RM_LIST="$RM_LIST $(ls -1 README.$po.txt)";done || true # fails without true if no README.$po.txt
-# list only files > zero bytes
-DOCS=$(for file in AUTHORS ChangeLog COPYING* INSTALL NEWS README $RM_LIST;do [[ -s $file ]] && ls -1 $file;done ) || true
-
-
-LDFLAGS="$SLKLDFLAGS" \
-CFLAGS="$SLKCFLAGS" \
-CXXFLAGS="$SLKCFLAGS -std=c++11" \
-./configure ${NLS:-} \
-  --prefix=/usr/local \
-  --libdir=/usr/lib${LIBDIRSUFFIX} \
-  --mandir=/usr/man \
-  --docdir=/usr/doc/$PRGNAM-$VERSION
-  
-
-make $NUMJOBS || exit 1
-make DESTDIR=$PKG install || exit 1
-# remove all man pages ..
-rm -rf $PKG/usr/man
-# .. and re-install those required
-# English always ..
-make DESTDIR=$PKG install-man1
-# .. and other languages when required
-for PO in $I18N; do [[ -s inkscape.$PO.1 ]] && make DESTDIR=$PKG install-man$(echo $PO|tr [:upper:] [:lower:] | tr -d "_")DATA;done
-
-
-# Add this to the doinst.sh:
 mkdir -p $PKG/install
 cat <<EOINS >> $PKG/install/doinst.sh
-if [ -x /usr/bin/update-desktop-database ]; then
-  /usr/bin/update-desktop-database usr/share/applications >/dev/null 2>&1
+# Update the desktop database:
+if [ -x usr/bin/update-desktop-database ]; then
+  chroot . /usr/bin/update-desktop-database /usr/local/share//applications > /dev/null 2>&1
 fi
 
-if [ -e usr/share/icons/hicolor/icon-theme.cache ]; then
+# Update hicolor theme cache:
+if [ -d usr/share/icons/hicolor ]; then
   if [ -x /usr/bin/gtk-update-icon-cache ]; then
-    /usr/bin/gtk-update-icon-cache usr/share/icons/hicolor >/dev/null 2>&1
+    chroot . /usr/bin/gtk-update-icon-cache -f -t /usr/local/share/icons/hicolor 1> /dev/null 2> /dev/null
   fi
 fi
+
 EOINS
 
-mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a $DOCS $PKG/usr/doc/$PRGNAM-$VERSION || true
-cat $SRCDIR/$(basename $0) > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
-chown -R root:root $PKG/usr/doc/$PRGNAM-$VERSION
-find $PKG/usr/doc -type f -exec chmod 644 {} \;
-
-if [ -d $PKG/usr/man ]; then
-  find $PKG/usr/man -type f -name "*.?" -exec gzip -9f {} \;
-  for i in $(find $PKG/usr/man -type l -name "*.?") ; do ln -s $( readlink $i ).gz $i.gz ; rm $i ; done
-fi
-
-
-find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
-  | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
-
-mkdir -p $PKG/install
 SlackDesc
 
 cd $PKG

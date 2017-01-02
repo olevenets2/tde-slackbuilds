@@ -29,6 +29,64 @@ VERSION=${VERSION:-$TDEVERSION}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_tde}
 
+source ../../get-source.sh
+
+cd $TMP/tmp-$PRGNAM
+tar -xf ${SOURCE}
+
+cd applications
+cd ${PRGNAM}
+
+# list only files > zero bytes
+DOCS=$(for file in AUTHORS* ChangeLog* COPYING* FAQ* INSTALL* KNOWNBUGS* NEWS* README* TODO* *.lsm;do [[ -s $file ]] && ls -1 $file;done ) || true
+
+chown -R root:root .
+chmod -R u+w,go+r-w,a+rX-st .
+
+mkdir -p build-${PRGNAM}
+cd build-${PRGNAM}
+
+  cmake \
+    -DCMAKE_C_FLAGS:STRING="$SLKCFLAGS $TQT_INCLUDE_PATH" \
+    -DCMAKE_CXX_FLAGS:STRING="$SLKCFLAGS" \
+    -DCMAKE_C_COMPILER=${COMPILER} \
+    -DCMAKE_CXX_COMPILER=${COMPILER_CXX} \
+    -DCMAKE_INSTALL_PREFIX=${INSTALL_TDE} \
+    -DLIB_SUFFIX=${LIBDIRSUFFIX} \
+    -DSYSCONF_INSTALL_DIR="/etc/trinity" \
+    -DMAN_INSTALL_DIR=${INSTALL_TDE}/man \
+    -DWITH_LIBDVDREAD="ON" \
+    -DWITH_MUSICBRAINZ="OFF" \
+    -DWITH_SYSTEM_LIBSAMPLERATE="ON" \
+    -DWITH_HAL="OFF" \
+    -DWITH_DEBUG="OFF" \
+    -DWITH_ALSA="ON" \
+    -DWITH_ARTS="ON" \
+    -DWITH_FFMPEG="ON" \
+    -DWITH_FFMPEG_ALL_CODECS="OFF" \
+    -DWITH_FLAC="ON" \
+    -DWITH_SNDFILE="ON" \
+    -DWITH_TAGLIB="ON" \
+    -DWITH_MAD="ON" \
+    -DWITH_MUSEPACK="OFF" \
+    -DWITH_VORBIS="ON" \
+    -DWITH_LAME="ON" \
+    -DBUILD_K3BSETUP="ON" \
+    -DBUILD_DOC="ON" \
+    ..
+
+  make $NUMJOBS || exit 1
+  make DESTDIR=$PKG install || exit 1
+cd -
+
+mkdir -p $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
+cp -a $DOCS $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION || true
+cat $SRCDIR/$(basename $0) > $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
+chown -R root:root $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
+find $PKG${INSTALL_TDE}/doc -type f -exec chmod 644 {} \;
+
+find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
+  | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
 
 SlackDesc()
 {
@@ -55,69 +113,8 @@ $PKGNAM:
 " > $PKG/install/slack-desc
 }
 
-source ../../get-source.sh
-
-cd $TMP/tmp-$PRGNAM
-echo "
-Extracting the source from the ${PRGNAM} archive ..."
-tar -xf ${SOURCE}
-
-cd applications
-cd ${PRGNAM}
-
-# list only files > zero bytes
-DOCS=$(for file in AUTHORS* ChangeLog* COPYING* FAQ* INSTALL* KNOWNBUGS* NEWS* README* TODO* *.lsm;do [[ -s $file ]] && ls -1 $file;done ) || true
-
-chown -R root:root .
-chmod -R u+w,go+r-w,a+rX-st .
-
-mkdir -p build-${PRGNAM}
-cd build-${PRGNAM}
-
-  cmake \
-    -DCMAKE_C_FLAGS:STRING="$SLKCFLAGS $TQT_INCLUDE_PATH" \
-    -DCMAKE_CXX_FLAGS:STRING="$SLKCFLAGS" \
-    -DCMAKE_INSTALL_PREFIX=${INSTALL_TDE} \
-    -DLIB_SUFFIX=${LIBDIRSUFFIX} \
-    -DSYSCONF_INSTALL_DIR="/etc/trinity" \
-    -DMAN_INSTALL_DIR=${INSTALL_TDE}/man \
-    -DWITH_LIBDVDREAD="ON" \
-    -DWITH_MUSICBRAINZ="OFF" \
-    -DWITH_SYSTEM_LIBSAMPLERATE="ON" \
-    -DWITH_HAL="OFF" \
-    -DWITH_DEBUG="OFF" \
-    -DWITH_ALSA="ON" \
-    -DWITH_ARTS="ON" \
-    -DWITH_FFMPEG="ON" \
-    -DWITH_FFMPEG_ALL_CODECS="OFF" \
-    -DWITH_FLAC="ON" \
-    -DWITH_SNDFILE="ON" \
-    -DWITH_TAGLIB="ON" \
-    -DWITH_MAD="ON" \
-    -DWITH_MUSEPACK="OFF" \
-    -DWITH_VORBIS="ON" \
-    -DWITH_LAME="ON" \
-    -DBUILD_K3BSETUP="ON" \
-    -DBUILD_DOC="ON" \
-    ..
-
-
-  make $NUMJOBS || exit 1
-  make DESTDIR=$PKG install || exit 1
-cd -
-
-mkdir -p $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
-cp -a $DOCS $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION || true
-cat $SRCDIR/$(basename $0) > $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
-chown -R root:root $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
-find $PKG${INSTALL_TDE}/doc -type f -exec chmod 644 {} \;
-
-find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
-  | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
-
 mkdir -p $PKG/install
 SlackDesc
-
 
 cd $PKG
 makepkg --linkadd y --chown n $OUTPUT/${PKGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} 

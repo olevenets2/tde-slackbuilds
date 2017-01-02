@@ -48,6 +48,8 @@ cd build-${PRGNAM}
   cmake \
     -DCMAKE_C_FLAGS:STRING="$SLKCFLAGS $TQT_INCLUDE_PATH" \
     -DCMAKE_CXX_FLAGS:STRING="$SLKCFLAGS" \
+    -DCMAKE_C_COMPILER=${COMPILER} \
+    -DCMAKE_CXX_COMPILER=${COMPILER_CXX} \
     -DCMAKE_INSTALL_PREFIX=${INSTALL_TDE} \
     -DLIB_SUFFIX=${LIBDIRSUFFIX} \
     -DSYSCONF_INSTALL_DIR="/etc/trinity" \
@@ -94,24 +96,22 @@ $PRGNAM: Home: https://www.trinitydesktop.org/index.php
 }
 
 mkdir -p $PKG/install
-SlackDesc
-
-# Add this to the doinst.sh:
-mkdir -p $PKG/install
 cat <<EOINS >> $PKG/install/doinst.sh
 # Update the desktop database:
 if [ -x usr/bin/update-desktop-database ]; then
-  chroot . /usr/bin/update-desktop-database usr/share/applications > /dev/null 2>&1
+  chroot . /usr/bin/update-desktop-database ${INSTALL_TDE}/share/applications > /dev/null 2>&1
 fi
 
 # Update hicolor theme cache:
 if [ -d usr/share/icons/hicolor ]; then
   if [ -x /usr/bin/gtk-update-icon-cache ]; then
-    chroot . /usr/bin/gtk-update-icon-cache -f -t usr/share/icons/hicolor 1> /dev/null 2> /dev/null
+    chroot . /usr/bin/gtk-update-icon-cache -f -t ${INSTALL_TDE}/share/icons/hicolor 1> /dev/null 2> /dev/null
   fi
 fi
 
 EOINS
+
+SlackDesc
 
 cd $PKG
 makepkg --linkadd y --chown n $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} 

@@ -45,6 +45,8 @@ chmod -R u+w,go+r-w,a+rX-st .
 LDFLAGS="${SLKLDFLAGS}" \
 CFLAGS="${SLKCFLAGS} $TQT_INCLUDE_PATH" \
 CXXFLAGS="${SLKCFLAGS}" \
+CC=${COMPILER} \
+CXX=${COMPILER_CXX} \
 ./autogen.sh \
    --prefix=${INSTALL_TDE} \
    --libdir=${INSTALL_TDE}/lib${LIBDIRSUFFIX} \

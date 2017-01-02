@@ -13,3 +13,4 @@
 01/01/2017 Update license year and add tde-slackbuild project as I no longer do this alone.
            Commented out the desktop file change to d3lphin I previously made. Will leave it for an option
            for the users who want it, like me. -Thorn Inurcide
+01/**/2017 Added option to choose between Clang or GCC as your compiler.

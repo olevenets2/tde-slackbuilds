@@ -28,6 +28,70 @@ VERSION=${VERSION:-$TDEVERSION}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_tde}
 
+source ../../get-source.sh
+
+cd $TMP/tmp-$PRGNAM
+tar -xf ${SOURCE}
+
+cd applications
+cd ${PRGNAM}
+
+# list only files > zero bytes
+DOCS=$(for file in AUTHORS* ChangeLog* COPYING* FAQ* INSTALL* KNOWNBUGS* LICEN?E* NEWS* *README* TODO* *.lsm;do [[ -s $file ]] && ls -1 $file;done ) || true
+# put useful docs in $INSTALL_TDE/doc/kvpnc-$VERSION, not html directory as the Makefile does
+mkdir tmpdocs
+for file in $(ls -1 doc | grep -v Makefile)
+do
+cp doc/$file tmpdocs 2>/dev/null || true # need this to overrule exit 1 when directories fail to copy
+rm doc/$file 2>/dev/null || true # need this to overrule exit 1 when directories fail to be removed
+done
+
+# set support for additional language(s) as per I18N variable
+# but only for languages available with this package
+langs="";for Lang in $I18N;do [[ -e po/$Lang".po" ]] && langs="$langs $Lang"".po";done
+sed -i "s|POFILES =.*$|POFILES =$langs|" po/Makefile.am
+langs=$(echo $langs | sed 's|.po||g')
+#
+langdoc="en";for Lang in $I18N;do [[ -d doc/$Lang ]] && langdoc="$langdoc $Lang";done
+sed -i "s|KDE_LANG = .*$|KDE_LANG = $langdoc|" doc/Makefile.am
+sed -i "s|SUBDIRS = .*$|SUBDIRS = tdeioslave $langdoc|" doc/Makefile.am
+
+# update admin for installed version of libtool
+cp /$(grep -h ltmain.sh /var/log/packages/libtool*) admin/
+cp /$(grep -h libtool.m4 /var/log/packages/libtool*) admin/libtool.m4.in
+cp /$(grep -h missing /var/log/packages/libtool*) admin/
+
+make -f admin/Makefile.common
+
+chown -R root:root .
+chmod -R u+w,go+r-w,a+rX-st .
+
+mkdir -p build-${PRGNAM}
+cd build-${PRGNAM}
+
+LDFLAGS="${SLKLDFLAGS}" \
+CFLAGS="${SLKCFLAGS} $TQT_INCLUDE_PATH" \
+CXXFLAGS="${SLKCFLAGS}" \
+CC=${COMPILER} \
+CXX=${COMPILER_CXX} \
+../configure \
+   --prefix=${INSTALL_TDE} \
+   --build=$ARCH-slackware-linux
+
+  make ${NUMJOBS:-} || exit 1
+  make DESTDIR=$PKG install || exit 1
+
+mkdir -p $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
+(cd ../;cp -a $DOCS $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION) || true
+mv ../tmpdocs/* $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
+rm $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION/*{debian,gentoo}*
+cat $SRCDIR/$(basename $0) > $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
+chown -R root:root $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
+find $PKG${INSTALL_TDE}/doc -type f -exec chmod 644 {} \;
+
+find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
+  | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
+
 SlackDesc()
 {
 echo "
@@ -53,77 +117,8 @@ $PRGNAM:
 " > $PKG/install/slack-desc
 }
 
-source ../../get-source.sh
-
-cd $TMP/tmp-$PRGNAM
-echo -e "\nExtracting the source from the ${PRGNAM} archive ..."
-tar -xf ${SOURCE}
-
-cd applications
-cd ${PRGNAM}
-
-
-# list only files > zero bytes
-DOCS=$(for file in AUTHORS* ChangeLog* COPYING* FAQ* INSTALL* KNOWNBUGS* LICEN?E* NEWS* *README* TODO* *.lsm;do [[ -s $file ]] && ls -1 $file;done ) || true
-# put useful docs in $INSTALL_TDE/doc/kvpnc-$VERSION, not html directory as the Makefile does
-mkdir tmpdocs
-for file in $(ls -1 doc | grep -v Makefile)
-do
-cp doc/$file tmpdocs 2>/dev/null || true # need this to overrule exit 1 when directories fail to copy
-rm doc/$file 2>/dev/null || true # need this to overrule exit 1 when directories fail to be removed
-done
-
-
-# set support for additional language(s) as per I18N variable
-# but only for languages available with this package
-langs="";for Lang in $I18N;do [[ -e po/$Lang".po" ]] && langs="$langs $Lang"".po";done
-sed -i "s|POFILES =.*$|POFILES =$langs|" po/Makefile.am
-langs=$(echo $langs | sed 's|.po||g')
-#
-langdoc="en";for Lang in $I18N;do [[ -d doc/$Lang ]] && langdoc="$langdoc $Lang";done
-sed -i "s|KDE_LANG = .*$|KDE_LANG = $langdoc|" doc/Makefile.am
-sed -i "s|SUBDIRS = .*$|SUBDIRS = tdeioslave $langdoc|" doc/Makefile.am
-
-
-# update admin for installed version of libtool
-cp /$(grep -h ltmain.sh /var/log/packages/libtool*) admin/
-cp /$(grep -h libtool.m4 /var/log/packages/libtool*) admin/libtool.m4.in
-cp /$(grep -h missing /var/log/packages/libtool*) admin/
-
-make -f admin/Makefile.common
-
-chown -R root:root .
-chmod -R u+w,go+r-w,a+rX-st .
-
-mkdir -p build-${PRGNAM}
-cd build-${PRGNAM}
-
-# Configure the package
-LDFLAGS="${SLKLDFLAGS}" \
-CFLAGS="${SLKCFLAGS} $TQT_INCLUDE_PATH" \
-CXXFLAGS="${SLKCFLAGS}" \
-../configure \
-   --prefix=${INSTALL_TDE} \
-   --build=$ARCH-slackware-linux
-
-  make ${NUMJOBS:-} || exit 1
-  make DESTDIR=$PKG install || exit 1
-
-
-mkdir -p $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
-(cd ../;cp -a $DOCS $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION) || true
-mv ../tmpdocs/* $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
-rm $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION/*{debian,gentoo}*
-cat $SRCDIR/$(basename $0) > $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
-chown -R root:root $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
-find $PKG${INSTALL_TDE}/doc -type f -exec chmod 644 {} \;
-
-find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
-  | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
-
 mkdir -p $PKG/install
 SlackDesc
-
 
 cd $PKG
 makepkg --linkadd y --chown n $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} 

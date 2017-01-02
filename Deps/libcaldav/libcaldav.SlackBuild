@@ -42,10 +42,11 @@ DOCS=$(for file in AUTHORS* rfc4791.pdf ChangeLog* COPYING* FAQ* INSTALL* KNOWNB
 chown -R root:root .
 chmod -R u+w,go+r-w,a+rX-st .
 
-# Configure the package
 LDFLAGS="${SLKLDFLAGS}" \
 CFLAGS="${SLKCFLAGS} $TQT_INCLUDE_PATH" \
 CXXFLAGS="${SLKCFLAGS}" \
+CC=${COMPILER} \
+CXX=${COMPILER_CXX} \
 ./autogen.sh \
    --prefix=${INSTALL_TDE} \
    --libdir=${INSTALL_TDE}/lib${LIBDIRSUFFIX} \
@@ -58,7 +59,15 @@ CXXFLAGS="${SLKCFLAGS}" \
   make DESTDIR=$PKG install || exit 1
 cd -
 
-# Create the slack-desc
+mkdir -p $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
+cp -a $DOCS $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION || true
+cat $SRCDIR/$(basename $0) > $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
+chown -R root:root $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
+find $PKG${INSTALL_TDE}/doc -type f -exec chmod 644 {} \;
+
+find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
+  | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
+
 SlackDesc()
 {
 echo "
@@ -84,16 +93,6 @@ libcaldav:
 " > $PKG/install/slack-desc
 }
 
-mkdir -p $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
-cp -a $DOCS $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION || true
-cat $SRCDIR/$(basename $0) > $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
-chown -R root:root $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
-find $PKG${INSTALL_TDE}/doc -type f -exec chmod 644 {} \;
-
-find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
-  | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
-
-# Add the slack-desc
 mkdir -p $PKG/install
 SlackDesc
 

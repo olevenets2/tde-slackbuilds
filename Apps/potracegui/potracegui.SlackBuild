@@ -28,36 +28,9 @@ VERSION=${VERSION:-$TDEVERSION}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_tde}
 
-
-SlackDesc()
-{
-echo "
-# HOW TO EDIT THIS FILE:
-# The 'handy ruler' below makes it easier to edit a package description.  Line
-# up the first '|' above the ':' following the base package name, and the '|' on
-# the right side marks the last column you can put a character in.  You must make
-# exactly 11 lines for the formatting to be correct.  It's also customary to
-# leave one space after the ':'.
-
-$PRGNAM|-----handy-ruler------------------------------------------------------|
-$PRGNAM: Potracegui is a GUI interface for potrace, a program for tracing
-$PRGNAM: bitmapped images and transforming them into vector format images.
-$PRGNAM:
-$PRGNAM: Potracegui can load remote files (web, ftp...), use any image format
-$PRGNAM: recognized by TDE, and supports drag and drop.
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-" > $PKG/install/slack-desc
-}
-
 source ../../get-source.sh
 
 cd $TMP/tmp-$PRGNAM
-echo -e "\nExtracting the source from the ${PRGNAM} archive ..."
 tar -xf ${SOURCE}
 
 cd applications
@@ -80,10 +53,11 @@ chmod -R u+w,go+r-w,a+rX-st .
 mkdir -p build-${PRGNAM}
 cd build-${PRGNAM}
 
-# Configure the package
 LDFLAGS="${SLKLDFLAGS}" \
 CFLAGS="${SLKCFLAGS} $TQT_INCLUDE_PATH" \
 CXXFLAGS="${SLKCFLAGS}" \
+CC=${COMPILER} \
+CXX=${COMPILER_CXX} \
 ../configure \
    --prefix=${INSTALL_TDE} \
    --sysconfdir="/etc/trinity" \
@@ -91,10 +65,8 @@ CXXFLAGS="${SLKCFLAGS}" \
    --disable-rpath \
    --enable-closure
 
-
   make ${NUMJOBS:-} || exit 1
   make DESTDIR=$PKG install || exit 1
-
 
 mkdir -p $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
 (cd ../;cp -a $DOCS $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION) || true
@@ -105,9 +77,33 @@ find $PKG${INSTALL_TDE}/doc -type f -exec chmod 644 {} \;
 find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
   | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
 
+SlackDesc()
+{
+echo "
+# HOW TO EDIT THIS FILE:
+# The 'handy ruler' below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|' on
+# the right side marks the last column you can put a character in.  You must make
+# exactly 11 lines for the formatting to be correct.  It's also customary to
+# leave one space after the ':'.
+
+$PRGNAM|-----handy-ruler------------------------------------------------------|
+$PRGNAM:
+$PRGNAM: $PRGNAM is a TDE frontend for various vpn clients.
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM: With language support for:
+$PRGNAM:
+$PRGNAM: en $langs
+$PRGNAM:
+" > $PKG/install/slack-desc
+}
+
 mkdir -p $PKG/install
 SlackDesc
-
 
 cd $PKG
 makepkg --linkadd y --chown n $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} 

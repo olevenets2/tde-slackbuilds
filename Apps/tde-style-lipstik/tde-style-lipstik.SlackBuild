@@ -28,34 +28,16 @@ VERSION=${VERSION:-$TDEVERSION}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_tde}
 
-SlackDesc()
-{
-echo "
-tde-style-lipstik: tde-style-lipstik (lipstik style for tde)
-tde-style-lipstik:
-tde-style-lipstik: lipstik style for tde
-tde-style-lipstik:
-tde-style-lipstik:
-tde-style-lipstik:
-tde-style-lipstik:
-tde-style-lipstik:
-tde-style-lipstik:
-tde-style-lipstik:
-tde-style-lipstik:
-" > $PKG/install/slack-desc
-}
-
-DOCS="AUTHORS ChangeLog* COPYING README* TODO"
-
 source ../../get-source.sh
 
 cd $TMP/tmp-$PRGNAM
-echo "
-Extracting the source from the ${PRGNAM} archive ..."
 tar -xf ${SOURCE}
 
 cd applications
 cd ${PRGNAM}
+
+# list only files > zero bytes
+DOCS=$(for file in AUTHORS* ChangeLog* COPYING* FAQ* INSTALL* KNOWNBUGS* NEWS* README* TODO* *.lsm;do [[ -s $file ]] && ls -1 $file;done ) || true
 
 chown -R root:root .
 chmod -R u+w,go+r-w,a+rX-st .
@@ -72,6 +54,8 @@ cd build-${PRGNAM}
 LDFLAGS="${SLKLDFLAGS}" \
 CFLAGS="${SLKCFLAGS} $TQT_INCLUDE_PATH" \
 CXXFLAGS="${SLKCFLAGS}" \
+CC=${COMPILER} \
+CXX=${COMPILER_CXX} \
 ../configure \
    --prefix=${INSTALL_TDE} \
    --sysconfdir="/etc/trinity" \
@@ -91,6 +75,23 @@ find $PKG${INSTALL_TDE}/doc -type f -exec chmod 644 {} \;
 
 find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
   | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
+
+SlackDesc()
+{
+echo "
+tde-style-lipstik: tde-style-lipstik (lipstik style for tde)
+tde-style-lipstik:
+tde-style-lipstik: lipstik style for tde
+tde-style-lipstik:
+tde-style-lipstik:
+tde-style-lipstik:
+tde-style-lipstik:
+tde-style-lipstik:
+tde-style-lipstik:
+tde-style-lipstik:
+tde-style-lipstik:
+" > $PKG/install/slack-desc
+}
 
 mkdir -p $PKG/install
 SlackDesc
