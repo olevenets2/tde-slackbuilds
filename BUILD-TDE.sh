@@ -462,7 +462,7 @@ do
 
 # tde-i18n package installation is handled in tde-i18n.SlackBuild because if more than one i18n package is being built, only the last one will be installed by upgradepkg
 # Note to self: this alteration appears to fix the problem (Erroing and refusing to compile) BUT makes the script recomnpile it if you run the
-# script with re-use even though it is installed
+# script with re-use even though it is installed. Yeah and it gets really annoying when testing new things lol
 if [[ $INST == 1 ]] && [[ ${package} != tde-i18n ]]; then upgradepkg --install-new --reinstall $TMP/${package}-$(eval echo $version)-*-${build}*.txz
 if [[ $(ls /var/log/packages/${package}-*$(eval echo $version)-*-${build}*) ]]; then
 sed -i "s|$dir ||" $TMPVARS/TDEbuilds
