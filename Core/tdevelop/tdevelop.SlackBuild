@@ -84,18 +84,18 @@ echo "
 # make exactly 11 lines for the formatting to be correct.  It's also
 # customary to leave one space after the ':'.
 
-          |-----handy-ruler------------------------------------------------------|
-tdeartwork: tdeartwork (Extra artwork/themes/wallpapers for TDE)
-tdeartwork:
-tdeartwork: Extra artwork/themes/wallpapers for TDE
-tdeartwork:
-tdeartwork:
-tdeartwork:
-tdeartwork:
-tdeartwork:
-tdeartwork:
-tdeartwork:
-tdeartwork: Home: https://www.trinitydesktop.org/index.php 
+        |-----handy-ruler------------------------------------------------------|
+tdevelop: tdevelop (TDE development programs)
+tdevelop:
+tdevelop: TDE development programs
+tdevelop:
+tdevelop:
+tdevelop:
+tdevelop:
+tdevelop:
+tdevelop:
+tdevelop:
+tdevelop: Home: http://www.trinitydesktop.org/
 " > $PKG/install/slack-desc
 }
 
