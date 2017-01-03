@@ -66,8 +66,8 @@ cd build-${PRGNAM}
 LDFLAGS="${SLKLDFLAGS}" \
 CFLAGS="${SLKCFLAGS} $TQT_INCLUDE_PATH" \
 CXXFLAGS="${SLKCFLAGS}" \
-CC=${COMPILER} \
-CXX=${COMPILER_CXX} \
+CC="gcc" \
+CXX="g++" \
 ../configure \
    --prefix=${INSTALL_TDE} \
    --sysconfdir="/etc/trinity" \

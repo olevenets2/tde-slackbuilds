@@ -8,7 +8,7 @@ Will look in to this when I have more free time. My apologies.
 Chalk crashes when trying to launch it. (At least for me) The rest of Koffice
 seems to work fine.
 
-Koffice,tdek3b,k9copy,kile and kaffeine aren't compiling with Clang. So even if you select to build 
+Several things from the Apps dir aren't compiling with Clang. So even if you select to build 
 with Clang, GCC is used. I will keep checking on these in future release and updates to Clang in Slackware
 
 THE BUG REPORTS FOR EVERYTHING IF YOU'RE INTERESTED
