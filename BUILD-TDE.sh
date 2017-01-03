@@ -460,10 +460,8 @@ do
 # Re: http://serverfault.com/questions/71285/in-centos-4-4-how-can-i-strip-escape-sequences-from-a-text-file
   sed -ri "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g" $TMP/${package}-build-log || ${EXIT_FAIL:-"true"}
 
-# tde-i18n package installation is handled in tde-i18n.SlackBuild because if more than one i18n package is being built, only the last one will be installed by upgradepkg
-# Note to self: this alteration appears to fix the problem (Erroing and refusing to compile) BUT makes the script recomnpile it if you run the
-# script with re-use even though it is installed. Yeah and it gets really annoying when testing new things lol
-if [[ $INST == 1 ]] && [[ ${package} != tde-i18n ]]; then upgradepkg --install-new --reinstall $TMP/${package}-$(eval echo $version)-*-${build}*.txz
+checkinstall ()
+{
 if [[ $(ls /var/log/packages/${package}-*$(eval echo $version)-*-${build}*) ]]; then
 sed -i "s|$dir ||" $TMPVARS/TDEbuilds
 else
@@ -472,7 +470,15 @@ echo "
       Check the build log $TMP/${package}-build-log
       "
 ${EXIT_FAIL:-":"}
-fi;fi
+fi
+}
+# tde-i18n package installation is handled in tde-i18n.SlackBuild because if more than one i18n package is being built, only the last one will be installed by upgradepkg
+if [[ $INST == 1 ]] && [[ ${package} != tde-i18n ]]; then upgradepkg --install-new --reinstall $TMP/${package}-$(eval echo $version)-*-${build}*.txz
+checkinstall
+## test for last language in the I18N list to ensure they've all been built
+elif [[ $INST == 1 ]] && [[ ${package} == tde-i18n ]]; then package=${package}-$(cat $TMPVARS/LASTLANG)
+checkinstall
+fi
 
   # back to original directory
   cd $ROOT

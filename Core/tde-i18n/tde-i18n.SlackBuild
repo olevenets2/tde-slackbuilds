@@ -57,7 +57,6 @@ cd ${PRGNAM}-$lang/build
   cmake \
     -DCMAKE_C_FLAGS:STRING="$SLKCFLAGS" \
     -DCMAKE_CXX_FLAGS:STRING="$SLKCFLAGS" \
-    -DCMAKE_CXX_FLAGS_RELEASE:STRING="$SLKCFLAGS" \
     -DCMAKE_C_COMPILER=${COMPILER} \
     -DCMAKE_CXX_COMPILER=${COMPILER_CXX} \
     -DCMAKE_BUILD_TYPE=Release \
@@ -152,3 +151,5 @@ upgradepkg --install-new --reinstall $OUTPUT/${PRGNAM}-${lang}-${VERSION}-${ARCH
 fi
 
 done
+
+echo $lang > $TMPVARS/LASTLANG
