@@ -9,7 +9,7 @@ dialog --no-shadow --colors --title " Introduction " --msgbox \
 "\n
  This is the set up script for TDE SlackBuilds on Slackware 14.2 for setting user preferences and options.
 \n\n
- Source archives can be stored locally or downloaded during the build from a selected TDE mirror site.
+ Source archives must be placed in the 'src' directory or will be downloaded during the build from a geoIP located mirror site.
 \n\n
  A package build list is created and successfully built and installed packages are removed from that list as the build progresses.
 \n\n
@@ -24,11 +24,11 @@ dialog --yes-label "Re-use" --no-label "New" --defaultno --no-shadow --colors --
 "\n
 Select \Zr\Z4\ZbNew\Zn if:
 \n
-This is a new build - OR
+               This is a new build - OR
 \n
-Additional packages are being built
+               Additional packages are being built
 \n
- 'New' will delete any previous build list.
+\Zr\Z4\ZbNew\Zn will delete any previous build list.
 \n\n
 Selecting \Z1R\Zb\Z0e-use\Zn avoids having to create the build list again when re-running the build for any SlackBuilds that failed." \
 13 75
@@ -154,7 +154,9 @@ Set the number of simultaneous jobs for make to whatever your system will suppor
 
 
 rm -f $TMPVARS/I18N
-dialog --nocancel --no-shadow --colors --title " Select Additional Languages " --inputbox \
+EXITVAL=2
+until [[ $EXITVAL -lt 2 ]] ; do
+dialog --nocancel --no-shadow --colors --help-button --help-label "README" --title " Select Additional Languages " --inputbox \
 "\n
  Additional language support
 \n\n
@@ -171,7 +173,34 @@ dialog --nocancel --no-shadow --colors --title " Select Additional Languages " -
 \Zb\Z6af ar az be bg bn br bs ca cs csb cy da de el en_GB eo es et eu fa fi fr fy ga gl he hi hr hu is it ja kk km ko lt lv mk mn ms nb nds nl nn pa pl pt pt_BR ro ru rw se sk sl sr sr@Latn ss sv ta te tg th tr uk uz uz@cyrillic vi wa zh_CN zh_TW\Zn
 \n\n" \
 26 75 \
-2> $TMPVARS/I18N
+2> $TMPVARS/I18N && break
+[[ $EXITVAL == 2 ]] && dialog --defaultno --yes-label "Ascii" --no-label "Continue" --no-shadow --colors --no-collapse --yesno \
+"\n
+If you can see the two 'y' like letters, then you've probably got
+\na suitable terminal font installed and can choose \Zr\Z4\ZbContinue\Zn,
+\notherwise choose \Z1A\Zb\Z0scii\Zn.
+\n\n
+                            <<\Z3\Zb ҷ ɣ \Zn>>
+\n\n
+$(echo -e "\Zb\Z0A suitable font in a utf8 enabled terminal is needed to display all the extended characters in this list. Liberation Mono in an 'xterm' is known to work. Setting up a 'tty' is not worth the effort.\Zn")
+\n\n" \
+15 75
+EXVAL=$?
+[[ $EXVAL == 1 ]] && dialog --no-shadow --colors --no-collapse --msgbox \
+"\n
+\Zb\Z2PgDn/PgUp to scroll\Zn
+\n\n
+$(xzless Core/tde-i18n/langcodes.xz | tr "\n" X | sed 's|X|\\n|g;s|Latn\t|Latn|g')
+\n\n" \
+26 75
+[[ $EXVAL == 0 ]] && dialog --no-shadow --colors --no-collapse --msgbox \
+"\n
+\Zb\Z2PgDn/PgUp to scroll\Zn
+\n\n
+$(xzless Core/tde-i18n/langcodes.xz |sed 's|\t\+|\t|g'|cut -f 1,3-| tr "\n" X | sed 's|X|\\n|g;s|\t|\t\t|g;s|cyrillic\t|cyrillic|g;s|Latn\t|Latn|g')
+\n\n" \
+26 75
+done
 
 
 rm -f $TMPVARS/TQT_DOCS
@@ -397,15 +426,7 @@ export EXIT_FAIL=$(cat $TMPVARS/EXIT_FAIL)
 export KEEP_BUILD=$(cat $TMPVARS/KEEP_BUILD)
 
 # See which compiler was selected and use the appropriate C++ compiler
-CXX1="g++"
-CXX2="clang++"
-if [[ $(cat $TMPVARS/COMPILER) == gcc ]] ; then
-   echo $CXX1 > $TMPVARS/COMPILER_CXX
-   else
-   echo $CXX2 > $TMPVARS/COMPILER_CXX
-fi
-
-export COMPILER_CXX=$(cat $TMPVARS/COMPILER_CXX)
+[[ $(cat $TMPVARS/COMPILER) == gcc ]] && export COMPILER_CXX="g++" || export COMPILER_CXX="clang++"
 
 LIBDIRSUFFIX=""
 # Is this a 64 bit system?
@@ -473,6 +494,8 @@ ${EXIT_FAIL:-":"}
 fi
 }
 # tde-i18n package installation is handled in tde-i18n.SlackBuild because if more than one i18n package is being built, only the last one will be installed by upgradepkg
+## tidy-html5 is a special case because the version number is not in the archive name
+[[ ${package} == tidy-html5 ]] && version=$(unzip -c tidy-html5-master.zip | grep -A 1 version.txt | tail -n 1)
 if [[ $INST == 1 ]] && [[ ${package} != tde-i18n ]]; then upgradepkg --install-new --reinstall $TMP/${package}-$(eval echo $version)-*-${build}*.txz
 checkinstall
 ## test for last language in the I18N list to ensure they've all been built

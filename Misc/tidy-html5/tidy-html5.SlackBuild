@@ -48,7 +48,7 @@ VERSION=$(head -n 1 version.txt)
 I18N=$(echo $I18N | tr '[:upper:]' '[:lower:]')
 for lang in $I18N
 do
-[[ $(ls -1 src/language_*.h|grep _$lang) != "" ]] && LOCALize="YES" && langs="$lang ${langs:-}"
+[[ $(ls -1 src/language_*.h|grep _$lang) != "" ]] && LOCALize="ON" && langs="$lang ${langs:-}"
 done
 [[ ${langs:-} != "" ]] && langs=$langs" + other locales"
 
@@ -59,7 +59,13 @@ cmake ../.. \
 -DCMAKE_CXX_COMPILER=${COMPILER_CXX} \
 -DCMAKE_BUILD_TYPE=Release \
 -DCMAKE_INSTALL_PREFIX=/usr/local \
--DSUPPORT_LOCALIZATIONS=${LOCALize:-"NO"}
+-DLIB_SUFFIX=${LIBDIRSUFFIX:-} \
+-DBUILD_SHARED_LIB="ON" \
+-DTIDY_CONSOLE_SHARED="ON" \
+-DBUILD_TAB2SPACE="ON" \
+-DBUILD_SAMPLE_CODE="OFF" \
+-DTIDY_COMPAT_HEADERS="OFF" \
+-DSUPPORT_LOCALIZATIONS=${LOCALize:-"OFF"}
 
 chown -R root:root .
 chmod -R u+w,go+r-w,a+rX-st .
