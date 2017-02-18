@@ -176,7 +176,7 @@ dialog --nocancel --no-shadow --colors --help-button --help-label "README" --tit
 2> $TMPVARS/I18N && break
 [[ $EXITVAL == 2 ]] && dialog --defaultno --yes-label "Ascii" --no-label "Continue" --no-shadow --colors --no-collapse --yesno \
 "\n
-If you can see the two 'y' like letters, then you've probably got
+If you can see the two 'y' like characters, then you've probably got
 \na suitable terminal font installed and can choose \Zr\Z4\ZbContinue\Zn,
 \notherwise choose \Z1A\Zb\Z0scii\Zn.
 \n\n
@@ -326,19 +326,22 @@ Non-TDE apps are in the Misc category and don't need the \Zb\Zr\Z4R\Znequired TD
 "Core/tdevelop" "TDE development programs" off "\Zb\Z6 Requires tdesdk  \Zn" \
 "Core/tdetoys" "TDE Amusements" off "\Zb\Z6   \Zn" \
 "Core/tdewebdev" "Quanta Plus and other applications" off "\Zb\Z6   \Zn" \
-" Misc/speex" "Audio compression format designed for speech" off "\Zb\Z6 Requires l/speexdsp  \Zn" \
-"Core/tdenetwork" "Networking applications for TDE" off "\Zb\Z6 Optional dependency - speex \Zn" \
+" Misc/tidy-html5" "Corrects and cleans up HTML and XML documents" off "\Zb\Z6 Runtime option for Quanta+ [tdewebdev] \Zn" \
+" Misc/speex" "Audio compression format designed for speech" off "\Zb\Z6 Buildtime option for tdenetwork and amarok. Requires l/speexdsp  \Zn" \
+"Core/tdenetwork" "Networking applications for TDE" off "\Zb\Z6 Optional build-time dependency - speex \Zn" \
 "Core/tde-i18n" "Additional language support for TDE" off "\Zb\Z6 Required when \Zb\Z3Additional language support\Zb\Z6 has been selected \Zn" \
 "Libs/tdelibkdcraw" "Decode RAW picture files" off "\Zb\Z6 Required for digikam, tdegwenview and ksquirrel \Zn" \
 "Libs/tdelibkexiv2" "Library to manipulate picture metadata" off "\Zb\Z6 Required for digikam, tdegwenview and ksquirrel. Needs l/exiv2... \Zn" \
 "Libs/tdelibkipi" "A common plugin structure" off "\Zb\Z6 Required for digikam, tdegwenview and ksquirrel \Zn" \
 "Libs/kipi-plugins" "Additional functions for digiKam, ksquirrel and gwenview" off "\Zb\Z6 Required for digikam, tdegwenview and ksquirrel. Requires tdelibkdcraw tdelibkexiv2 tdelibkipi. \Zn" \
-"Libs/libksquirrel" "A set of image codecs for KSquirrel" off "\Zb\Z6 Required for ksquirrel \Zn" \
+" Misc/xmedcon" "A medical image conversion utility & library" off "\Zb\Z6 Buildtime option for libksquirrel \Zn" \
+"Libs/libksquirrel" "A set of image codecs for KSquirrel" off "\Zb\Z6 Required for ksquirrel. Buildtime options include l/netpbm, t/transfig [fig2dev], Misc/xmedcon \Zn" \
 "Apps/abakus" "PC calculator" off "\Zb\Z6 optional dependency l/mpfr which requires l/gmp \Zn" \
-" Misc/libmp4v2" "Create and modify mp4 files" off "\Zb\Z6   \Zn" \
+" Misc/libmp4v2" "Create and modify mp4 files" off "\Zb\Z6 Buildtime option for Amarok  \Zn" \
 "Apps/tdeamarok" "A Music Player" off "\Zb\Z6 Optional dependencies - xine-lib, libmp4v2, speex, moodbar \Zn" \
+" Misc/moodbar" "GStreamer plugin for Amarok for moodbar feature" off "\Zb\Z6 Runtime option for Amarok \Zn" \
 "Apps/digikam" "A digital photo management application + Showfoto viewer" off "\Zb\Z6 Requires kipi-plugins tdelibkdcraw tdelibkexiv2 tdelibkipi.  \Zn" \
-"Apps/dolphin" "Dolphin file manager for TDE" off "\Zb\Z6   \Zn" \
+"Apps/dolphin" "Dolphin file manager for TDE" off "\Zb\Z6 A d3lphin.desktop file is included - see dolphin.SlackBuild.  \Zn" \
 "Apps/filelight" "Graphical diskspace display" off "\Zb\Z6 Runtime requirement x/xdpyinfo \Zn" \
 "Apps/gtk-qt-engine" "A GTK+2 theme engine" off "\Zb\Z6   \Zn" \
 "Apps/gtk3-tqt-engine" "A GTK+3 theme engine" off "\Zb\Z6   \Zn" \
@@ -356,6 +359,7 @@ Non-TDE apps are in the Misc category and don't need the \Zb\Zr\Z4R\Znequired TD
 "Apps/koffice-i18n" "Internationalization files for koffice" off "\Zb\Z6 Required for koffice when \Zb\Z3Additional language support\Zb\Z6 has been selected  \Zn" \
 "Apps/ksensors" "A graphical interface for sensors" off "\Zb\Z6 Runtime requirement ap/lm_sensors \Zn" \
 "Apps/kscope" "A source-editing environment for C and C-style languages." off "\Zb\Z6 Runtime options cscope [d/cscope], ctags [ap/vim], dot [graphviz] \Zn" \
+" Misc/graphviz" "Graph Visualization" off "\Zb\Z6 Runtime option for kscope. pdf/html docs not built by default  \Zn" \
 "Apps/kshutdown" "Shutdown utility for TDE" off "\Zb\Z6   \Zn" \
 "Apps/ksquirrel" "An image viewer with OpenGL and KIPI support." off "\Zb\Z6 Requires kipi-plugins tdelibkdcraw tdelibkexiv2 tdelibkipi libksquirrel. \Zn" \
 "Apps/kvpnc" "TDE frontend for various vpn clients" off "\Zb\Z6 Miscellaneous documentation will be in $(cat $TMPVARS/INSTALL_TDE)/doc/kvpnc-$(cat $TMPVARS/TDEVERSION)  \Zn" \
@@ -369,11 +373,8 @@ Non-TDE apps are in the Misc category and don't need the \Zb\Zr\Z4R\Znequired TD
 "Apps/tdesudo" "Graphical frontend for the sudo command" off "\Zb\Z6   \Zn" \
 "Apps/twin-style-crystal" "twin theme" off "\Zb\Z6   \Zn" \
 " Misc/GraphicsMagick" "Swiss army knife of image processing" off "\Zb\Z6   \Zn" \
-" Misc/graphviz" "Graph Visualization" off "\Zb\Z6 Optional for kscope. pdf/html docs not built by default  \Zn" \
-" Misc/tidy-html5" "Corrects and cleans up HTML and XML documents" off "\Zb\Z6 Optional for Quanta+ [tdewebdev] \Zn" \
 " Misc/inkscape" "SVG editor" off "\Zb\Z6 Requires lxml if online help facility is required. \Zn" \
 " Misc/lxml" "Python bindings for libxml2 and libxslt" off "\Zb\Z6 Required to use Inkscape online help \Zn" \
-" Misc/moodbar" "GStreamer plugin for Amarok for moodbar feature" off "\Zb\Z6 Optional for Amarok \Zn" \
 2> $TMPVARS/TDEbuilds
 # successful builds are removed from the TDEbuilds list by '$dir ' so add a space to the last entry
 # and the " needs to be removed because the Misc entries are double-quoted
@@ -461,7 +462,8 @@ do
    { [[ $dir == Deps* ]] && export TDEMIR_SUBDIR="/dependencies"; } \
 || { [[ $dir == Core* ]] && export TDEMIR_SUBDIR=""; } \
 || { [[ $dir == Libs* ]] && export TDEMIR_SUBDIR="/libraries"; } \
-|| { [[ $dir == Apps* ]] && export TDEMIR_SUBDIR="/applications"; }
+|| { [[ $dir == Apps* ]] && export TDEMIR_SUBDIR="/applications"; } \
+|| { [[ $dir == *Misc* ]] && export TDEMIR_SUBDIR="misc"; } # used for untar_fn - leading slash deliberately omitted
 
   # Get the package name
   package=$(echo $dir | cut -f2- -d /)

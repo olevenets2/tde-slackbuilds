@@ -31,49 +31,36 @@ TAG=${TAG:-}
 SRCURL="http://$PRGNAM.sourceforge.net/download/$VERSION/$PRGNAM-$VERSION.tar.gz"
 ARCHIVE_TYPE="tar.gz"
 source ../../get-source.sh
+getsource_fn
 
-cd $TMP/tmp-$PRGNAM
-tar -xf ${SOURCE}
+untar_fn
+listdocs_fn
 
-cd ${PRGNAM}-${VERSION}
+chown_fn
 
-# list only files > zero bytes
-DOCS=$(for file in AUTHORS* ChangeLog* COPYING* FAQ* INSTALL* KNOWNBUGS* NEWS* README* TODO* *.lsm;do [[ -s $file ]] && ls -1 $file;done ) || true
-
-chown -R root:root .
-chmod -R u+w,go+r-w,a+rX-st .
+cd_builddir_fn
 
 LDFLAGS="$SLKLDFLAGS" \
 CFLAGS="$SLKCFLAGS" \
 CXXFLAGS="$SLKCFLAGS" \
 CC=${COMPILER} \
 CXX=${COMPILER_CXX} \
-./configure \
+../configure \
   --prefix=/usr/local \
   --libdir=/usr/lib${LIBDIRSUFFIX} \
   --with-libpotrace \
   --mandir=/usr/man \
-  --docdir=/usr/doc/$PRGNAM-$VERSION
   
-make $NUMJOBS || exit 1
-make DESTDIR=$PKG install || exit 1
+make_fn
 
-mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a $DOCS $PKG/usr/doc/$PRGNAM-$VERSION || true
-cat $SRCDIR/$(basename $0) > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
-chown -R root:root $PKG/usr/doc/$PRGNAM-$VERSION
-find $PKG/usr/doc -type f -exec chmod 644 {} \;
+installdocs_fn
 
-if [ -d $PKG/usr/man ]; then
-  find $PKG/usr/man -type f -name "*.?" -exec gzip -9f {} \;
-  for i in $(find $PKG/usr/man -type l -name "*.?") ; do ln -s $( readlink $i ).gz $i.gz ; rm $i ; done
-fi
+mangzip_fn
 
-find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
-  | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
+strip_fn
 
-SlackDesc()
-{
+mkdir_install_fn
+
 echo "
 # HOW TO EDIT THIS FILE:
 # The 'handy ruler' below makes it easier to edit a package description.  Line
@@ -95,17 +82,6 @@ $PRGNAM: A separate program, mkbitmap, can act as a pre-processor for Potrace,
 $PRGNAM: applying scaling and various filters to an image before converting it
 $PRGNAM: to a bitmap. This is useful for potracing greyscale and color images.
 " > $PKG/install/slack-desc
-}
 
-mkdir -p $PKG/install
-SlackDesc
 
-cd $PKG
-makepkg --linkadd y --chown n $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} 
-cd $OUTPUT
-md5sum ${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} > ${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz}.md5
-cd -
-cat $PKG/install/slack-desc | grep "^${PRGNAM}" | grep -v handy > $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.txt
-
-# Restore the original umask:
-umask ${_UMASK_}
+makepkg_fn

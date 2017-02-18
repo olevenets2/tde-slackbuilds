@@ -29,22 +29,23 @@ BUILD=${BUILD:-1}
 TAG=${TAG:-_tde}
 
 source ../../get-source.sh
+getsource_fn
 
-cd $TMP/tmp-$PRGNAM
-tar -xf ${SOURCE}
+untar_fn
 
-cd applications
-cd ${PRGNAM}
+listdocs_fn
 
-DOCS=$(for file in AUTHORS* ChangeLog* COPYING* FAQ* INSTALL* KNOWNBUGS* NEWS* README* TODO* *.lsm;do [[ -s $file ]] && ls -1 $file;done ) || true
+# set support for additional language(s) as per I18N variable
+# but only for languages available with this package
+langs="";for Lang in $I18N;do [[ -e po/$Lang".po" ]] && langs="$langs $Lang"".po";done
+sed -i "s|POFILES =.*$|POFILES =$langs|" po/Makefile.am
+langs=$(echo $langs | sed "s|.po||g")
 
-source $SRCDIR/../../ltoolupdate.sh
+ltoolupdate_fn
 
-chown -R root:root .
-chmod -R u+w,go+r-w,a+rX-st .
+chown_fn
 
-mkdir -p build-${PRGNAM}
-cd build-${PRGNAM}
+cd_builddir_fn
 
 # Refusing to compile with Clang 
 LDFLAGS="${SLKLDFLAGS}" \
@@ -60,21 +61,14 @@ CXX="g++" \
    --enable-closure \
    --build=$ARCH-slackware-linux
 
-  make $NUMJOBS || exit 1
-  make DESTDIR=$PKG install || exit 1
-cd -
+make_fn
 
-mkdir -p $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
-cp -a $DOCS $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION || true
-cat $SRCDIR/$(basename $0) > $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
-chown -R root:root $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
-find $PKG${INSTALL_TDE}/doc -type f -exec chmod 644 {} \;
+installdocs_fn
 
-find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
-  | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
+strip_fn
 
-SlackDesc()
-{
+mkdir_install_fn
+
 echo "
 # HOW TO EDIT THIS FILE:
 # The 'handy ruler' below makes it easier to edit a package description.  Line
@@ -90,15 +84,13 @@ $PRGNAM: Media Player for TDE
 $PRGNAM: 
 $PRGNAM:  
 $PRGNAM: 
-$PRGNAM: 
+$PRGNAM: With language support for:
 $PRGNAM:
-$PRGNAM:
+$PRGNAM: en $langs
 $PRGNAM:
 $PRGNAM:
 " > $PKG/install/slack-desc
-}
 
-mkdir -p $PKG/install
 cat <<EOINS >> $PKG/install/doinst.sh
 # Update the desktop database:
 if [ -x usr/bin/update-desktop-database ]; then
@@ -114,17 +106,5 @@ fi
 
 EOINS
 
-mkdir -p $PKG/install
-SlackDesc
 
-cd $PKG
-makepkg --linkadd y --chown n $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} 
-cd $OUTPUT
-md5sum ${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} > ${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz}.md5
-cd -
-cat $PKG/install/slack-desc | grep "^${PRGNAM}" > $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.txt
-
-# Restore the original umask:
-umask ${_UMASK_}
- 
-
+makepkg_fn

@@ -25,23 +25,19 @@
 
 PKGNAM=tdek3b-i18n
 PRGNAM=k3b-i18n
+[[ $I18N == "" ]] && echo -e "\nYou have tried to build $PRGNAM without selecting any language(s)\n" && exit
 VERSION=${VERSION:-$TDEVERSION}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_tde}
 
 source ../../get-source.sh
+getsource_fn
 
-cd $TMP/tmp-$PRGNAM
-tar -xf ${SOURCE}
+untar_fn
 
-cd applications
-cd ${PRGNAM}
+listdocs_fn
 
-# list only files > zero bytes
-DOCS=$(for file in AUTHORS* ChangeLog* COPYING* FAQ* INSTALL* KNOWNBUGS* NEWS* README* TODO* *.lsm;do [[ -s $file ]] && ls -1 $file;done ) || true
-
-chown -R root:root .
-chmod -R u+w,go+r-w,a+rX-st .
+chown_fn
 
 # set support for additional language(s) as per I18N variable
 # but only for languages available with this package
@@ -51,8 +47,7 @@ for loca in $langs;do sed -i "/$loca/d" subdirs;done
 ## ... and use modified subdirs to remove unwanted locale directories
 while read dir;do rm -rf $dir;done < subdirs
 
-mkdir -p build-${PRGNAM}
-cd build-${PRGNAM}
+cd_builddir_fn
 
   cmake \
     -DCMAKE_C_COMPILER=${COMPILER} \
@@ -60,21 +55,14 @@ cd build-${PRGNAM}
     -DCMAKE_INSTALL_PREFIX=${INSTALL_TDE} \
     ..
 
-  make $NUMJOBS || exit 1
-  make DESTDIR=$PKG install || exit 1
-cd -
+make_fn
 
-mkdir -p $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
-cp -a $DOCS $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION || true
-cat $SRCDIR/$(basename $0) > $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
-chown -R root:root $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
-find $PKG${INSTALL_TDE}/doc -type f -exec chmod 644 {} \;
+installdocs_fn
 
-find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
-  | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
+strip_fn
 
-SlackDesc()
-{
+mkdir_install_fn
+
 echo "
 # HOW TO EDIT THIS FILE:
 # The 'handy ruler' below makes it easier to edit a package description.  Line
@@ -96,19 +84,8 @@ tdek3b-i18n:
 tdek3b-i18n: 
 tdek3b-i18n: 
 " > $PKG/install/slack-desc
-}
 
-mkdir -p $PKG/install
-SlackDesc
 
 ARCH="noarch"
-cd $PKG
-makepkg --linkadd y --chown n $OUTPUT/${PKGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} 
-cd $OUTPUT
-md5sum ${PKGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} > ${PKGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz}.md5
-cd -
-cat $PKG/install/slack-desc | grep "^${PKGNAM}" > $OUTPUT/${PKGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.txt
-
-# Restore the original umask:
-umask ${_UMASK_}
- 
+PRGNAM=$PKGNAM
+makepkg_fn
