@@ -27,48 +27,38 @@ PRGNAM=libart-lgpl
 VERSION=${VERSION:-$TDEVERSION}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_tde}
-PKGNAME=libart_lgpl
+PKGNAM=libart_lgpl
 
 source ../../get-source.sh
+getsource_fn
 
-cd $TMP/tmp-$PRGNAM
-tar -xf ${SOURCE}
+untar_fn
 
-cd dependencies
-cd ${PRGNAM}
+listdocs_fn
 
-# list only files > zero bytes
-DOCS=$(for file in AUTHORS* ChangeLog* COPYING* FAQ* INSTALL* KNOWNBUGS* LICEN?E* NEWS* *README* TODO* *.lsm;do [[ -s $file ]] && ls -1 $file;done ) || true
+chown_fn
 
-chown -R root:root .
-chmod -R u+w,go+r-w,a+rX-st .
+cd_builddir_fn
 
 LDFLAGS="$SLKLDFLAGS" \
 CXXFLAGS="$SLKCFLAGS" \
 CFLAGS="$SLKCFLAGS" \
 CC=${COMPILER} \
 CXX=${COMPILER_CXX} \
-./configure \
+../configure \
   --prefix=/usr \
   --libdir=/usr/lib${LIBDIRSUFFIX} \
-  --docdir=/usr/doc/$PKGNAME-$VERSION \
   --disable-static \
   --build=$ARCH-slackware-linux \
 
-make $NUMJOBS || exit 1
-make DESTDIR=$PKG install || exit 1
+make_fn
 
-mkdir -p $PKG/usr/doc/$PKGNAME-$VERSION
-cp -a $DOCS $PKG/usr/doc/$PKGNAME-$VERSION || true
-cat $SRCDIR/$(basename $0) > $PKG/usr/doc/$PKGNAME-$VERSION/$PKGNAME.SlackBuild
-chown -R root:root $PKG/usr/doc/$PKGNAME-$VERSION
-find $PKG/usr/doc -type f -exec chmod 644 {} \;
+installdocs_fn
 
-find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
-  | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
+strip_fn
 
-SlackDesc()
-{
+mkdir_install_fn
+
 echo "
 # HOW TO EDIT THIS FILE:
 # The 'handy ruler' below makes it easier to edit a package description.  Line
@@ -90,17 +80,7 @@ libart_lgpl:
 libart_lgpl:
 libart_lgpl: Home: https://www.trinitydesktop.org/index.php
 " > $PKG/install/slack-desc
-}
 
-mkdir -p $PKG/install
-SlackDesc
 
-cd $PKG
-makepkg --linkadd y --chown n $OUTPUT/${PKGNAME}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz}
-cd $OUTPUT
-md5sum ${PKGNAME}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} > ${PKGNAME}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz}.md5
-cd -
-cat $PKG/install/slack-desc | grep "^${PKGNAME}" > $OUTPUT/${PKGNAME}-${VERSION}-${ARCH}-${BUILD}${TAG}.txt
-
-# Restore the original umask:
-umask ${_UMASK_}
+PRGNAM=$PKGNAM
+makepkg_fn

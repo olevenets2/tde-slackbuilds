@@ -1,0 +1,139 @@
+#!/bin/sh
+#
+# Slackware build script for (X)MedCon
+#
+# Copyright 2016 Marek Srejma (sam_web@yahoo.de)
+# Copyright 2015-2017  tde-slackbuilds project on GitHub - modified SBo script
+# All rights reserved.
+#
+# Redistribution and use of this script, with or without modification, is
+# permitted provided that the following conditions are met:
+#
+# 1. Redistributions of this script must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+# THIS SOFTWARE IS PROVIDED BY THE AUTHOR ''AS IS'' AND ANY EXPRESS OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
+# EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+# OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+# OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+# ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# 
+PRGNAM=xmedcon
+VERSION=${VERSION:-0.14.1}
+BUILD=${BUILD:-1}
+TAG=${TAG:-_tde}
+
+SRCURL="https://sourceforge.net/projects/xmedcon/files/XMedCon-Source/$VERSION/$PRGNAM-$VERSION.tar.bz2/download"
+
+source ../../get-source.sh
+getsource_fn
+
+untar_fn
+
+listdocs_fn
+
+chown_fn
+
+#cd_builddir_fn
+
+CFLAGS="$SLKCFLAGS" \
+CXXFLAGS="$SLKCFLAGS" \
+./configure \
+  --prefix=/usr \
+  --libdir=/usr/lib$LIBDIRSUFFIX \
+  --sysconfdir=/etc \
+  --localstatedir=/var \
+  --mandir=/usr/man \
+  --docdir=/usr/doc/$PRGNAM-$VERSION \
+  --disable-static \
+  --build=$ARCH-slackware-linux
+
+make_fn
+
+installdocs_fn
+
+mangzip_fn
+
+strip_fn
+
+mkdir_install_fn
+
+mv $PKG/usr/etc $PKG/
+mv $PKG/etc/xmedconrc $PKG/etc/xmedconrc.new
+
+mkdir -p $PKG/usr/share/pixmaps
+cp -a $DOCDIR/etc/xmedcon.png $PKG/usr/share/pixmaps
+
+mkdir -p $PKG/usr/share/applications
+echo "[Desktop Entry]
+Encoding=UTF-8
+Type=Application
+Name=(X)MedCon
+GenericName=Medical Image Conversion 
+Comment=Medical Image Conversion 
+Exec=xmedcon
+Icon=xmedcon.png
+Categories=Graphics;Utility;" > $PKG/usr/share/applications/xmedcon.desktop
+
+
+echo "# HOW TO EDIT THIS FILE:
+# The 'handy ruler' below makes it easier to edit a package description.
+# Line up the first '|' above the ':' following the base package name, and
+# the '|' on the right side marks the last column you can put a character in.
+# You must make exactly 11 lines for the formatting to be correct.  It's also
+# customary to leave one space after the ':' except on otherwise blank lines.
+
+       |-----handy-ruler------------------------------------------------------|
+xmedcon: xmedcon (X)
+xmedcon:
+xmedcon: a medical image conversion utility & library; hereby hoping to lower
+xmedcon: at least one barrier in medical research projects.
+xmedcon:
+xmedcon:
+xmedcon: http://xmedcon.sourceforge.net/
+xmedcon:
+xmedcon:
+xmedcon:
+xmedcon:" > $PKG/install/slack-desc
+
+echo $'config() {
+  NEW="$1"
+  OLD="$(dirname $NEW)/$(basename $NEW .new)"
+  # If there is no config file by that name, mv it over:
+  if [ ! -r $OLD ]; then
+    mv $NEW $OLD
+  elif [ "$(cat $OLD | md5sum)" = "$(cat $NEW | md5sum)" ]; then
+    # toss the redundant copy
+    rm $NEW
+  fi
+  # Otherwise, we leave the .new copy for the admin to consider...
+}
+
+preserve_perms() {
+  NEW="$1"
+  OLD="$(dirname $NEW)/$(basename $NEW .new)"
+  if [ -e $OLD ]; then
+    cp -a $OLD ${NEW}.incoming
+    cat $NEW > ${NEW}.incoming
+    mv ${NEW}.incoming $NEW
+  fi
+  config $NEW
+}
+
+config etc/xmedconrc.new
+
+if [ -x /usr/bin/update-desktop-database ]; then
+  /usr/bin/update-desktop-database -q usr/share/applications >/dev/null 2>&1
+fi
+
+if [ -x /usr/bin/update-mime-database ]; then
+  /usr/bin/update-mime-database usr/share/mime >/dev/null 2>&1
+fi' > $PKG/install/doinst.sh
+
+makepkg_fn

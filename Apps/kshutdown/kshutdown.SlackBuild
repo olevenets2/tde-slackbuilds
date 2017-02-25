@@ -29,24 +29,18 @@ BUILD=${BUILD:-1}
 TAG=${TAG:-_tde}
 
 source ../../get-source.sh
+getsource_fn
 
-cd $TMP/tmp-$PRGNAM
-tar -xf ${SOURCE}
-
-cd applications
-cd ${PRGNAM}
+untar_fn
 
 
-# list only files > zero bytes
-DOCS=$(for file in AUTHORS* ChangeLog* COPYING* FAQ* INSTALL* KNOWNBUGS* LICEN?E* NEWS* *README* TODO* *.lsm;do [[ -s $file ]] && ls -1 $file;done ) || true
+listdocs_fn
 
-source $SRCDIR/../../ltoolupdate.sh
+ltoolupdate_fn
 
-chown -R root:root .
-chmod -R u+w,go+r-w,a+rX-st .
+chown_fn
 
-mkdir -p build-${PRGNAM}
-cd build-${PRGNAM}
+cd_builddir_fn
 
 LDFLAGS="${SLKLDFLAGS}" \
 CFLAGS="${SLKCFLAGS} $TQT_INCLUDE_PATH" \
@@ -60,20 +54,14 @@ CXX=${COMPILER_CXX} \
    --disable-rpath \
    --enable-closure
 
-  make ${NUMJOBS:-} || exit 1
-  make DESTDIR=$PKG install || exit 1
+make_fn
 
-mkdir -p $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
-(cd ../;cp -a $DOCS $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION) || true
-cat $SRCDIR/$(basename $0) > $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
-chown -R root:root $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
-find $PKG${INSTALL_TDE}/doc -type f -exec chmod 644 {} \;
+installdocs_fn
 
-find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
-  | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
+strip_fn
 
-SlackDesc()
-{
+mkdir_install_fn
+
 echo "
 $PRGNAM: $PRGNAM (shut down utility for TDE)
 $PRGNAM:
@@ -88,18 +76,6 @@ $PRGNAM: en $(echo $langs)
 $PRGNAM:
 $PRGNAM:
 " > $PKG/install/slack-desc
-}
 
-mkdir -p $PKG/install
-SlackDesc
 
-cd $PKG
-makepkg --linkadd y --chown n $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} 
-cd $OUTPUT
-md5sum ${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} > ${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz}.md5
-cd -
-cat $PKG/install/slack-desc | grep "^${PRGNAM}" | grep -v handy > $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.txt
-
-# Restore the original umask:
-umask ${_UMASK_}
- 
+makepkg_fn

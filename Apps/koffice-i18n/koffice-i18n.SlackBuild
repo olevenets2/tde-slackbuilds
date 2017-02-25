@@ -24,17 +24,15 @@
 #   SUCH DAMAGE.
 
 PRGNAM=koffice-i18n
+[[ $I18N == "" ]] && echo -e "\nYou have tried to build $PRGNAM without selecting any language(s)\n" && exit
 VERSION=${VERSION:-$TDEVERSION}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_tde}
 
 source ../../get-source.sh
+getsource_fn
 
-cd $TMP/tmp-$PRGNAM
-tar -xf ${SOURCE}
-
-cd applications
-cd ${PRGNAM}
+untar_fn
 
 # set support for additional language(s) as per I18N variable
 # but only for languages available with this package
@@ -54,32 +52,28 @@ cd $dir
 
 make -f admin/Makefile.common
 
-chown -R root:root .
-chmod -R u+w,go+r-w,a+rX-st .
+chown_fn
+
+cd_builddir_fn
 
 LDFLAGS="${SLKLDFLAGS}" \
 CFLAGS="${SLKCFLAGS} $TQT_INCLUDE_PATH" \
 CXXFLAGS="${SLKCFLAGS}" \
 CC=${COMPILER} \
 CXX=${COMPILER_CXX} \
-./configure \
+../configure \
    --prefix=${INSTALL_TDE}
 
-  make $NUMJOBS || exit 1
-  make DESTDIR=$PKG install || exit 1
+make_fn
 
 cd ../
 done
 langs=$(echo $langdir | sed 's|koffice-i18n-||g')
-cd -
 
-mkdir -p $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
-cat $SRCDIR/$(basename $0) > $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
-chown -R root:root $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
-find $PKG${INSTALL_TDE}/doc -type f -exec chmod 644 {} \;
+installdocs_fn
 
-SlackDesc()
-{
+mkdir_install_fn
+
 echo "
 # HOW TO EDIT THIS FILE:
 # The 'handy ruler' below makes it easier to edit a package description.  Line
@@ -101,18 +95,7 @@ $PRGNAM:
 $PRGNAM:
 $PRGNAM:
 " > $PKG/install/slack-desc
-}
 
-mkdir -p $PKG/install
-SlackDesc
 
 ARCH="noarch"
-cd $PKG
-makepkg --linkadd y --chown n $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} 
-cd $OUTPUT
-md5sum ${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} > ${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz}.md5
-cd -
-cat $PKG/install/slack-desc | grep "^${PRGNAM}" | grep -v handy > $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.txt
-
-# Restore the original umask:
-umask ${_UMASK_}
+makepkg_fn

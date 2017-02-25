@@ -25,17 +25,15 @@
 
 PKGNAM=tdegwenview-i18n
 PRGNAM=gwenview-i18n
+[[ $I18N == "" ]] && echo -e "\nYou have tried to build $PRGNAM without selecting any language(s)\n" && exit
 VERSION=${VERSION:-$TDEVERSION}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_tde}
 
 source ../../get-source.sh
+getsource_fn
 
-cd $TMP/tmp-$PRGNAM
-tar -xf ${SOURCE}
-
-cd applications
-cd ${PRGNAM}
+untar_fn
 
 # Add missing files for Spanish TDE handbook docs
 if [[ $I18N == *es* ]]
@@ -52,21 +50,18 @@ cp de/doc/index.docbook es/doc/index.docbook
 sed -i -e 's|German|Spanish|' -e 's|Das Handbuch zu Gwenview|Manual del usuario Gwenview|' -e 's|Deutsche Übersetzung|Traducción Española|' -e 's|ist ein Bildbetrachter für &kde;|es un visor de imágenes para TDE|' -e '85s|Bild|imagen|' -e '87s|Betrachter|visionador|' -e 's|Künstler|artista|' -e 's|Photo|foto|' -e '93s|Bild|dibujo|' -e 's|Tipps|Consejos|' -e 's|Thomas||' -e 's|Reitelbach||' -e 's|tr@erdfunkstelle.de||' es/doc/index.docbook
 fi
 
-# list only files > zero bytes
-DOCS=$(for file in AUTHORS* ChangeLog* COPYING* FAQ* INSTALL* KNOWNBUGS* NEWS* README* TODO* *.lsm;do [[ -s $file ]] && ls -1 $file;done ) || true
+listdocs_fn
 
 # set support for additional language(s) as per I18N variable
 # but only for languages available with this package
 langs="";for Lang in $I18N;do [[ -d $Lang ]] && langs="$langs $Lang";done
 sed -i "s|SUBDIRS=.*$|SUBDIRS=$langs|" Makefile.am
 
-source $SRCDIR/../../ltoolupdate.sh
+ltoolupdate_fn
 
-chown -R root:root .
-chmod -R u+w,go+r-w,a+rX-st .
+chown_fn
 
-mkdir -p build-${PRGNAM}
-cd build-${PRGNAM}
+cd_builddir_fn
 
 LDFLAGS="${SLKLDFLAGS}" \
 CFLAGS="${SLKCFLAGS} $TQT_INCLUDE_PATH" \
@@ -80,21 +75,14 @@ CXX=${COMPILER_CXX} \
    --disable-rpath \
    --enable-closure
 
-  make $NUMJOBS || exit 1
-  make DESTDIR=$PKG install || exit 1
-cd -
+make_fn
 
-mkdir -p $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
-cp -a $DOCS $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION || true
-cat $SRCDIR/$(basename $0) > $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
-chown -R root:root $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
-find $PKG${INSTALL_TDE}/doc -type f -exec chmod 644 {} \;
+installdocs_fn
 
-find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
-  | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
+strip_fn
 
-SlackDesc()
-{
+mkdir_install_fn
+
 echo "
 # HOW TO EDIT THIS FILE:
 # The 'handy ruler' below makes it easier to edit a package description.  Line
@@ -116,19 +104,8 @@ tdegwenview-i18n:
 tdegwenview-i18n:
 tdegwenview-i18n:
 " > $PKG/install/slack-desc
-}
 
-mkdir -p $PKG/install
-SlackDesc
 
 ARCH="noarch"
-cd $PKG
-makepkg --linkadd y --chown n $OUTPUT/${PKGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} 
-cd $OUTPUT
-md5sum ${PKGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} > ${PKGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz}.md5
-cd -
-cat $PKG/install/slack-desc | grep "^${PKGNAM}" > $OUTPUT/${PKGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.txt
-
-# Restore the original umask:
-umask ${_UMASK_}
- 
+PRGNAM=$PKGNAM
+makepkg_fn

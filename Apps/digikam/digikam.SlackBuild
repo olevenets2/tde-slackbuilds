@@ -29,15 +29,11 @@ BUILD=${BUILD:-1}
 TAG=${TAG:-_tde}
 
 source ../../get-source.sh
+getsource_fn
 
-cd $TMP/tmp-$PRGNAM
-tar -xf ${SOURCE}
+untar_fn
 
-cd applications
-cd ${PRGNAM}
-
-# list only files > zero bytes
-DOCS=$(for file in AUTHORS* ChangeLog* COPYING* FAQ* INSTALL* KNOWNBUGS* NEWS* README* TODO* *.lsm;do [[ -s $file ]] && ls -1 $file;done ) || true
+listdocs_fn
 
 # set support for additional language(s) as per I18N variable
 # but only for languages available with this package
@@ -48,38 +44,32 @@ langdocdk="digikam";for Lang in $langs;do [[ -d doc/$Lang"_digikam" ]] && langdo
 langdocsf="showfoto";for Lang in $langs;do [[ -d doc/$Lang"_showfoto" ]] && langdocsf=$(echo $Lang"_showfoto" $langdocsf);done
 sed -i "s|SUBDIRS =.*$|SUBDIRS =. $langdocdk $langdocsf|" doc/Makefile.am
 
-source $SRCDIR/../../ltoolupdate.sh
+ltoolupdate_fn
 
-chown -R root:root .
-chmod -R u+w,go+r-w,a+rX-st .
+chown_fn
+
+cd_builddir_fn
 
 LDFLAGS="${SLKLDFLAGS}" \
 CFLAGS="${SLKCFLAGS} $TQT_INCLUDE_PATH" \
 CXXFLAGS="${SLKCFLAGS}" \
 CC=${COMPILER} \
 CXX=${COMPILER_CXX} \
-./configure \
+../configure \
    --prefix=${INSTALL_TDE} \
    --sysconfdir="/etc/trinity" \
    --mandir=${INSTALL_TDE}/man \
    --disable-rpath \
    --enable-closure
 
-  make $NUMJOBS || exit 1
-  make DESTDIR=$PKG install || exit 1
-cd -
+make_fn
 
-mkdir -p $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
-(cd ${PRGNAM};cp -a $DOCS $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION) || true
-cat $SRCDIR/$(basename $0) > $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
-chown -R root:root $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
-find $PKG${INSTALL_TDE}/doc -type f -exec chmod 644 {} \;
+installdocs_fn
 
-find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
-  | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
+strip_fn
 
-SlackDesc()
-{
+mkdir_install_fn
+
 echo "
 # HOW TO EDIT THIS FILE:
 # The 'handy ruler' below makes it easier to edit a package description.  Line
@@ -101,10 +91,7 @@ digikam:
 digikam:
 digikam:
 " > $PKG/install/slack-desc
-}
 
-mkdir -p $PKG/install
-SlackDesc
 
 # If building with additional language support, showfoto doesn't run using the language selected
 # because showfoto.mo files are not being built. This is added into the build at this packaging
@@ -117,14 +104,5 @@ do
 ln -s digikam.mo showfoto.mo)
 done
 fi
-cd $PKG
+makepkg_fn
 
-makepkg --linkadd y --chown n $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} 
-cd $OUTPUT
-md5sum ${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} > ${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz}.md5
-cd -
-cat $PKG/install/slack-desc | grep "^${PRGNAM}" > $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.txt
-
-# Restore the original umask:
-umask ${_UMASK_}
- 

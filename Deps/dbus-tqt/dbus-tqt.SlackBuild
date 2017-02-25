@@ -28,23 +28,17 @@ VERSION=${VERSION:-$TDEVERSION}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_tde}
 
-DOCS="AUTHORS COPYING NEWS README*"
 
 source ../../get-source.sh
+getsource_fn
 
-cd $TMP/tmp-$PRGNAM
-echo "
-Extracting the source from the ${PRGNAM} archive ..."
-tar -xf ${SOURCE}
+untar_fn
 
-cd dependencies
-cd ${PRGNAM}
+listdocs_fn
 
-chown -R root:root .
-chmod -R u+w,go+r-w,a+rX-st .
+chown_fn
 
-mkdir -p build-${PRGNAM}
-cd build-${PRGNAM}
+cd_builddir_fn
   cmake \
     -DCMAKE_C_FLAGS:STRING="$SLKCFLAGS" \
     -DCMAKE_CXX_FLAGS:STRING="$SLKCFLAGS" \
@@ -57,33 +51,36 @@ cd build-${PRGNAM}
     -DSYSCONF_INSTALL_DIR="/etc/trinity" \
     -DMAN_INSTALL_DIR=${INSTALL_TDE}/man \
     ..
-  make $NUMJOBS || exit 1
-  make DESTDIR=$PKG install || exit 1
-cd -
+make_fn
 
-mkdir -p $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
-cp -a $DOCS $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION || true
-cat $SRCDIR/$(basename $0) > $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
-chown -R root:root $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
-find $PKG${INSTALL_TDE}/doc -type f -exec chmod 644 {} \;
+installdocs_fn
 
-if [ -d $PKG/usr/man ]; then
-  find $PKG/usr/man -type f -name "*.?" -exec gzip -9f {} \;
-  for i in $(find $PKG/usr/man -type l -name "*.?") ; do ln -s $( readlink $i ).gz $i.gz ; rm $i ; done
-fi
+mangzip_fn
 
-find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
-  | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
+strip_fn
 
-mkdir -p $PKG/install
-cat $SRCDIR/slack-desc > $PKG/install/slack-desc
+mkdir_install_fn
 
-cd $PKG
-makepkg --linkadd y --chown n $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz}
-cd $OUTPUT
-md5sum ${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz} > ${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-txz}.md5
-cd -
-cat $PKG/install/slack-desc | grep "^${PRGNAM}" > $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.txt
+echo "
+# HOW TO EDIT THIS FILE:
+# The 'handy ruler' below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|'
+# on the right side marks the last column you can put a character in.  You must
+# make exactly 11 lines for the formatting to be correct.  It's also
+# customary to leave one space after the ':'.
 
-# Restore the original umask:
-umask ${_UMASK_}
+        |-----handy-ruler------------------------------------------------------|
+dbus-tqt: dbus-tqt (simple IPC library)
+dbus-tqt:
+dbus-tqt: A core concept of the D-BUS implementation is that
+dbus-tqt: 'libdbus' is intended to be a low-level API, similar to
+dbus-tqt: Xlib. Most programmers are intended to use the bindings to GLib,
+dbus-tqt: Qt, Python, Mono, Java, or whatever. These bindings have varying
+dbus-tqt: levels of completeness.
+dbus-tqt:
+dbus-tqt:
+dbus-tqt:
+dbus-tqt: Home: https://www.trinitydesktop.org/index.php
+" > $PKG/install/slack-desc
+
+makepkg_fn
