@@ -235,3 +235,16 @@ cat $PKG/install/slack-desc | grep "^${PRGNAM}" | grep -v handy > $OUTPUT/${PRGN
 umask ${_UMASK_}
 }
 
+libpng16_fn ()
+{
+(cd /usr/bin
+ln -sf libpng16-config libpng-config )
+(cd /usr/include
+ln -sf libpng16/pngconf.h pngconf.h
+ln -sf libpng16/png.h png.h )
+(cd /usr/lib64/pkgconfig
+ln -sf libpng16.pc libpng.pc )
+(cd /usr/lib64
+ln -sf libpng16.so libpng.so
+ln -sf libpng16.la libpng.la )
+}

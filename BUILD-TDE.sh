@@ -69,6 +69,7 @@ build_core()
 # These need to be set here:
 export INST=1
 TMP=${TMP:-/tmp}
+export LIBPNG_TMP=$TMP
 ROOT=$(pwd)
 
 
@@ -355,7 +356,8 @@ Non-TDE apps are in the Misc category and don't need the \Zb\Zr\Z4R\Znequired TD
 "Apps/knemo" "The TDE Network Monitor" off "\Zb\Z6   \Zn" \
 "Apps/knights" "A graphical chess interface" off "\Zb\Z6   \Zn" \
 "Apps/knmap" "A graphical nmap interface" off "\Zb\Z6 Might need tdesudo \Zn" \
-"Apps/koffice" "Office Suite" off "\Zb\Z6   \Zn" \
+" Misc/GraphicsMagick" "Swiss army knife of image processing" off "\Zb\Z6 Buildtime option for chalk[krita]  \Zn" \
+"Apps/koffice" "Office Suite" off "\Zb\Z6 Optional build-time dependencies - GraphicsMagick/libpng14 [for chalk/krita]  \Zn" \
 "Apps/koffice-i18n" "Internationalization files for koffice" off "\Zb\Z6 Required for koffice when \Zb\Z3Additional language support\Zb\Z6 has been selected  \Zn" \
 "Apps/ksensors" "A graphical interface for sensors" off "\Zb\Z6 Runtime requirement ap/lm_sensors \Zn" \
 "Apps/kscope" "A source-editing environment for C and C-style languages." off "\Zb\Z6 Runtime options cscope [d/cscope], ctags [ap/vim], dot [graphviz] \Zn" \
@@ -372,13 +374,50 @@ Non-TDE apps are in the Misc category and don't need the \Zb\Zr\Z4R\Znequired TD
 "Apps/tdeio-locate" "TDE frontend for the locate command" off "\Zb\Z6   \Zn" \
 "Apps/tdesudo" "Graphical frontend for the sudo command" off "\Zb\Z6   \Zn" \
 "Apps/twin-style-crystal" "twin theme" off "\Zb\Z6   \Zn" \
-" Misc/GraphicsMagick" "Swiss army knife of image processing" off "\Zb\Z6   \Zn" \
 " Misc/inkscape" "SVG editor" off "\Zb\Z6 Requires lxml if online help facility is required. \Zn" \
 " Misc/lxml" "Python bindings for libxml2 and libxslt" off "\Zb\Z6 Required to use Inkscape online help \Zn" \
 2> $TMPVARS/TDEbuilds
 # successful builds are removed from the TDEbuilds list by '$dir ' so add a space to the last entry
 # and the " needs to be removed because the Misc entries are double-quoted
 sed -i -e 's|$| |' -e 's|"||g' $TMPVARS/TDEbuilds
+
+
+## only run this if building koffice has been selected
+[[ $(sed 's|koffice-||' $TMPVARS/TDEbuilds | grep -o Apps/koffice) ]] && \
+{
+rm -f $TMPVARS/Krita_OPTS
+dialog --nocancel --no-shadow --colors --title " Building chalk in koffice " --item-help --checklist \
+"\n
+There are three options that can be set up for building the imaging app in koffice.
+\n\n
+[1] It is called \Zb\Z3chalk\Zn in TDE but is known as \Zb\Z3krita\Zn most other places.
+\n\n
+[2] .pngs loaded into chalk/krita will crash if it is built with libpng-1.6, but will load if libpng-1.4 is used for the build.
+\n
+  If libpng is chosen here, it will be added to the build list and the package placed in $TMP - not installed. It will then be installed by koffice.SB if the libpng unversioned headers and libs are not linked to libpng14.
+\n
+  The koffice.SB will restore those links to libpng16 when the build has finished or failed.
+\n\n
+[3] The build will prefer ImageMagick to GraphicsMagick if both are installed but many image formats crash with IM, so GM is recommended.
+\n
+  If GM is chosen here, that preference will be overridden and GM will be added to the build list if not already selected or installed." \
+28 75 3 \
+" krita" "Set the app name to krita" on "\Zb\Z6 otherwise will be \Zb\Z3chalk\Zn \Zb\Z6 \Zn" \
+" libpng14" "Build with libpng-1.4" on "\Zb\Z6 otherwise will be \Zb\Z3libpng-1.6\Zn \Zb\Z6 \Zn" \
+" useGM" "Use GraphicsMagick" on "\Zb\Z6 otherwise will be \Zb\Z3ImageMagick\Zn \Zb\Z6[if installed] \Zn" \
+2> $TMPVARS/Krita_OPTS
+## If GM has been selected and isn't in the build list or installed, add it to the build list before koffice
+GM_VERSION=$(grep VERSION:- $ROOT/Misc/GraphicsMagick/GraphicsMagick.SlackBuild|cut -d- -f2|cut -d} -f1)
+[[ $(cat $TMPVARS/Krita_OPTS) == *useGM* ]] && \
+[[ $(cat $TMPVARS/TDEbuilds) != *GraphicsMagick* ]] && \
+[[ ! $(ls /var/log/packages/GraphicsMagick-${GM_VERSION}* 2>/dev/null) ]] && \
+sed -i 's|Apps/koffice|Misc/GraphicsMagick &|' $TMPVARS/TDEbuilds
+## If libpng-1.4 has been selected and hasn't already been built, add it to the build list before koffice
+PNG_VERSION=$(grep VERSION:- $ROOT/Misc/libpng/libpng.SlackBuild|cut -d- -f2|cut -d} -f1)
+[[ $(cat $TMPVARS/Krita_OPTS) == *libpng14* ]] && \
+[[ ! $(ls $LIBPNG_TMP/libpng-${PNG_VERSION}-*-1.txz 2>/dev/null) ]] && \
+sed -i 's|Apps/koffice|Misc/libpng &|' $TMPVARS/TDEbuilds
+}
 }
 
 [[ ! -e $TMPVARS/TDEbuilds ]] && run_dialog
@@ -409,7 +448,7 @@ Setup is complete.
 \n\n
  \Z1S\Zb\Z0tart\Zn building the packages or \Zr\Z4\ZbAbort\Zn" \
 9 75
-[[ $(echo $?) == 1 ]] && echo && echo && echo "Build aborted" && echo && exit 1
+[[ $(echo $?) == 1 ]] && echo -e "\n\nBuild aborted\n" && exit 1
 echo
 
 ######################
@@ -425,6 +464,10 @@ export I18N=$(cat $TMPVARS/I18N)
 export TQT_DOCS=$(cat $TMPVARS/TQT_DOCS)
 export EXIT_FAIL=$(cat $TMPVARS/EXIT_FAIL)
 export KEEP_BUILD=$(cat $TMPVARS/KEEP_BUILD)
+# these exports are for koffice.SB
+[[ $(cat $TMPVARS/Krita_OPTS 2>/dev/null) == *krita* ]] && export REVERT=yes
+[[ $(cat $TMPVARS/Krita_OPTS 2>/dev/null) == *useGM* ]] && export USE_GM_LIBS=yes
+[[ $(cat $TMPVARS/Krita_OPTS 2>/dev/null) == *libpng14* ]] && export USE_PNG14=yes
 
 # See which compiler was selected and use the appropriate C++ compiler
 [[ $(cat $TMPVARS/COMPILER) == gcc ]] && export COMPILER_CXX="g++" || export COMPILER_CXX="clang++"
@@ -485,24 +528,39 @@ do
 
 checkinstall ()
 {
-if [[ $(ls /var/log/packages/${package}-*$(eval echo $version)-*-${build}*) ]]; then
-sed -i "s|$dir ||" $TMPVARS/TDEbuilds
-else
+## test for what package is being built .. 
+## if it's not libpng, test for the package installed
+## otherwise test for the libpng package only, not installed
+{
+{
+[[ ${package} != libpng ]] && [[ $(ls /var/log/packages/${package}-*$(eval echo $version)-*-${build}* 2>/dev/null) ]]
+} || {
+[[ ${package} == libpng ]] && [[ $(ls $LIBPNG_TMP/${package}-$(eval echo $version)-*-${build}*.txz 2>/dev/null) ]]
+}
+} && \
+## if either test is successful, the above will exit 0, then remove 'package' from the build list \
+sed -i "s|$dir ||" $TMPVARS/TDEbuilds || \
+## if unsuccessful, display error message \
+{
 echo "
       Error:  ${package} package build failed
       Check the build log $TMP/${package}-build-log
       "
+## if koffice was building with libpng14, restore the libpng16 headers for any following builds
+[[ ${USE_PNG14:-} == yes ]] && source $ROOT/get-source.sh && libpng16_fn || true
 ${EXIT_FAIL:-":"}
-fi
+}
 }
 # tde-i18n package installation is handled in tde-i18n.SlackBuild because if more than one i18n package is being built, only the last one will be installed by upgradepkg
 ## tidy-html5 is a special case because the version number is not in the archive name
+## create libpng-1.4 package only - it will be installed by the koffice.SB because it overrides libpng headers which for Sl14.2/current point to libpng16.
 [[ ${package} == tidy-html5 ]] && version=$(unzip -c tidy-html5-master.zip | grep -A 1 version.txt | tail -n 1)
-if [[ $INST == 1 ]] && [[ ${package} != tde-i18n ]]; then upgradepkg --install-new --reinstall $TMP/${package}-$(eval echo $version)-*-${build}*.txz
+if [[ $INST == 1 ]] && [[ ${package} != tde-i18n ]] && [[ ${package} != libpng ]]; then upgradepkg --install-new --reinstall $TMP/${package}-$(eval echo $version)-*-${build}*.txz
 checkinstall
 ## test for last language in the I18N list to ensure they've all been built
 elif [[ $INST == 1 ]] && [[ ${package} == tde-i18n ]]; then package=${package}-$(cat $TMPVARS/LASTLANG)
 checkinstall
+elif [[ ${package} == libpng ]]; then checkinstall
 fi
 
   # back to original directory

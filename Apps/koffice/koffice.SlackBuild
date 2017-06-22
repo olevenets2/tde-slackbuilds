@@ -25,13 +25,56 @@
 
 PRGNAM=koffice
 VERSION=${VERSION:-$TDEVERSION}
-BUILD=${BUILD:-1}
+BUILD=${BUILD:-2}
 TAG=${TAG:-_tde}
+
+## if GraphicsMagick not chosen in BUILD-TDE.sh, set up build to use ImageMagick
+[[ ${USE_GM_LIBS:-} != yes ]] && IM_LDFLAGS=$($(which Magick++-config) --libs)
+
+## build with libpng-1.4 - set in BUILD-TDE.sh - loading pngs in chalk/krita crashes with libpng16
+[[ ${USE_PNG14:-} == yes ]] && \
+[[ $(ls -l /usr/include/png.h) != *libpng14* ]] && \
+{ [[ $(getconf LONG_BIT) == 64 ]] && ARCH=x86_64 || ARCH=i686
+} && \
+{ installpkg $LIBPNG_TMP/libpng-1.4.20-$ARCH-1.txz || \
+{ echo -e "\033[39;1m\n (re)install libpng-1.4 \n\033[0m" && \
+exit
+}
+} || true
+
 
 source ../../get-source.sh
 getsource_fn
 
 untar_fn
+
+## fix chalk crashing - set liblcms as a direct dependency - see issue 37 for details
+sed -i '2iLCMS1LIBS = -llcms' chalk/Makefile.am
+sed -i 's|LDADD) \\$(LIBS)|& \\$(LCMS1LIBS)|' admin/am_edit
+
+## fix chalk crashing when launched from Applications menu
+sed -i "s|Exec=.*$|Exec=$INSTALL_TDE/bin/chalk %U|" chalk/chalk.desktop
+
+## revert name 'chalk' to 'krita' - set in BUILD-TDE.sh
+[[ ${REVERT:-} == yes ]] && APP=krita && \
+(echo -e "\n Reverting chalk to krita .. \n"
+## Rename directories and files:
+mv chalk krita
+for file in $(find . -name "*chalk*")
+do
+rename chalk krita $file 2>/dev/null || true # errors will be corrected next loop
+done
+## repeat for instances of 'chalk' appearing twice:
+for file in $(find . -name "*chalk*")
+do
+rename chalk krita $file
+done
+mv "krita/doc/Developing Chalk Plugins.odt" "krita/doc/Developing Krita Plugins.odt"
+## Rename contents:
+find . -type f -exec sed -i -e 's/chalk/krita/g' {} \;
+find . -type f -exec sed -i -e 's/CHALK/KRITA/g' {} \;
+find . -type f -exec sed -i -e 's/Chalk/Krita/g' {} \;
+sed -i 's|Swedish for krita|Swedish for chalk|' krita/README)
 
 listdocs_fn
 
@@ -42,7 +85,7 @@ chown_fn
 cd_builddir_fn
 
 # Refusing to compile with Clang =[
-LDFLAGS="${SLKLDFLAGS} $($(which Magick++-config) --libs)" \
+LDFLAGS="${SLKLDFLAGS} ${IM_LDFLAGS:-}" \
 CFLAGS="${SLKCFLAGS} $TQT_INCLUDE_PATH" \
 CXXFLAGS="${SLKCFLAGS}" \
 CC="gcc" \
@@ -52,8 +95,7 @@ CXX="g++" \
    --sysconfdir="/etc/trinity" \
    --mandir=${INSTALL_TDE}/man \
    --disable-rpath \
-   --enable-closure \
-   --build=$ARCH-slackware-linux
+   --enable-closure
 
 make_fn
 
@@ -71,7 +113,7 @@ echo "
 # make exactly 11 lines for the formatting to be correct.  It's also
 # customary to leave one space after the ':'.
 
-        |-----handy-ruler------------------------------------------------------|
+$PRGNAM|-----handy-ruler------------------------------------------------------|
 $PRGNAM: $PRGNAM (Office Suite)
 $PRGNAM:
 $PRGNAM: KOffice is a collection of office applications linked together by a 
@@ -97,8 +139,9 @@ if [ -d usr/share/icons/hicolor ]; then
     chroot . /usr/bin/gtk-update-icon-cache -f -t ${INSTALL_TDE}/share/icons/hicolor 1> /dev/null 2> /dev/null
   fi
 fi
-
 EOINS
 
-
 makepkg_fn
+
+## restore libpng16 links
+[[ ${USE_PNG14:-} == yes ]] && libpng16_fn || true
