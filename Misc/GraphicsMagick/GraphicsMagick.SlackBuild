@@ -24,11 +24,12 @@
 #   SUCH DAMAGE.
 
 PRGNAM=GraphicsMagick
-VERSION=${VERSION:-1.3.21}
+VERSION=${VERSION:-1.3.25}
 BUILD=${BUILD:-1}
 TAG=${TAG:-}
 
-SRCURL="http://downloads.sourceforge.net/graphicsmagick/${PRGNAM}-${VERSION}.tar.bz2"
+SRCURL="https://downloads.sourceforge.net/project/graphicsmagick/graphicsmagick/${VERSION}/GraphicsMagick-${VERSION}.tar.xz"
+ARCHIVE_TYPE="tar.xz"
 source ../../get-source.sh
 getsource_fn
 
