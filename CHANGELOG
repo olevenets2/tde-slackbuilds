@@ -14,6 +14,6 @@
            Commented out the desktop file change to d3lphin I previously made. Will leave it for an option
            for the users who want it, like me. -Thorn Inurcide
 01/02/2017 Added option to choose between Clang or GCC as your compiler.
-		   Added ltoolupdate.sh for the scripts using configure in TDE. This allows changes to it to effect
-		   all the scripts at once instead of going through each and every one of them. And frees up several lines
-		   in the SlackBuilds.
+           Added ltoolupdate.sh for the scripts using configure in TDE. This allows changes to it to effect
+	   all the scripts at once instead of going through each and every one of them. And frees up several lines
+           in the SlackBuilds.
