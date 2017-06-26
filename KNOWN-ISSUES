@@ -1,12 +1,9 @@
 Not all mimetypes are detected. Files without extensions and things like slack-desc
 have no default assosiations.
-Anyone know fix? Besides just manually doing this in the settings after installing. 
+Anyone know a fix? Besides just manually doing this in the settings after installing. 
 
-TDM isn't working right at the moment. At least installed outside of /usr.
-Will look in to this when I have more free time. My apologies.
-
-Chalk crashes when trying to launch it. (At least for me) The rest of Koffice
-seems to work fine.
+TDM isn't working right at the moment. At least installed outside of /usr. It appears
+that it's launching the xterm failsafe by default no matter what session is picked.
 
 Several things from the Apps dir aren't compiling with Clang. So even if you select to build 
 with Clang, GCC is used. I will keep checking on these in future release and updates to Clang in Slackware
