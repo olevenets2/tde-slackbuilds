@@ -40,3 +40,4 @@ NOTE: The Misc directory contains SlackBuilds for software you might already hav
 Please check to see if you have them or not already if you can't remember for sure. If you already have them
 there is no need to select them to be compiled and built. Though you can do this anyways if you want to replace the
 ones you have, but there is no need for this.
+Please be sure to read the KNOWN-ISSUES file prior to building.
