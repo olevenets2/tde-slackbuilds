@@ -8,12 +8,5 @@ that it's launching the xterm failsafe by default no matter what session is pick
 Several things from the Apps dir aren't compiling with Clang. So even if you select to build 
 with Clang, GCC is used. I will keep checking on these in future release and updates to Clang in Slackware
 
-***Koffice build failure on 14.2***
-Before compiling koffice, you should remove imagemagick from your system and then reinstall it after koffice has been built
-or recompile it changing the --without-modules flag to --with-modules
-**Or**
-Don't compile GraphicsMagick/libpng14 support into it. ( this will cause Krita/Chalk crashes though)
-**Slackware -current users can ignore this.**
-
 THE BUG REPORTS FOR EVERYTHING IF YOU'RE INTERESTED
 https://bugs.trinitydesktop.org/buglist.cgi?quicksearch=ALL
