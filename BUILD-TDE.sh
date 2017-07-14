@@ -398,13 +398,13 @@ There are three options that can be set up for building the imaging app in koffi
 \n
   The koffice.SB will restore those links to libpng16 when the build has finished or failed.
 \n\n
-[3] The build will prefer ImageMagick to GraphicsMagick if both are installed but many image formats crash with IM, so GM is recommended.
+[3] GraphicsMagick will enable an extended range of image formats to be loaded and saved. ImageMagick should be an alternative, but building fails with that, so without GM, the range of supported image formats will be limited.
 \n
-  If GM is chosen here, that preference will be overridden and GM will be added to the build list if not already selected or installed." \
-28 75 3 \
-" krita" "Set the app name to krita" on "\Zb\Z6 otherwise will be \Zb\Z3chalk\Zn \Zb\Z6 \Zn" \
-" libpng14" "Build with libpng-1.4" on "\Zb\Z6 otherwise will be \Zb\Z3libpng-1.6\Zn \Zb\Z6 \Zn" \
-" useGM" "Use GraphicsMagick" on "\Zb\Z6 otherwise will be \Zb\Z3ImageMagick\Zn \Zb\Z6[if installed] \Zn" \
+  If GM is chosen here, it will be added to the build list if not already selected or installed." \
+30 75 3 \
+" krita" "Set the app name to krita" on "\Zb\Z6 otherwise will be \Zb\Z3chalk\Zn" \
+" libpng14" "Build with libpng-1.4" on "\Zb\Z6 otherwise will be \Zb\Z3libpng-1.6\Zn" \
+" useGM" "Use GraphicsMagick" on "\Zb\Z6  \Zn" \
 2> $TMPVARS/Krita_OPTS
 ## If GM has been selected and isn't in the build list or installed, add it to the build list before koffice
 GM_VERSION=$(grep VERSION:- $ROOT/Misc/GraphicsMagick/GraphicsMagick.SlackBuild|cut -d- -f2|cut -d} -f1)
@@ -466,7 +466,6 @@ export EXIT_FAIL=$(cat $TMPVARS/EXIT_FAIL)
 export KEEP_BUILD=$(cat $TMPVARS/KEEP_BUILD)
 # these exports are for koffice.SB
 [[ $(cat $TMPVARS/Krita_OPTS 2>/dev/null) == *krita* ]] && export REVERT=yes
-[[ $(cat $TMPVARS/Krita_OPTS 2>/dev/null) == *useGM* ]] && export USE_GM_LIBS=yes
 [[ $(cat $TMPVARS/Krita_OPTS 2>/dev/null) == *libpng14* ]] && export USE_PNG14=yes
 
 # See which compiler was selected and use the appropriate C++ compiler

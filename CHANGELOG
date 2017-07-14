@@ -17,3 +17,4 @@
            Added ltoolupdate.sh for the scripts using configure in TDE. This allows changes to it to effect
 	   all the scripts at once instead of going through each and every one of them. And frees up several lines
            in the SlackBuilds.
+2017-07-13 Issue 40 - koffice.SB, build 3. Fixed karbon build failure caused by configure options used for Sl14.2 ImageMagick build.

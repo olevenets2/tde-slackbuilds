@@ -25,11 +25,9 @@
 
 PRGNAM=koffice
 VERSION=${VERSION:-$TDEVERSION}
-BUILD=${BUILD:-2}
+BUILD=${BUILD:-3}
 TAG=${TAG:-_tde}
 
-## if GraphicsMagick not chosen in BUILD-TDE.sh, set up build to use ImageMagick
-[[ ${USE_GM_LIBS:-} != yes ]] && IM_LDFLAGS=$($(which Magick++-config) --libs)
 
 ## build with libpng-1.4 - set in BUILD-TDE.sh - loading pngs in chalk/krita crashes with libpng16
 [[ ${USE_PNG14:-} == yes ]] && \
@@ -55,7 +53,10 @@ sed -i 's|LDADD) \\$(LIBS)|& \\$(LCMS1LIBS)|' admin/am_edit
 ## fix chalk crashing when launched from Applications menu
 sed -i "s|Exec=.*$|Exec=$INSTALL_TDE/bin/chalk %U|" chalk/chalk.desktop
 
-## revert name 'chalk' to 'krita' - set in BUILD-TDE.sh
+## fix build problem for karbon - see issue 40 for details
+sed -i 's|(Magick-config|(Wand-config|' configure.in.in
+
+## revert name 'chalk' to 'krita' - option set in BUILD-TDE.sh
 [[ ${REVERT:-} == yes ]] && APP=krita && \
 (echo -e "\n Reverting chalk to krita .. \n"
 ## Rename directories and files:
@@ -85,7 +86,7 @@ chown_fn
 cd_builddir_fn
 
 # Refusing to compile with Clang =[
-LDFLAGS="${SLKLDFLAGS} ${IM_LDFLAGS:-}" \
+LDFLAGS="${SLKLDFLAGS}" \
 CFLAGS="${SLKCFLAGS} $TQT_INCLUDE_PATH" \
 CXXFLAGS="${SLKCFLAGS}" \
 CC="gcc" \
