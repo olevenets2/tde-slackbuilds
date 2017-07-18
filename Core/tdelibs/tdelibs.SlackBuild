@@ -38,6 +38,9 @@ chown_fn
 
 patch -p1 < $SRCDIR/patches/build-with-clang.patch
 
+# Check for avahi-tqt
+[[ $(ls /var/log/packages/avahi-tqt-*) ]] && AVAHI="ON"
+
 cd_builddir_fn
   cmake \
     -DCMAKE_C_FLAGS:STRING="$SLKCFLAGS $TQT_INCLUDE_PATH" \
@@ -56,7 +59,7 @@ cd_builddir_fn
     -DWITH_SUDO_TDESU_BACKEND="ON" \
     -DWITH_NETWORK_MANAGER_BACKEND="ON" \
     -DWITH_ASPELL="OFF" \
-    -DWITH_AVAHI="OFF" \
+    -DWITH_AVAHI=${AVAHI:-"OFF"} \
     -DWITH_LIBART="ON" \
     -DWITH_OPENEXR="ON" \
     -DWITH_LZMA="ON" \
