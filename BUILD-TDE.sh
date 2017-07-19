@@ -327,6 +327,7 @@ Non-TDE apps are in the Misc category and don't need the \Zb\Zr\Z4R\Znequired TD
 "Core/tdesdk" "Tools used by TDE developers" off "\Zb\Z6 Requires tdepim \Zn" \
 "Core/tdevelop" "TDE development programs" off "\Zb\Z6 Requires tdesdk  \Zn" \
 "Core/tdetoys" "TDE Amusements" off "\Zb\Z6   \Zn" \
+"Core/tdeedu" "Educational software" off "\Zb\Z6   \Zn" \
 "Core/tdewebdev" "Quanta Plus and other applications" off "\Zb\Z6   \Zn" \
 " Misc/tidy-html5" "Corrects and cleans up HTML and XML documents" off "\Zb\Z6 Runtime option for Quanta+ [tdewebdev] \Zn" \
 " Misc/speex" "Audio compression format designed for speech" off "\Zb\Z6 Buildtime option for tdenetwork and amarok. Requires l/speexdsp  \Zn" \
