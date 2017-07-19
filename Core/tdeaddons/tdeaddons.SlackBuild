@@ -39,6 +39,15 @@ patch -p0 < $SRCDIR/arkplugin-diffs-1
 
 chown_fn
 
+#check for tdegames
+[[ $(ls /var/log/packages/tdegames-*) ]] && ATLANTIKDESIGNER="ON"
+
+#check for tdepim
+[[ $(ls /var/log/packages/tdepim-*) ]] && KADDRESSBOOK_PLUGINS="ON"
+
+# Check for tdemultimedia
+[[ $(ls /var/log/packages/tdemultimedia-*) ]] && NOATUN_PLUGINS="ON"
+
 cd_builddir_fn
   cmake \
     -DCMAKE_C_FLAGS:STRING="$SLKCFLAGS" \
@@ -54,6 +63,9 @@ cd_builddir_fn
     -DLIB_SUFFIX=${LIBDIRSUFFIX} \
     -DWITH_ALL_OPTIONS="ON" \
     -DBUILD_ALL="ON" \
+    -DBUILD_ATLANTIKDESIGNER=${ATLANTIKDESIGNER:-"OFF"} \
+    -DBUILD_KADDRESSBOOK_PLUGINS=${KADDRESSBOOK_PLUGINS:-"OFF"} \
+    -DBUILD_NOATUN_PLUGINS=${NOATUN_PLUGINS:-"OFF"} \
     -Wno-dev \
     ..
 make_fn
