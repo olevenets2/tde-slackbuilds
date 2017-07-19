@@ -319,11 +319,11 @@ Non-TDE apps are in the Misc category and don't need the \Zb\Zr\Z4R\Znequired TD
 "Core/tdemultimedia" "Multimedia packages for TDE" off "\Zb\Z6   \Zn" \
 "Core/tdeartwork" "Extra artwork/themes/wallpapers for TDE" off "\Zb\Z6   \Zn" \
 "Core/tdegraphics" "Misc graphics apps" off "\Zb\Z6   \Zn" \
-"Core/tdeaddons" "Additional plugins and scripts" off "\Zb\Z6   \Zn" \
 "Core/tdegames" "Games for TDE - atlantik, kasteroids, katomic, etc." off "\Zb\Z6   \Zn" \
 "Deps/libcaldav" "Calendaring Extensions to WebDAV" off "\Zb\Z6 Optional dependency for korganizer [tdepim] \Zn" \
 "Deps/libcarddav" "Online address support" off "\Zb\Z6 Optional dependency for korganizer [tdepim] \Zn" \
 "Core/tdepim" "Personal Information Management" off "\Zb\Z6   \Zn" \
+"Core/tdeaddons" "Additional plugins and scripts" off "\Zb\Z6   \Zn" \
 "Core/tdesdk" "Tools used by TDE developers" off "\Zb\Z6 Requires tdepim \Zn" \
 "Core/tdevelop" "TDE development programs" off "\Zb\Z6 Requires tdesdk  \Zn" \
 "Core/tdetoys" "TDE Amusements" off "\Zb\Z6   \Zn" \

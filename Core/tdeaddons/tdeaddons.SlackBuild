@@ -54,9 +54,6 @@ cd_builddir_fn
     -DLIB_SUFFIX=${LIBDIRSUFFIX} \
     -DWITH_ALL_OPTIONS="ON" \
     -DBUILD_ALL="ON" \
-    -DBUILD_ATLANTIKDESIGNER="OFF" \
-    -DBUILD_NOATUN_PLUGINS="OFF" \
-    -DBUILD_KADDRESSBOOK_PLUGINS="OFF" \
     -Wno-dev \
     ..
 make_fn
