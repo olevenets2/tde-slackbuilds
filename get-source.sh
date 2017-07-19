@@ -64,13 +64,7 @@ SOURCE=$SRCDIR/${PRGNAM}-${VERSION}.${ARCHIVE_TYPE:-"tar.bz2"}
 # SRCURL for non-TDE archives, set in the SB, will override the Trinity default *tar.bz2 URL
 SRCURL=${SRCURL:-"http://$TDE_MIRROR/releases/${VERSION}$TDEMIR_SUBDIR/${PRGNAM}-${VERSION}.tar.bz2"}
 
-# You can use your own private machine.conf file to overrule machine defaults:
-if [ -e $SRCDIR/machine.conf ]; then
-  . $SRCDIR/machine.conf
-elif [ -e /etc/slackbuild/machine.conf ]; then
-  . /etc/slackbuild/machine.conf
-else
-  # Automatically determine the architecture we're building on:
+# Automatically determine the architecture we're building on:
   MARCH=$( uname -m )
 # uname -m will give the wrong architecture if 32bit with 64bit kernel
     [[ $MARCH == "x86_64" ]] && ! [[ -d /lib64 ]] && MARCH="i586"
@@ -102,7 +96,6 @@ else
                SLKLDFLAGS=${SLKLDFLAGS:-""}; LIBDIRSUFFIX=${LIBDIRSUFFIX:-""}
                ;;
   esac
-fi
 
 case "$ARCH" in
     arm*)    TARGET=$ARCH-slackware-linux-gnueabi ;;
