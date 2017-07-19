@@ -48,7 +48,7 @@ untar_fn
 
 ## fix chalk crashing - set liblcms as a direct dependency - see issue 37 for details
 sed -i '2iLCMS1LIBS = -llcms' chalk/Makefile.am
-sed -i 's|LDADD) \\$(LIBS)|& \\$(LCMS1LIBS)|' admin/am_edit
+sed -i '977s|CXXLINK)|& \\$(LCMS1LIBS)|' admin/am_edit
 
 ## fix chalk crashing when launched from Applications menu
 sed -i "s|Exec=.*$|Exec=$INSTALL_TDE/bin/chalk %U|" chalk/chalk.desktop
