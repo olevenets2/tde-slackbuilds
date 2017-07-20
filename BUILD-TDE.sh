@@ -367,6 +367,7 @@ Non-TDE apps are in the Misc category and don't need the \Zb\Zr\Z4R\Znequired TD
 "Apps/kshutdown" "Shutdown utility for TDE" off "\Zb\Z6   \Zn" \
 "Apps/ksquirrel" "An image viewer with OpenGL and KIPI support." off "\Zb\Z6 Requires kipi-plugins tdelibkdcraw tdelibkexiv2 tdelibkipi libksquirrel. \Zn" \
 "Apps/kvpnc" "TDE frontend for various vpn clients" off "\Zb\Z6 Miscellaneous documentation will be in $(cat $TMPVARS/INSTALL_TDE)/doc/kvpnc-$(cat $TMPVARS/TDEVERSION)  \Zn" \
+"Apps/ktorrent" "A BitTorrent client for TDE" off "\Zb\Z6   \Zn" \
 "Apps/kaffeine" "Media player for TDE" off "\Zb\Z6   \Zn" \
 "Apps/rosegarden" "Audio sequencer and musical notation editor" off "\Zb\Z6 Requires jack-audio-connection-kit liblo and dssi for proper funtionality \Zn" \
 "Apps/kbfx" "Alternate menu for TDE" off "\Zb\Z6   \Zn" \
