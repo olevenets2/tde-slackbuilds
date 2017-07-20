@@ -332,6 +332,7 @@ Non-TDE apps are in the Misc category and don't need the \Zb\Zr\Z4R\Znequired TD
 " Misc/tidy-html5" "Corrects and cleans up HTML and XML documents" off "\Zb\Z6 Runtime option for Quanta+ [tdewebdev] \Zn" \
 " Misc/speex" "Audio compression format designed for speech" off "\Zb\Z6 Buildtime option for tdenetwork and amarok. Requires l/speexdsp  \Zn" \
 "Core/tdenetwork" "Networking applications for TDE" off "\Zb\Z6 Optional build-time dependency - speex \Zn" \
+"Core/tdeadmin" "System admin packages" off "\Zb\Z6  \Zn" \
 "Core/tde-i18n" "Additional language support for TDE" off "\Zb\Z6 Required when \Zb\Z3Additional language support\Zb\Z6 has been selected \Zn" \
 "Libs/tdelibkdcraw" "Decode RAW picture files" off "\Zb\Z6 Required for digikam, tdegwenview and ksquirrel \Zn" \
 "Libs/tdelibkexiv2" "Library to manipulate picture metadata" off "\Zb\Z6 Required for digikam, tdegwenview and ksquirrel. Needs l/exiv2... \Zn" \
@@ -378,6 +379,8 @@ Non-TDE apps are in the Misc category and don't need the \Zb\Zr\Z4R\Znequired TD
 "Apps/tdeio-locate" "TDE frontend for the locate command" off "\Zb\Z6   \Zn" \
 "Apps/tdesudo" "Graphical frontend for the sudo command" off "\Zb\Z6   \Zn" \
 "Apps/twin-style-crystal" "twin theme" off "\Zb\Z6   \Zn" \
+"Apps/tdmtheme" "tdm theme editor module" off "\Zb\Z6   \Zn" \
+"Apps/kdbg" "GUI for gdb using TDE" off "\Zb\Z6   \Zn" \
 " Misc/inkscape" "SVG editor" off "\Zb\Z6 Requires lxml if online help facility is required. \Zn" \
 " Misc/lxml" "Python bindings for libxml2 and libxslt" off "\Zb\Z6 Required to use Inkscape online help \Zn" \
 2> $TMPVARS/TDEbuilds
