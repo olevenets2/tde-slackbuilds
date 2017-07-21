@@ -50,6 +50,11 @@ untar_fn
 sed -i '2iLCMS1LIBS = -llcms' chalk/Makefile.am
 sed -i 's|LDADD) \\$(LIBS)|& \\$(LCMS1LIBS)|' admin/am_edit
 
+## building with installation directory /usr - see issue #43 for details
+[[ $INSTALL_TDE == /usr ]] && \
+{ mv $TQTDIR/lib/libtqt-mt.la $TQTDIR/lib/libtqt-mt.la-bak 2>/dev/null || true
+}
+
 ## fix chalk crashing when launched from Applications menu
 sed -i "s|Exec=.*$|Exec=$INSTALL_TDE/bin/chalk %U|" chalk/chalk.desktop
 
@@ -146,3 +151,8 @@ makepkg_fn
 
 ## restore libpng16 links
 [[ ${USE_PNG14:-} == yes ]] && libpng16_fn || true
+
+## restore libtqt-mt.la
+[[ $INSTALL_TDE == /usr ]] && \
+{ mv $TQTDIR/lib/libtqt-mt.la-bak $TQTDIR/lib/libtqt-mt.la 2>/dev/null || true
+}
