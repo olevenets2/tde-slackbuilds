@@ -76,7 +76,6 @@ CXX=${COMPILER_CXX} \
  -plugin-style-sgi \
  -plugin-style-windows
 
-
 make -i $NUMJOBS || exit 1
 QTDIR=$PKG$TQTDIR-$VERSION
 LD_LIBRARY_PATH=$QTDIR/lib make install INSTALL_ROOT=$PKG || exit 1
@@ -117,6 +116,13 @@ mkdir -p $PKG${INSTALL_TDE}/lib${LIBDIRSUFFIX}/pkgconfig
   ln -sf $TQTDIR-${VERSION}/lib/pkgconfig/tqt-mt.pc .
 )
 
+# Add desktop files to launch some programs:
+mkdir -p $PKG${INSTALL_TDE}/share/applications/tde
+cp -a $SRCDIR/apps/tqtconfig.desktop $PKG${INSTALL_TDE}/share/applications/tde/tqtconfig.desktop
+cp -a $SRCDIR/apps/tqlinguist.desktop $PKG${INSTALL_TDE}/share/applications/tde/tqlinguist.desktop
+cp -a $SRCDIR/apps/tqdesigner.desktop $PKG${INSTALL_TDE}/share/applications/tde/tqdesigner.desktop
+cp -a $SRCDIR/apps/tqassistant.desktop $PKG${INSTALL_TDE}/share/applications/tde/tqassistant.desktop
+
 # Symlink tqt3 includes to qt3, to provide it for non-tde software as well =]
 mkdir -p $PKG${INSTALL_TDE}/include
 ( cd $PKG${INSTALL_TDE}/include ; ln -sf $TQTDIR-${VERSION}/include qt3 )
@@ -135,17 +141,17 @@ echo "
 # customary to leave one space after the ':'.
 
     |-----handy-ruler------------------------------------------------------|
-tqt3: tqt3 (C++ GUI application framework)
-tqt3:
-tqt3: Qt is a multiplatform C++ GUI application framework
-tqt3:
-tqt3:
-tqt3:
-tqt3:
-tqt3:
-tqt3:
-tqt3:
-tqt3: Home: https://wiki.trinitydesktop.org/Trinity_Desktop_Environment
+$PRGNAM: $PRGNAM (C++ GUI application framework)
+$PRGNAM:
+$PRGNAM: Qt is a multiplatform C++ GUI application framework
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM: Home: https://wiki.trinitydesktop.org/Trinity_Desktop_Environment
 " > $PKG/install/slack-desc
 
 # Add this to the doinst.sh:
