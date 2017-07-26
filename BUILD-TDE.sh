@@ -387,6 +387,8 @@ Non-TDE apps are in the Misc category and don't need the \Zb\Zr\Z4R\Znequired TD
 "Apps/soundkonverter" "frontend to various audio converters" off "\Zb\Z6   \Zn" \
 "Apps/krusader" "File manager for TDE" off "\Zb\Z6   \Zn" \
 "Apps/piklab" "IDE fot PIC microcontrollers" off "\Zb\Z6   \Zn" \
+"Apps/kdbusnotification" "A DBUS notification to TDE interface" off "\Zb\Z6   \Zn" \
+"Apps/kvkbd" "A virtual keyboard for TDE" off "\Zb\Z6   \Zn" \
 " Misc/inkscape" "SVG editor" off "\Zb\Z6 Requires lxml if online help facility is required. \Zn" \
 " Misc/lxml" "Python bindings for libxml2 and libxslt" off "\Zb\Z6 Required to use Inkscape online help \Zn" \
 2> $TMPVARS/TDEbuilds
