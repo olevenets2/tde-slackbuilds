@@ -63,6 +63,7 @@ strip_fn
 
 mkdir_install_fn
 
+PRGNAM=$PKGNAM
 echo "
 # HOW TO EDIT THIS FILE:
 # The 'handy ruler' below makes it easier to edit a package description.  Line
@@ -71,21 +72,19 @@ echo "
 # exactly 11 lines for the formatting to be correct.  It's also customary to
 # leave one space after the ':'.
 
-        |-----handy-ruler------------------------------------------------------|
-tdek3b-i18n: tdek3b-i18n (internationalization files for the CD Creator).
-tdek3b-i18n:
-tdek3b-i18n: For languages:
-tdek3b-i18n: 
-tdek3b-i18n: $langs
-tdek3b-i18n: 
-tdek3b-i18n: 
-tdek3b-i18n: 
-tdek3b-i18n: 
-tdek3b-i18n: 
-tdek3b-i18n: 
+       |-----handy-ruler------------------------------------------------------|
+$PRGNAM: $PRGNAM (internationalization files for the CD Creator).
+$PRGNAM:
+$PRGNAM: For languages:
+$PRGNAM:
+$PRGNAM: $langs
+$PRGNAM: 
+$PRGNAM:
+$PRGNAM:
+$PRGNAM: 
+$PRGNAM:
+$PRGNAM:
 " > $PKG/install/slack-desc
 
-
 ARCH="noarch"
-PRGNAM=$PKGNAM
 makepkg_fn

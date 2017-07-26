@@ -70,11 +70,11 @@ echo "
 # the right side marks the last column you can put a character in.  You must make
 # exactly 11 lines for the formatting to be correct.  It's also customary to
 # leave one space after the ':'.
-
-$PRGNAM|-----handy-ruler------------------------------------------------------|
+       |-----handy-ruler------------------------------------------------------|
+$PRGNAM: $PRGNAM (Graphical front end for the sudo command)
 $PRGNAM:
-$PRGNAM: $PRGNAM is a graphical front end for the sudo command.
 $PRGNAM:
+$PRGNAM: Graphical front end for the sudo command
 $PRGNAM:
 $PRGNAM:
 $PRGNAM:
@@ -82,7 +82,7 @@ $PRGNAM: With language support for:
 $PRGNAM:
 $PRGNAM: en $langs
 $PRGNAM:
-$PRGNAM:
+$PRGNAM: Home: https://www.trinitydesktop.org/index.php
 " > $PKG/install/slack-desc
 
 
