@@ -66,7 +66,7 @@ echo "
 # the right side marks the last column you can put a character in.  You must make
 # exactly 11 lines for the formatting to be correct.  It's also customary to
 # leave one space after the ':'.
-
+       |-----handy-ruler------------------------------------------------------|
 $PRGNAM: $PRGNAM (TDE educational software)
 $PRGNAM:
 $PRGNAM: Many pieces of software for education.
@@ -94,6 +94,5 @@ if [ -d usr/share/icons/hicolor ]; then
   fi
 fi
 EOINS
-
 
 makepkg_fn

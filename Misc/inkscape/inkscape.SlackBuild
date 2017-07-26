@@ -95,19 +95,19 @@ echo "
 # the right side marks the last column you can put a character in.  You must make
 # exactly 11 lines for the formatting to be correct.  It's also customary to
 # leave one space after the ':'.
-
-$PRGNAM|-----handy-ruler------------------------------------------------------|
+       |-----handy-ruler------------------------------------------------------|
 $PRGNAM: Inkscape (Open Source vector graphics editor)
 $PRGNAM:
 $PRGNAM: Inkscape is an Open Source vector graphics editor, with capabilities
 $PRGNAM: similar to Illustrator, Freehand, CorelDraw, or Xara X using the W3C
 $PRGNAM: standard Scalable Vector Graphics (SVG) file format.
 $PRGNAM:
-$PRGNAM: Homepage: http://www.inkscape.org/
+$PRGNAM:
 $PRGNAM:
 $PRGNAM: With language support for:
 $PRGNAM: en $(echo $langs)
 $PRGNAM:
+$PRGNAM: Homepage: http://www.inkscape.org/
 " > $PKG/install/slack-desc
 
 cat <<EOINS >> $PKG/install/doinst.sh
@@ -122,8 +122,6 @@ if [ -d usr/share/icons/hicolor ]; then
     chroot . /usr/bin/gtk-update-icon-cache -f -t /usr/local/share/icons/hicolor 1> /dev/null 2> /dev/null
   fi
 fi
-
 EOINS
-
 
 makepkg_fn

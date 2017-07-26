@@ -59,6 +59,7 @@ strip_fn
 
 mkdir_install_fn
 
+PRGNAM=$PKGNAM
 echo "
 # HOW TO EDIT THIS FILE:
 # The 'handy ruler' below makes it easier to edit a package description.  Line
@@ -67,20 +68,18 @@ echo "
 # make exactly 11 lines for the formatting to be correct.  It's also
 # customary to leave one space after the ':'.
 
-           |-----handy-ruler------------------------------------------------------|
-libart_lgpl: libart_lgpl (the LGPL'd component of libart)
-libart_lgpl:
-libart_lgpl: This is the LGPL'd component of libart. All functions needed
-libart_lgpl: for running the Gnome canvas, and for printing support, will be
-libart_lgpl: going in here. The GPL'd component will be getting various
-libart_lgpl: enhanced functions for specific applications.
-libart_lgpl:
-libart_lgpl:
-libart_lgpl:
-libart_lgpl:
-libart_lgpl: Home: https://www.trinitydesktop.org/index.php
+       |-----handy-ruler------------------------------------------------------|
+$PRGNAM: $PRGNAM (the LGPL'd component of libart)
+$PRGNAM:
+$PRGNAM: This is the LGPL'd component of libart. All functions needed
+$PRGNAM: for running the Gnome canvas, and for printing support, will be
+$PRGNAM: going in here. The GPL'd component will be getting various
+$PRGNAM: enhanced functions for specific applications.
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM: Home: https://www.trinitydesktop.org/index.php
 " > $PKG/install/slack-desc
 
-
-PRGNAM=$PKGNAM
 makepkg_fn

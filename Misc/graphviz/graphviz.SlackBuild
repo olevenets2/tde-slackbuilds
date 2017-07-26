@@ -89,8 +89,7 @@ echo "
 # on the right side marks the last column you can put a character in.  You must
 # make exactly 11 lines for the formatting to be correct.  It's also
 # customary to leave one space after the ':'.
-
-$PRGNAM|-----handy-ruler------------------------------------------------------|
+       |-----handy-ruler------------------------------------------------------|
 $PRGNAM: $PRGNAM (Graph Visualization)
 $PRGNAM:
 $PRGNAM: Graphviz is open source graph visualization software.
@@ -102,7 +101,7 @@ $PRGNAM: Homepage: http://graphviz.org/
 $PRGNAM:
 $PRGNAM:
 $PRGNAM:
-
+$PRGNAM:Homepage: http://graphviz.org/
 " > $PKG/install/slack-desc
 
 doinstsh

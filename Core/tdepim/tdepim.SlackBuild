@@ -78,18 +78,18 @@ echo "
 # make exactly 11 lines for the formatting to be correct.  It's also
 # customary to leave one space after the ':'.
 
-      |-----handy-ruler------------------------------------------------------|
-tdepim: tdepim (personal information management)
-tdepim:
-tdepim: The TDE-PIM project aims to bring together those who wish to help
-tdepim: design, implement, test, etc. anything that's to do with
-tdepim: personal information management.
-tdepim:
-tdepim:
-tdepim:
-tdepim:
-tdepim:
-tdepim: Home: http://www.trinitydesktop.org/ 
+       |-----handy-ruler------------------------------------------------------|
+$PRGNAM: $PRGNAM (personal information management)
+$PRGNAM:
+$PRGNAM: The TDE-PIM project aims to bring together those who wish to help
+$PRGNAM: design, implement, test, etc. anything that's to do with
+$PRGNAM: personal information management.
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM: Home: http://www.trinitydesktop.org/ 
 " > $PKG/install/slack-desc
 
 cat <<EOINS >> $PKG/install/doinst.sh
@@ -109,8 +109,6 @@ fi
 if [ -x usr/bin/update-mime-database ]; then
   chroot . /usr/bin/update-mime-database ${INSTALL_TDE}/share/mime >/dev/null 2>&1
 fi
-
 EOINS
-
 
 makepkg_fn

@@ -77,19 +77,20 @@ echo "
 # exactly 11 lines for the formatting to be correct.  It's also customary to
 # leave one space after the ':'.
 
-            |-----handy-ruler------------------------------------------------------|
-kipi-plugins: Kipi Plugins are additional functions for the TDE Images Management
-kipi-plugins: Host Programs (digiKam, ksquirrel and gwenview). They can add
-kipi-plugins: extra menus and shortcuts, and extend the host program features.
-kipi-plugins: You can install as many or as few as you like, from within the host
-kipi-plugins: programs.
-kipi-plugins:
-kipi-plugins: With language support for:
-kipi-plugins:
-kipi-plugins: en $(echo $langs)
-kipi-plugins:
-kipi-plugins:
+       |-----handy-ruler------------------------------------------------------|
+$PRGNAM: $PRGNAM (Functions for the TDE Images Management Host Programs)
+$PRGNAM:
+$PRGNAM: Kipi Plugins are additional functions for the TDE Images Management
+$PRGNAM: Host Programs (digiKam, ksquirrel and gwenview). They can add
+$PRGNAM: extra menus and shortcuts, and extend the host program features.
+$PRGNAM: You can install as many or as few as you like, from within the host
+$PRGNAM: programs.
+$PRGNAM:
+$PRGNAM: With language support for:
+$PRGNAM:
+$PRGNAM: en $(echo $langs)
+$PRGNAM:
+$PRGNAM: Home: https://www.trinitydesktop.org/index.php 
 " > $PKG/install/slack-desc
-
 
 makepkg_fn

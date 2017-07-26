@@ -122,20 +122,19 @@ echo "
 # customary to leave one space after the ':'.
 
        |-----handy-ruler------------------------------------------------------|
-tdebase: tdebase (The Trinity Desktop base)
-tdebase:
-tdebase: tdebase is the second mandatory package (besides tdelibs) for the
-tdebase: Trinity Desktop Environment. Here we have various applications and
-tdebase: infrastructure files and libraries.
-tdebase:
-tdebase:
-tdebase:
-tdebase:
-tdebase:
-tdebase: Home: https://www.trinitydesktop.org/index.php
+$PRGNAM: $PRGNAM (The Trinity Desktop base)
+$PRGNAM:
+$PRGNAM: tdebase is the second mandatory package (besides tdelibs) for the
+$PRGNAM: Trinity Desktop Environment. Here we have various applications and
+$PRGNAM: infrastructure files and libraries.
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM: Home: https://www.trinitydesktop.org/index.php
 " > $PKG/install/slack-desc
 
 sed -e "s|\${INSTALL_TDE}|${INSTALL_TDE}|g" -e "s|\$TQTDIR|$TQTDIR|g" < $SRCDIR/doinst.sh > $PKG/install/doinst.sh
-
 
 makepkg_fn

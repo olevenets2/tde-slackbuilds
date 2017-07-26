@@ -67,6 +67,7 @@ strip_fn
 
 mkdir_install_fn
 
+PRGNAM=$PKGNAM
 echo "
 # HOW TO EDIT THIS FILE:
 # The 'handy ruler' below makes it easier to edit a package description.  Line
@@ -76,19 +77,18 @@ echo "
 # leave one space after the ':'.
 
        |-----handy-ruler------------------------------------------------------|
-tdelibkipi: tdelibKipi (KDE Image Plugin Interface) for TDE
-tdelibkipi:
-tdelibkipi: Kipi is an effort to develop a common plugin structure for digiKam,
-tdelibkipi: and other kipi host programs. Its aim is to share image plugins
-tdelibkipi: among graphic applications. Kipi is based on the old digiKam plugins
-tdelibkipi: implementation and is maintained by the digiKam team.
-tdelibkipi:
-tdelibkipi: With language support for:
-tdelibkipi:
-tdelibkipi: en $(echo $langs)
-tdelibkipi:
+$PRGNAM: $PRGNAM (KDE Image Plugin Interface) for TDE
+$PRGNAM:
+$PRGNAM: Kipi is an effort to develop a common plugin structure for digiKam,
+$PRGNAM: and other kipi host programs. Its aim is to share image plugins
+$PRGNAM: among graphic applications. Kipi is based on the old digiKam plugins
+$PRGNAM: implementation and is maintained by the digiKam team.
+$PRGNAM:
+$PRGNAM: With language support for:
+$PRGNAM:
+$PRGNAM: en $(echo $langs)
+$PRGNAM:
+$PRGNAM: Home: https://www.trinitydesktop.org/index.php
 " > $PKG/install/slack-desc
 
-
-PRGNAM=$PKGNAM
 makepkg_fn

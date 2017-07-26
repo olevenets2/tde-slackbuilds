@@ -70,7 +70,7 @@ echo "
 # make exactly 11 lines for the formatting to be correct.  It's also
 # customary to leave one space after the ':'.
 
-$PRGNAM|-----handy-ruler------------------------------------------------------|
+       |-----handy-ruler------------------------------------------------------|
 $PRGNAM: $PRGNAM (For inclusion in the Amarok music player)
 $PRGNAM: 
 $PRGNAM: The Moodbar is an algorithm for creating a colorful visual
@@ -81,9 +81,8 @@ $PRGNAM:
 $PRGNAM: This package contains a GStreamer plugin with elements that are used
 $PRGNAM: in the moodbar analysis, and an application that actually does the analysis.
 $PRGNAM: 
+$PRGNAM:
 $PRGNAM:      
-
 " > $PKG/install/slack-desc
-
 
 makepkg_fn

@@ -33,7 +33,6 @@ TAG=${TAG:-}
 # override download option in get-source.sh because there is no version # in the file name
 [[ ! -s ../../src/tidy-html5-master.zip ]] && wget -nv -T 20 -O ../../src/tidy-html5-master.zip https://github.com/htacg/tidy-html5/archive/master.zip || true
 
-
 ARCHIVE_TYPE="zip"
 source ../../get-source.sh
 getsource_fn
@@ -89,20 +88,19 @@ echo "
 # the right side marks the last column you can put a character in.  You must make
 # exactly 11 lines for the formatting to be correct.  It's also customary to
 # leave one space after the ':'.
-
-$PRGNAM|-----handy-ruler------------------------------------------------------|
+       |-----handy-ruler------------------------------------------------------|
+$PRGNAM: $PRGNAM (corrects and cleans up HTML and XML documents)
+$PRGNAM:
 $PRGNAM: Tidy corrects and cleans up HTML and XML documents by fixing markup
 $PRGNAM: errors and upgrading legacy code to modern standards.
-$PRGNAM:
 $PRGNAM: Optional with Quanta+
-$PRGNAM:
 $PRGNAM:
 $PRGNAM: http://www.html-tidy.org
 $PRGNAM:
 $PRGNAM: For languages:
 $PRGNAM: en $(echo ${langs:-})
 $PRGNAM:
+$PRGNAM:
 " > $PKG/install/slack-desc
-
 
 makepkg_fn

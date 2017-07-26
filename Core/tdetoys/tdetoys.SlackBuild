@@ -69,17 +69,17 @@ echo "
 # customary to leave one space after the ':'.
 
        |-----handy-ruler------------------------------------------------------|
-tdetoys: tdetoys (TDE Amusements)
-tdetoys:
-tdetoys: TDE Amusements
-tdetoys:
-tdetoys:
-tdetoys:
-tdetoys:
-tdetoys:
-tdetoys:
-tdetoys:
-tdetoys: Home: http://www.trinitydesktop.org/
+$PRGNAM: $PRGNAM (TDE Amusements)
+$PRGNAM:
+$PRGNAM: TDE Amusements
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM: Home: http://www.trinitydesktop.org/
 " > $PKG/install/slack-desc
 
 cat <<EOINS >> $PKG/install/doinst.sh
@@ -94,8 +94,6 @@ if [ -d usr/share/icons/hicolor ]; then
     chroot . /usr/bin/gtk-update-icon-cache -f -t ${INSTALL_TDE}/share/icons/hicolor 1> /dev/null 2> /dev/null
   fi
 fi
-
 EOINS
-
 
 makepkg_fn

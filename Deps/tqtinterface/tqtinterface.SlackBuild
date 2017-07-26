@@ -73,19 +73,18 @@ echo "
 # make exactly 11 lines for the formatting to be correct.  It's also
 # customary to leave one space after the ':'.
 
-            |-----handy-ruler------------------------------------------------------|
-tqtinterface: tqtinterface (libraries that abstract the underlying Qt system)
-tqtinterface:
-tqtinterface: This package includes libraries that abstract the underlying
-tqtinterface: Qt system from the actual Trinity code, allowing easy, complete
-tqtinterface: upgrades to new versions of Qt.
-tqtinterface:
-tqtinterface:
-tqtinterface:
-tqtinterface:
-tqtinterface:
-tqtinterface: Home: https://www.trinitydesktop.org/index.php
+       |-----handy-ruler------------------------------------------------------|
+$PRGNAM: $PRGNAM (libraries that abstract the underlying Qt system)
+$PRGNAM:
+$PRGNAM: This package includes libraries that abstract the underlying
+$PRGNAM: Qt system from the actual Trinity code, allowing easy, complete
+$PRGNAM: upgrades to new versions of Qt.
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM: Home: https://www.trinitydesktop.org/index.php
 " > $PKG/install/slack-desc
-
 
 makepkg_fn

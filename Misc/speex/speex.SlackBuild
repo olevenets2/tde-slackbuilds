@@ -44,13 +44,11 @@ untar_fn
 # Thanks to SBo:
 sed -i s/r// README.TI-DSP
 
-
 listdocs_fn
 
 chown_fn
 
 cd_builddir_fn
-
 
 LDFLAGS="$SLKLDFLAGS" \
 CFLAGS="$SLKCFLAGS" \
@@ -74,7 +72,6 @@ mangzip_fn
 # Fix libspeex.la Thanks SBo script:
 sed -i "s|-L$PKG.*/lib${LIBDIRSUFFIX} ||" $PKG/usr/lib${LIBDIRSUFFIX}/libspeex.la
 
-
 strip_fn
 
 mkdir_install_fn
@@ -87,19 +84,18 @@ echo "
 # make exactly 11 lines for the formatting to be correct.  It's also
 # customary to leave one space after the ':'.
 
-     |-----handy-ruler------------------------------------------------------|
-speex: speex (patent-free audio compression format designed for speech)
-speex:
-speex: Speex is an Open Source/Free Software patent-free audio compression
-speex: format designed for speech. The Speex Project aims to lower
-speex: the barrier of entry for voice applications by providing a free
-speex: alternative to expensive proprietary speech codecs.
-speex:
-speex:
-speex:
-speex:
-speex: Home: http://www.speex.org/
+       |-----handy-ruler------------------------------------------------------|
+$PRGNAM: $PRGNAM (patent-free audio compression format designed for speech)
+$PRGNAM:
+$PRGNAM: Speex is an Open Source/Free Software patent-free audio compression
+$PRGNAM: format designed for speech. The Speex Project aims to lower
+$PRGNAM: the barrier of entry for voice applications by providing a free
+$PRGNAM: alternative to expensive proprietary speech codecs.
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM: Home: http://www.speex.org/
 " > $PKG/install/slack-desc
-
 
 makepkg_fn

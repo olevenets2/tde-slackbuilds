@@ -90,17 +90,18 @@ echo "# HOW TO EDIT THIS FILE:
 # customary to leave one space after the ':' except on otherwise blank lines.
 
        |-----handy-ruler------------------------------------------------------|
-xmedcon: xmedcon (X)
-xmedcon:
-xmedcon: a medical image conversion utility & library; hereby hoping to lower
-xmedcon: at least one barrier in medical research projects.
-xmedcon:
-xmedcon:
-xmedcon: http://xmedcon.sourceforge.net/
-xmedcon:
-xmedcon:
-xmedcon:
-xmedcon:" > $PKG/install/slack-desc
+$PRGNAM: $PRGNAM (X)
+$PRGNAM:
+$PRGNAM: a medical image conversion utility & library; hereby hoping to lower
+$PRGNAM: at least one barrier in medical research projects.
+$PRGNAM:
+$PRGNAM:
+$PRGNAM: 
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM: http://xmedcon.sourceforge.net/
+" > $PKG/install/slack-desc
 
 echo $'config() {
   NEW="$1"

@@ -72,17 +72,17 @@ echo "
 # customary to leave one space after the ':'.
 
         |-----handy-ruler------------------------------------------------------|
-tdevelop: tdevelop (TDE development programs)
-tdevelop:
-tdevelop: TDE development programs
-tdevelop:
-tdevelop:
-tdevelop:
-tdevelop:
-tdevelop:
-tdevelop:
-tdevelop:
-tdevelop: Home: http://www.trinitydesktop.org/
+$PRGNAM: $PRGNAM (TDE development programs)
+$PRGNAM:
+$PRGNAM: TDE development programs
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM: Home: http://www.trinitydesktop.org/
 " > $PKG/install/slack-desc
 
 cat <<EOINS >> $PKG/install/doinst.sh
@@ -102,8 +102,6 @@ fi
 if [ -x usr/bin/update-mime-database ]; then
   chroot . /usr/bin/update-mime-database ${INSTALL_TDE}/share/mime >/dev/null 2>&1
 fi
-
 EOINS
-
 
 makepkg_fn

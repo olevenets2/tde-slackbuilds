@@ -90,17 +90,17 @@ echo "
 # customary to leave one space after the ':'.
 
        |-----handy-ruler------------------------------------------------------|
-tdelibs: tdelibs (TDE libraries)
-tdelibs:
-tdelibs: These are the Trinity Desktop Environment [TDE]
-tdelibs: libraries. This package includes libraries that are central
-tdelibs: to the development and execution of a TDE program, as well
-tdelibs: as internationalization files for these libraries, misc HTML
-tdelibs: documentation, theme modules, and regression tests.
-tdelibs:
-tdelibs:
-tdelibs:
-tdelibs: Home: https://www.trinitydesktop.org/index.php
+$PRGNAM: $PRGNAM (TDE libraries)
+$PRGNAM:
+$PRGNAM: These are the Trinity Desktop Environment [TDE]
+$PRGNAM: libraries. This package includes libraries that are central
+$PRGNAM: to the development and execution of a TDE program, as well
+$PRGNAM: as internationalization files for these libraries, misc HTML
+$PRGNAM: documentation, theme modules, and regression tests.
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM: Home: https://www.trinitydesktop.org/index.php
 " > $PKG/install/slack-desc
 
 cat <<EOINS >> $PKG/install/doinst.sh
@@ -120,8 +120,6 @@ fi
 if [ -x usr/bin/update-mime-database ]; then
   chroot . /usr/bin/update-mime-database ${INSTALL_TDE}/share/mime >/dev/null 2>&1
 fi
-
 EOINS
-
 
 makepkg_fn

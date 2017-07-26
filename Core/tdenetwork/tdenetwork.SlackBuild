@@ -121,11 +121,11 @@ echo "
 # the right side marks the last column you can put a character in.  You must make
 # exactly 11 lines for the formatting to be correct.  It's also customary to
 # leave one space after the ':'.
-
-$PRGNAM|-----handy-ruler------------------------------------------------------|
+       |-----handy-ruler------------------------------------------------------|
 $PRGNAM: $PRGNAM (networking applications)
 $PRGNAM:
 $PRGNAM: Networking applications for TDE
+$PRGNAM:
 $PRGNAM:
 $PRGNAM:
 $PRGNAM:
@@ -153,8 +153,6 @@ fi
 if [ -x usr/bin/update-mime-database ]; then
   chroot . /usr/bin/update-mime-database ${INSTALL_TDE}/share/mime >/dev/null 2>&1
 fi
-
 EOINS
-
 
 makepkg_fn

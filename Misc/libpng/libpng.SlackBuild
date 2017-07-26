@@ -65,8 +65,7 @@ echo "
 # on the right side marks the last column you can put a character in.  You must
 # make exactly 11 lines for the formatting to be correct.  It's also
 # customary to leave one space after the ':'.
-
-$PRGNAM|-----handy-ruler------------------------------------------------------|
+       |-----handy-ruler------------------------------------------------------|
 $PRGNAM: $PRGNAM (Portable Network Graphics library)
 $PRGNAM:
 $PRGNAM: PNG (Portable Network Graphics) is an extensible file format for the
@@ -75,6 +74,7 @@ $PRGNAM: provides a patent-free replacement for GIF and can also replace many
 $PRGNAM: common uses of TIFF.  Indexed-color, grayscale, and truecolor images
 $PRGNAM: are supported, plus an optional alpha channel.  Sample depths range
 $PRGNAM: from 1 to 16 bits.
+$PRGNAM:
 $PRGNAM:
 $PRGNAM:
 $PRGNAM:

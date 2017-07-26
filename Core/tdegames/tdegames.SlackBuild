@@ -111,19 +111,18 @@ echo "
 # make exactly 11 lines for the formatting to be correct.  It's also
 # customary to leave one space after the ':'.
 
-        |-----handy-ruler------------------------------------------------------|
-tdegames: Games for the Trinity Desktop Environment
-tdegames:
-tdegames: atlantik, kasteroids, katomic, kbackgammon, kbattleship, kblackbox,
-tdegames: kbounce, keneloba, kfouleggs, kjumpingcube, klickety, klines,
-tdegames: kmahjongg, kmines, kolf, konquest, kpat, kpoker, kreversi, ksame,
-tdegames: kshisen, ksirtet, ksmiletris, ksnake, ksokoban, kspaceduel, ktron,
-tdegames: ktuberling, twin4, lskat.
-tdegames:
-tdegames:
-tdegames:
-tdegames:
+       |-----handy-ruler------------------------------------------------------|
+$PRGNAM: $PRGNAM (Games for the Trinity Desktop Environment)
+$PRGNAM:
+$PRGNAM: atlantik, kasteroids, katomic, kbackgammon, kbattleship, kblackbox,
+$PRGNAM: kbounce, keneloba, kfouleggs, kjumpingcube, klickety, klines,
+$PRGNAM: kmahjongg, kmines, kolf, konquest, kpat, kpoker, kreversi, ksame,
+$PRGNAM: kshisen, ksirtet, ksmiletris, ksnake, ksokoban, kspaceduel, ktron,
+$PRGNAM: ktuberling, twin4, lskat.
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
 " > $PKG/install/slack-desc
-
 
 makepkg_fn

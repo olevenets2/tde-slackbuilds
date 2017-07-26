@@ -68,8 +68,7 @@ echo "
 # the right side marks the last column you can put a character in.  You must make
 # exactly 11 lines for the formatting to be correct.  It's also customary to
 # leave one space after the ':'.
-
-$PRGNAM|-----handy-ruler------------------------------------------------------|
+       |-----handy-ruler------------------------------------------------------|
 $PRGNAM: Potrace is a backend for Potracegui.
 $PRGNAM:
 $PRGNAM: Potrace is a tool for tracing a bitmap - transforming it into a smooth
@@ -81,7 +80,7 @@ $PRGNAM:
 $PRGNAM: A separate program, mkbitmap, can act as a pre-processor for Potrace,
 $PRGNAM: applying scaling and various filters to an image before converting it
 $PRGNAM: to a bitmap. This is useful for potracing greyscale and color images.
+$PRGNAM:
 " > $PKG/install/slack-desc
-
 
 makepkg_fn

@@ -72,18 +72,18 @@ echo "
 # make exactly 11 lines for the formatting to be correct.  It's also
 # customary to leave one space after the ':'.
 
-        |-----handy-ruler------------------------------------------------------|
-tdeutils: tdeutils (Collection of utilities)
-tdeutils:
-tdeutils: Collection of utilities including ark
-tdeutils:
-tdeutils:
-tdeutils:
-tdeutils:
-tdeutils:
-tdeutils:
-tdeutils:
-tdeutils: Home: https://www.trinitydesktop.org/index.php
+       |-----handy-ruler------------------------------------------------------|
+$PRGNAM: $PRGNAM (Collection of utilities)
+$PRGNAM:
+$PRGNAM: Collection of utilities including ark
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM: Home: https://www.trinitydesktop.org/index.php
 " > $PKG/install/slack-desc
 
 cat <<EOINS >> $PKG/install/doinst.sh
@@ -103,8 +103,6 @@ fi
 if [ -x usr/bin/update-mime-database ]; then
   chroot . /usr/bin/update-mime-database ${INSTALL_TDE}/share/mime >/dev/null 2>&1
 fi
-
 EOINS
-
 
 makepkg_fn
