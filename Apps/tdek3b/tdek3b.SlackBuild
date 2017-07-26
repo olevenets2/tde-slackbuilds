@@ -38,6 +38,15 @@ listdocs_fn
 
 chown_fn
 
+# Check for ffmpeg:
+[[ $(ls /var/log/packages/ffmpeg-*) ]] && FFMPEG="ON"
+# Check for lame:
+[[ $(ls /var/log/packages/lame-*) ]] && LAME="ON"
+# Check for musepack:
+[[ $(ls /var/log/packages/musepack-tools-*) ]] && MUSEPACK="ON"
+# Check for musicbrainz:
+[[ $(ls /var/log/packages/libmusicbrainz-*) ]] && MUSICBRAINZ="ON"
+
 cd_builddir_fn
 
   cmake \
@@ -50,21 +59,21 @@ cd_builddir_fn
     -DSYSCONF_INSTALL_DIR="/etc/trinity" \
     -DMAN_INSTALL_DIR=${INSTALL_TDE}/man \
     -DWITH_LIBDVDREAD="ON" \
-    -DWITH_MUSICBRAINZ="OFF" \
+    -DWITH_MUSICBRAINZ=${MUSICBRAINZ:-"OFF"} \
     -DWITH_SYSTEM_LIBSAMPLERATE="ON" \
     -DWITH_HAL="OFF" \
     -DWITH_DEBUG="OFF" \
     -DWITH_ALSA="ON" \
     -DWITH_ARTS="ON" \
-    -DWITH_FFMPEG="ON" \
+    -DWITH_FFMPEG=${FFMPEG:-"OFF"} \
     -DWITH_FFMPEG_ALL_CODECS="OFF" \
     -DWITH_FLAC="ON" \
     -DWITH_SNDFILE="ON" \
     -DWITH_TAGLIB="ON" \
     -DWITH_MAD="ON" \
-    -DWITH_MUSEPACK="OFF" \
+    -DWITH_MUSEPACK=${MUSEPACK:-"OFF"} \
     -DWITH_VORBIS="ON" \
-    -DWITH_LAME="ON" \
+    -DWITH_LAME=${LAME:-"OFF"} \
     -DBUILD_K3BSETUP="ON" \
     -DBUILD_DOC="ON" \
     ..
@@ -77,6 +86,7 @@ strip_fn
 
 mkdir_install_fn
 
+PRGNAM=$PKGNAM
 echo "
 # HOW TO EDIT THIS FILE:
 # The 'handy ruler' below makes it easier to edit a package description.  Line
@@ -84,8 +94,7 @@ echo "
 # on the right side marks the last column you can put a character in.  You must
 # make exactly 11 lines for the formatting to be correct.  It's also
 # customary to leave one space after the ':'.
-
-$PKGNAM|-----handy-ruler------------------------------------------------------|
+       |-----handy-ruler------------------------------------------------------|
 $PKGNAM: $PKGNAM (The CD Creator, TDE $TDEVERSION version)
 $PKGNAM:
 $PKGNAM: K3b makes writing cds under Linux easy.  It has an easy to use
@@ -97,8 +106,7 @@ $PKGNAM: Christian Kvasny, and Klaus-Dieter Krannich.
 $PKGNAM:
 $PKGNAM: For more information, visit:  http://www.k3b.org
 $PKGNAM:
+$PKGNAM: Home: https://www.trinitydesktop.org/index.php
 " > $PKG/install/slack-desc
 
-
-PRGNAM=$PKGNAM
 makepkg_fn
