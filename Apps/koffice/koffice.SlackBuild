@@ -32,8 +32,6 @@ TAG=${TAG:-_tde}
 ## build with libpng-1.4 - set in BUILD-TDE.sh - loading pngs in chalk/krita crashes with libpng16
 [[ ${USE_PNG14:-} == yes ]] && \
 [[ $(ls -l /usr/include/png.h) != *libpng14* ]] && \
-{ [[ $(getconf LONG_BIT) == 64 ]] && ARCH=x86_64 || ARCH=i686
-} && \
 { installpkg $LIBPNG_TMP/libpng-1.4.20-$ARCH-1.txz || \
 { echo -e "\033[39;1m\n (re)install libpng-1.4 \n\033[0m" && \
 exit

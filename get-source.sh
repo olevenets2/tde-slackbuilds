@@ -66,8 +66,6 @@ SRCURL=${SRCURL:-"http://$TDE_MIRROR/releases/${VERSION}$TDEMIR_SUBDIR/${PRGNAM}
 
 # Automatically determine the architecture we're building on:
   MARCH=$( uname -m )
-# uname -m will give the wrong architecture if 32bit with 64bit kernel
-    [[ $MARCH == "x86_64" ]] && ! [[ -d /lib64 ]] && MARCH="i586"
   if [ -z "$ARCH" ]; then
     case "$MARCH" in
       i?86)    export ARCH=i586 ;;
@@ -80,10 +78,10 @@ SRCURL=${SRCURL:-"http://$TDE_MIRROR/releases/${VERSION}$TDEMIR_SUBDIR/${PRGNAM}
   fi
   # Set CFLAGS/CXXFLAGS and LIBDIRSUFFIX:
   case "$ARCH" in
-    i586)      SLKCFLAGS="-O2 -march=i586 -mtune=i686"
+    i586)      SLKCFLAGS="-O2 ${SET_march:-}"
                SLKLDFLAGS="-L$INSTALL_TDE/lib$LIBDIRSUFFIX"
                ;;
-    x86_64)    SLKCFLAGS="-O2 -fPIC"
+    x86_64)    SLKCFLAGS="-O2 -fPIC ${SET_march:-}"
                SLKLDFLAGS="-L$INSTALL_TDE/lib$LIBDIRSUFFIX -L/usr/lib64"
                ;;
     armv7hl)   SLKCFLAGS="-O2 -march=armv7-a -mfpu=vfpv3-d16"
@@ -235,9 +233,9 @@ ln -sf libpng16-config libpng-config )
 (cd /usr/include
 ln -sf libpng16/pngconf.h pngconf.h
 ln -sf libpng16/png.h png.h )
-(cd /usr/lib64/pkgconfig
+(cd /usr/lib$LIBDIRSUFFIX/pkgconfig
 ln -sf libpng16.pc libpng.pc )
-(cd /usr/lib64
+(cd /usr/lib$LIBDIRSUFFIX
 ln -sf libpng16.so libpng.so
 ln -sf libpng16.la libpng.la )
 }
