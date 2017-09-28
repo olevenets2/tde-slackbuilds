@@ -105,6 +105,15 @@ cd_builddir_fn
     -DBUILD_TRANSLATIONS="ON" \
     ..
 
+<<'Comment'
+Error:
+[ 99%] Linking CXX shared module libamarok_yauap-engine_plugin.so
+/usr/lib/gcc/arm-slackware-linux-gnueabi/7.1.0/../../../../arm-slackware-linux-gnueabi/bin/ld: cannot find -ldbus-tqt-1
+Workaround:
+Point the build to the exact location ..
+Comment
+[[ $YAUAP == ON ]] && sed -i "s|-ldbus-tqt-1|$INSTALL_TDE/lib/libdbus-tqt-1.so.0.0.0|" amarok/src/engine/yauap/CMakeFiles/libamarok_yauap-engine_plugin-module.dir/link.txt
+
 make_fn
 
 installdocs_fn

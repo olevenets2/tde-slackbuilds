@@ -65,40 +65,14 @@ SOURCE=$SRCDIR/${PRGNAM}-${VERSION}.${ARCHIVE_TYPE:-"tar.bz2"}
 SRCURL=${SRCURL:-"http://$TDE_MIRROR/releases/${VERSION}$TDEMIR_SUBDIR/${PRGNAM}-${VERSION}.tar.bz2"}
 
 # Automatically determine the architecture we're building on:
-  MARCH=$( uname -m )
-  if [ -z "$ARCH" ]; then
-    case "$MARCH" in
-      i?86)    export ARCH=i586 ;;
-      armv7hl) export ARCH=$MARCH ;;
-      armv6hl) export ARCH=$MARCH ;;
-      arm*)    export ARCH=arm ;;
-      # Unless $ARCH is already set, use uname -m for all other archs:
-      *)       export ARCH=$MARCH ;;
-    esac
-  fi
-  # Set CFLAGS/CXXFLAGS and LIBDIRSUFFIX:
-  case "$ARCH" in
-    i586)      SLKCFLAGS="-O2 ${SET_march:-}"
-               SLKLDFLAGS="-L$INSTALL_TDE/lib$LIBDIRSUFFIX"
-               ;;
-    x86_64)    SLKCFLAGS="-O2 -fPIC ${SET_march:-}"
-               SLKLDFLAGS="-L$INSTALL_TDE/lib$LIBDIRSUFFIX -L/usr/lib64"
-               ;;
-    armv7hl)   SLKCFLAGS="-O2 -march=armv7-a -mfpu=vfpv3-d16"
-               SLKLDFLAGS="-L$INSTALL_TDE/lib$LIBDIRSUFFIX"
-               ;;
-    armv6hl)   SLKCFLAGS="-O2 -march=armv6 -mfpu=vfp -mfloat-abi=hard"
-               SLKLDFLAGS="-L$INSTALL_TDE/lib$LIBDIRSUFFIX"
-               ;;
-    *)         SLKCFLAGS=${SLKCFLAGS:-"O2"}
-               SLKLDFLAGS=${SLKLDFLAGS:-""}; LIBDIRSUFFIX=${LIBDIRSUFFIX:-""}
-               ;;
-  esac
+## 2017-09 removed - ARCH is set in BUILD-TDE.sh
 
-case "$ARCH" in
-    arm*)    TARGET=$ARCH-slackware-linux-gnueabi ;;
-    *)       TARGET=$ARCH-slackware-linux ;;
-esac
+# Set CFLAGS/CXXFLAGS and LIBDIRSUFFIX:
+   { [[ $ARCH == x86_64 ]]  && SLKCFLAGS="-O2 -fPIC ${SET_march:-}" \
+                               SLKLDFLAGS="-L$INSTALL_TDE/lib$LIBDIRSUFFIX -L/usr/lib64"; } \
+|| {                           SLKCFLAGS="-O2 ${SET_march:-}" \
+                               SLKLDFLAGS="-L$INSTALL_TDE/lib$LIBDIRSUFFIX"; }
+
 
 # Exit the script on errors:
 set -e
@@ -148,6 +122,7 @@ fi
 untar_fn ()
 {
 cd $TMP/tmp-$PRGNAM
+echo -e "\n unpacking $(basename ${SOURCE}) ... \n"
 tar -xf ${SOURCE}
 [[ $TDEMIR_SUBDIR != misc ]] && cd ./$(echo $TDEMIR_SUBDIR | cut -d / -f 2) && cd ${PRGNAM} || cd ${PRGNAM}-${VERSION}
 }

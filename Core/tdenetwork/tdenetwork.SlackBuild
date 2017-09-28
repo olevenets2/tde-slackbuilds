@@ -34,6 +34,8 @@ getsource_fn
 untar_fn
 # If speex is installed, include it in the build for jingle
 [[ $(grep speex.h /var/log/packages/*speex*) ]] 2>/dev/null && SPX="ON"
+## add patch for gcc6
+sed -i 's|"functionName"|" functionName "|' kopete/libkopete/kautoconfig.cpp
 
 listdocs_fn
 

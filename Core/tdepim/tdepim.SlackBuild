@@ -32,13 +32,17 @@ source ../../get-source.sh
 getsource_fn
 
 untar_fn
-listdocs_fn
 
 # If libcaldav is installed, include it in the build for korganizer
 [[ $(ls /var/log/packages/libcaldav*) ]] 2>/dev/null && LCALDAV="ON"
 
 # If libcarddav is installed, include it in the build for korganizer
 [[ $(ls /var/log/packages/libcarddav*) ]] 2>/dev/null && LCARDDAV="ON"
+
+## add patch for gcc7
+sed -i "s|Attachment( '\\\0' )|Attachment( TQChar('\\\0') )|" korganizer/koeditorattachments.cpp
+
+listdocs_fn
 
 chown_fn
 

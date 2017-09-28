@@ -10,7 +10,7 @@ fi
 
 dialog --cr-wrap --no-shadow --colors --title " Introduction " --msgbox \
 "
- This is the set up script for TDE SlackBuilds on Slackware 14.2 for setting user preferences and options.
+ This is the set up script for TDE SlackBuilds on Slackware 14.2/current for setting user preferences and options.
 
  Source archives must be placed in the 'src' directory or will be downloaded during the build from a geoIP located mirror site.
 
@@ -119,65 +119,86 @@ So if you choose \Zb\Z3GCC\Zn, the \Zb\Z3g++\Zn compiler will be used. And if yo
 
 
 rm -f $TMPVARS/SET_MARCH
-rm -f $TMPVARS/64_MARCH
 rm -f $TMPVARS/ARCH
-## use this dialog widget for x86 processors only
-[[ $(uname -m) == *86* ]] && {
-## get the native march/mtune options
-CPU_MARCH=$(gcc -Q -O2 -march=native --help=target | grep -E "march=|mtune=" | tr -d [:blank:])
+#
+## get the march/mtune options built into gcc to show as an option in the README
+GCC_MARCH=$(gcc -Q -O2 --help=target | grep -E "^  -march=|^  -mtune=" | tr -d [:blank:])
+#
 ## what ARCH?
-[[ $(getconf LONG_BIT) == 64 ]] && echo x86_64 > $TMPVARS/ARCH || echo i586 > $TMPVARS/ARCH
+[[ $(getconf LONG_BIT) == 64 ]] && \
+echo x86_64 > $TMPVARS/ARCH || \
+{ [[ $GCC_MARCH == *armv* ]] && echo arm > $TMPVARS/ARCH
+} \
+|| echo i586 > $TMPVARS/ARCH
 ARCH=$(cat $TMPVARS/ARCH)
+#
+## if ARCH=arm, add mfpu
+[[ $ARCH == arm ]] && GCC_MARCH=$(gcc -Q -O2 --help=target | grep -E "^  -m" | grep -E "arch=|tune=|fpu=" | tr -d [:blank:])
+#
+## get the native march/mtune options
+NATIVE_MARCH=$(echo $(gcc -Q -O2 -march=native --help=target | grep -E "^  -march=|^  -mtune=" | tr -d [:blank:]))
+## Slackware 14.2 gcc 5.3.1 fails on this, [*** Error in `gcc': double free or corruption (top): 0x00308b50 ***], so:
+NATIVE_MARCH=${NATIVE_MARCH:-"unknown"}
+#
 ## get the default march/mtune options for a 64-bit build from the gcc configuration
-## with a temporary file for the summary screen
-[[ $ARCH == x86_64 ]] && GCC_MOPTS="\Zb\Z6$(gcc -Q -O2 --help=target | grep -E "march=|mtune=" | tr -d [:blank:])\Zn which is the gcc default" && echo $GCC_MOPTS|sed 's|which.*$||' > $TMPVARS/64_MARCH
+[[ $ARCH == x86_64 ]] && DEFAULT_MARCH=$GCC_MARCH
+## set the default march etc. options for RPi3 overriding the gcc configuration
+[[ $ARCH == arm ]] && DEFAULT_MARCH="-march=armv8-a+crc -mtune=cortex-a53 -mfpu=neon-fp-armv8"
 ## set the default march/mtune options for i586 and tune for i686 overriding the gcc configuration
-[[ $ARCH == i586 ]] && GCC_MOPTS="\Zb\Z6-march=i586 -mtune=i686\Zn"
+[[ $ARCH == i586 ]] && DEFAULT_MARCH="-march=i586 -mtune=i686"
+#
 ## run dialog
 EXITVAL=2
 until [[ $EXITVAL -lt 2 ]] ; do
 dialog --cr-wrap --defaultno --no-shadow --colors --ok-label " 2 / 3 " --cancel-label "1" --help-button --help-label "README" --title " gcc cpu optimization " --inputbox \
 "
- The build can be set up for gcc optimization for the -march and -mtune options.
+ The build can be set up for gcc optimization.
 
- \Zr\Z4\Zb<1>\Zn - will use the option $(echo $GCC_MOPTS)
+ \Zr\Z4\Zb<1>\Zn - the default option \Zb\Z6$(echo $DEFAULT_MARCH)\Zn
 
- <\Zb\Z02\Zn> - will use the gcc native option \Zb\Z6$(echo $CPU_MARCH)\Zn for this machine's cpu
+ <\Zb\Z02\Zn> - the gcc native option \Zb\Z6$(echo $NATIVE_MARCH)\Zn for this machine
 
  <\Zb\Z03\Zn> - edit to specify \Zb\Z6march/mtune\Zn for a target machine
 \Zb\Z0  [[ use any arrow key x2 to activate the input box for editing ]]\Zn
  
 " \
-21 75 "$(echo $CPU_MARCH)" \
+21 75 "$(echo $NATIVE_MARCH)" \
 2> $TMPVARS/SET_MARCH && break
 EXITVAL=$?
-[[ $EXITVAL == 1 ]] && [[ $ARCH == i586 ]] && echo "-march=i586 -mtune=i686" > $TMPVARS/SET_MARCH && break
+[[ $EXITVAL == 1 ]] && echo $DEFAULT_MARCH > $TMPVARS/SET_MARCH && break
+#
 ## add this to show what mtune option has been overridden
-[[ $ARCH == i586 ]] && I586_MSG=" overriding the option $(gcc -Q -O2 --help=target | grep mtune= | tr -d [:blank:]) configured into gcc"
-[[ $EXITVAL == 2 ]] && dialog --aspect 3 --cr-wrap --no-shadow --colors --scrollbar --ok-label "Return" --msgbox \
+[[ $EXITVAL == 2 ]] && \
+{ [[ $ARCH == x86_64 ]] && OPT1_MESSAGE=" * for x86_64 it is \Zb\Z6$(echo $GCC_MARCH)\Zn which is the gcc default."
+} || \
+{ [[ $ARCH == arm ]] && OPT1_MESSAGE="* for RPi3 [arm] the options are \Zb\Z6-march=armv8-a+crc -mtune=cortex-a53 -mfpu=neon-fp-armv8\Zn overriding the options \Zb\Z6$(echo $GCC_MARCH)\Zn configured into gcc"
+} || \
+{ [[ $ARCH == i586 ]] && OPT1_MESSAGE=" * for i586 the option has been set at \Zb\Z6-march=i586 -mtune=i686\Zn overriding the option \Zb\Z6$(echo $GCC_MARCH)\Zn configured into gcc"
+}
+#
+dialog --aspect 3 --cr-wrap --no-shadow --colors --scrollbar --ok-label "Return" --msgbox \
 "
-<\Z2\Zb1\Zn> is the default where the target machine's cpu-type is not known
- * for i586 the -mtune= option has been set at i686${I586_MSG:-}
- * for x86_64 it is the gcc configured option.
+<\Z2\Zb1\Zn> is the generic default for x86, or is pre-set for RPi3
+$OPT1_MESSAGE
 
-<\Z2\Zb2\Zn> will be the best option for any builds to be installed on this machine or one with an identical cpu-type.
+<\Z2\Zb2\Zn> is the option identified by gcc as native for this machine.
 
-<\Z2\Zb3\Zn> has been included to build packages on this machine for installation on another machine with a known cpu-type, allowing that target machine's cpu instruction set to be fully utilized.
+<\Z2\Zb3\Zn> is to override option <2> to build packages on this machine for installation on another machine with a known cpu-type, allowing that target machine's cpu instruction set to be fully utilized.
 
 The relationship between -march and -mtune options and their use is detailed in the gcc man page in the section 'Intel 386 and AMD x86-64 Options'.
  
 " \
 0 0
 done
-}
 
 
 rm -f $TMPVARS/NUMJOBS
+[[ $ARCH == arm ]] && NUMJOBS="-j8"
 dialog --cr-wrap --nocancel --no-shadow --colors --title " Parallel Build " --inputbox \
 "
 Set the number of simultaneous jobs for make to whatever your system will support.
 " \
-11 75 -j6 \
+11 75 ${NUMJOBS:-"-j6"} \
 2> $TMPVARS/NUMJOBS
 ## 
 
@@ -546,7 +567,7 @@ New build list                          \Zb\Z6$NEW_BUILD\Zn
 TDE version                             \Zb\Z6$TDEVERSION\Zn
 TDE installation directory              \Zb\Z6$INSTALL_TDE\Zn
 Compiler                                \Zb\Z6$COMPILER\Zn
-gcc cpu optimization                    \Zb\Z6${SET_march:-$(cat $TMPVARS/64_MARCH)}\Zn
+gcc cpu optimization                    \Zb\Z6$SET_march\Zn
 Number of parallel jobs                 \Zb\Z6$(echo $NUMJOBS|sed 's|-j||')\Zn
 Additional languages                    \Zb\Z6${I18N:-\Z0\Zbnone}\Zn
 Include tqt html docs                   \Zb\Z6$TQT_DOCS\Zn
@@ -603,6 +624,7 @@ do
 
   # The real build starts here
   script -c "sh ${package}.SlackBuild" $TMP/${package}-build-log || ${EXIT_FAIL:-"true"}
+
 # remove colorizing escape sequences from build-log
 # Re: http://serverfault.com/questions/71285/in-centos-4-4-how-can-i-strip-escape-sequences-from-a-text-file
   sed -ri "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g" $TMP/${package}-build-log || ${EXIT_FAIL:-"true"}

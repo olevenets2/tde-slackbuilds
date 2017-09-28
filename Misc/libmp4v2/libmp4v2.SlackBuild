@@ -38,6 +38,9 @@ listdocs_fn
 
 chown_fn
 
+## patch for gcc7 ../src/rtphint.cpp:342:35: error: ISO C++ forbids comparison between pointer and integer [-fpermissive]
+sed -i "s|pSlash != '|*pSlash != '|" src/rtphint.cpp
+
 cd_builddir_fn
 
 LDFLAGS="$SLKLDFLAGS" \
