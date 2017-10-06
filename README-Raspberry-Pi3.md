@@ -4,21 +4,20 @@ BUILD-TDE.sh has been set up with an option to build TDE on the Raspberry Pi3, w
 
 All packages build on Slackware current, but because the gcc version is 7.x.x, there have been a number of patches to the source code. Building on Slackware 14.2 has not been completely tested.
 
-Build times are as shown, with the number of parallel jobs set at 8, and with one internationalization locale being included. The build was run with the top off the Pi casing, and the cpu temperature generally remained below 80 °C, occasionally peaking at about [82.5 °C](https://www.raspberrypi.org/documentation/configuration/config-txt/overclocking.md) without heatsinks. All four cpus ran @ 1200MHz [4].
+Build times are as shown, with the number of parallel jobs set at 8 [1], and with one internationalization locale being included. The build was run with the top off the Pi casing, and the cpu temperature generally remained below 80 °C, occasionally peaking at about 82.5 °C without heatsinks. All four cpus ran @ 1200MHz [2].
 
 <hr>
-[1]
-inkscape froze the Pi with anything other than -j1, and was therefore built separately with that number.
+
+[1] This may not be the optimum. Based on a sample, builds may be quicker or slower at -j6, some with little difference at -j4, so YMMV. I assume this is because performance is degraded at temperatures in excess of [80 °C](https://www.raspberrypi.org/documentation/configuration/config-txt/overclocking.md)
 
 [2]
-Digikam build failed with gcc-7.x.x, and was built with gcc-5.4.0 on current. Hopefully, a solution to TDE bug [2832](http://bugs.pearsoncomputing.net/show_bug.cgi?id=2832) will eventually be available.
-
-[3]
-Avahi-tqt needs non-Slackware libdaemon and avahi packages installed, and these can be built on the Pi from the SlackBuilds.org scripts.
-
-[4]
 `echo ondemand > /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor` if needed.
 
+[3]
+Avahi-tqt needs libdaemon and avahi packages installed, and these can be built on the Pi from the SlackBuilds.org scripts.
+
+[4]
+inkscape needs too much memory for a build with more than one make process, and using swap slows the build, so the build was done with 'make -j1'.
 
 **Build times**
 
@@ -62,12 +61,12 @@ tde-i18n               13:42
 GraphicsMagick          7:08
 abakus                  1:05
 avahi-tqt [3]           2:16
-digikam [2]            32:17
+digikam                32:17
 dolphin                 1:18
 graphviz               21:36
 gtk-qt-engine             46
 gtk3-tqt-engine         2:35
-inkscape             3:11:11 [1]
+inkscape             3:11:11 [4]
 k9copy                  5:27
 kaffeine                6:28
 kbfx                    2:03

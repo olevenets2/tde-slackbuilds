@@ -33,6 +33,32 @@ getsource_fn
 
 untar_fn
 
+## fix for gcc7:
+##In file included from ../../../../../digikam/imageplugins/coreplugin/sharpnesseditor/matrix.cpp:35:0:
+##/usr/include/stdlib.h:751:12: error: expected unqualified-id before ‘int’
+## extern int abs (int __x) __THROW __attribute__ ((__const__)) __wur;
+##            ^
+echo '--- digikam/imageplugins/coreplugin/sharpnesseditor/clapack/f2c.h
++++ digikam/imageplugins/coreplugin/sharpnesseditor/clapack/f2c.h
+@@ -157 +156,0 @@
+-#define abs(x) ((x) >= 0 ? (x) : -(x))
+--- digikam/imageplugins/coreplugin/sharpnesseditor/matrix.cpp
++++ digikam/imageplugins/coreplugin/sharpnesseditor/matrix.cpp
+@@ -32,0 +33,5 @@
++// C++ includes.
++#include <stdlib.h>
++#include <cmath>
++using ::abs;
++
+@@ -38,4 +42,0 @@
+-
+-// C++ includes.
+-
+-#include <cmath>' | while read line
+do
+patch -p0
+done
+
 listdocs_fn
 
 # set support for additional language(s) as per I18N variable
