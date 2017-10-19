@@ -112,7 +112,7 @@ Error:
 Workaround:
 Point the build to the exact location ..
 Comment
-[[ $YAUAP == ON ]] && sed -i "s|-ldbus-tqt-1|$INSTALL_TDE/lib/libdbus-tqt-1.so.0.0.0|" amarok/src/engine/yauap/CMakeFiles/libamarok_yauap-engine_plugin-module.dir/link.txt
+[[ ${YAUAP:-} == ON ]] && sed -i "s|-ldbus-tqt-1|$INSTALL_TDE/lib$LIBDIRSUFFIX/libdbus-tqt-1.so.0.0.0|" amarok/src/engine/yauap/CMakeFiles/libamarok_yauap-engine_plugin-module.dir/link.txt
 
 make_fn
 

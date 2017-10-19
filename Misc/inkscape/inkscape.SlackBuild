@@ -24,201 +24,137 @@
 #   SUCH DAMAGE.
 
 PRGNAM=inkscape
-VERSION=${VERSION:-0.91}
+VERSION=${VERSION:-0.92.2}
 BUILD=${BUILD:-1}
-TAG=${TAG:-}
 
 SRCURL="https://media.inkscape.org/dl/resources/file/$PRGNAM-$VERSION.tar.bz2"
 source ../../get-source.sh
 getsource_fn
 
 untar_fn
-langs=""
-# don't package non-english man pages in man/man.1 - add them during make install for required languages
-sed -i -e '556,559d' -e '550,554d'  -e '533,537d'  Makefile.in
-if [[ $I18N == "" ]]
-then
-# no locales
-NLS="--disable-nls"
-else
-# set support for additional language(s) as per I18N variable
-# but only for languages available with this package
-for Lang in $I18N;do [[ -e po/$Lang".po" ]] && langs="$langs $Lang";done
-sed -i "s|PO_LINGUAS=.*$|PO_LINGUAS=$langs|"  po/Makefile.in.in
-fi
+
+## patch for poppler-0.58+
+patch -p1 < $SRCDIR/93ccf03162cd2e46d962822d5507865f3451168c.diff
+
+## install to .../lib64 on 64-bit system
+[[ -d /lib64 ]] && \
+{ ## set RPATH
+sed -i "s|ORIGIN/../lib/inkscape|ORIGIN/../lib$LIBDIRSUFFIX/inkscape|" CMakeLists.txt
+## set output directory
+sed -i "s|/lib |/lib$LIBDIRSUFFIX |" CMakeLists.txt
+## for dynamic lib
+sed -i "s|lib/inkscape|lib$LIBDIRSUFFIX/inkscape|" src/CMakeLists.txt
+## for static libs
+sed -i "s|lib/inkscape|lib$LIBDIRSUFFIX/inkscape|" CMakeScripts/HelperMacros.cmake
+}
+
+## only build for required locales
+{
+## .. for po/LINGUAS
+LOCALES=$(cat po/LINGUAS)
+rm po/LINGUAS
+for locale in $I18N
+ do
+ [[ $LOCALES == *$locale* ]] && \
+ echo $locale >> po/LINGUAS
+ done
+
+## set up a directory to store the required locale files temporarily
+TEMP_DIR=$TMP/tmp-$PRGNAM/loc_tmp
+mkdir $TEMP_DIR
+
+## .. for READMEs
+for locale in $I18N
+ do
+ mv README.$locale.txt $TEMP_DIR
+ done
+rm README.*.txt
+mv $TEMP_DIR/* .
+RM_LIST=$(ls -1 README*)
+
+## .. for keys.*.html
+for locale in $I18N
+ do
+ mv doc/keys.$locale.html $TEMP_DIR
+ done
+rm doc/keys.*.html
+mv $TEMP_DIR/* doc/
+KEYS_LIST=$(ls -1 doc/keys.*)
+
+## .. for translations
+for locale in $I18N
+ do
+ mv po/$locale.po $TEMP_DIR
+ done
+rm -rf po/*.po
+mv $TEMP_DIR/* po/
+
+## .. for tutorials
+for locale in $I18N
+ do
+ mv share/tutorials/*.$locale.* $TEMP_DIR
+ done
+rm share/tutorials/*.*.*
+mv $TEMP_DIR/* share/tutorials/
+
+## .. for templates
+for locale in $I18N
+ do
+ mv share/templates/*.$locale.* $TEMP_DIR
+ done
+rm share/templates/*.*.*
+mv $TEMP_DIR/* share/templates/
+} || true
 
 chown_fn
 
-# only include README..txt for required languages
-RM_LIST=""
-for po in $I18N;do RM_LIST="$RM_LIST $(ls -1 README.$po.txt)";done || true # fails without true if no README.$po.txt
-# only include keys..html for required languages
-KEYS_LIST="doc/keys.css doc/keys.en.html"
-for po in $I18N;do KEYS_LIST="$KEYS_LIST $(ls -1 doc/keys.$po.html)";done || true
-
 listdocs_fn
 
-#cd_builddir_fn - don't use
+cd_builddir_fn
 
-## gcc7 patches
-## fix for: ui/clipboard.cpp:1405:28: error: ‘ScopedPtr’ is not a member of ‘Glib’
-## thank you, Gentoo
-echo "--- src/ui/clipboard.cpp
-+++ src/ui/clipboard.cpp
-@@ -148,2 +147,0 @@
--    void _inkscape_wait_for_targets(std::list<Glib::ustring> &);
--
-@@ -1225,3 +1223 @@
--    // GTKmm's wait_for_targets() is broken, see the comment in _inkscape_wait_for_targets()
--    std::list<Glib::ustring> targets; // = _clipboard->wait_for_targets();
--    _inkscape_wait_for_targets(targets);
-+    std::list<Glib::ustring> targets = _clipboard->wait_for_targets();
-@@ -1377,33 +1372,0 @@
--}
--
--
--// GTKMM's clipboard::wait_for_targets is buggy and might return bogus, see
--//
--// https://bugs.launchpad.net/inkscape/+bug/296778
--// http://mail.gnome.org/archives/gtk-devel-list/2009-June/msg00062.html
--//
--// for details. Until this has been fixed upstream we will use our own implementation
--// of this method, as copied from /gtkmm-2.16.0/gtk/gtkmm/clipboard.cc.
--void ClipboardManagerImpl::_inkscape_wait_for_targets(std::list<Glib::ustring> &listTargets)
--{
--    //Get a newly-allocated array of atoms:
--    GdkAtom* targets = NULL;
--    gint n_targets = 0;
--    gboolean test = gtk_clipboard_wait_for_targets( gtk_clipboard_get(GDK_SELECTION_CLIPBOARD), &targets, &n_targets );
--    if (!test || (targets == NULL)) {
--        return;
--    }
--
--    //Add the targets to the C++ container:
--    for (int i = 0; i < n_targets; i++)
--    {
--        //Convert the atom to a string:
--        gchar* const atom_name = gdk_atom_name(targets[i]);
--
--        Glib::ustring target;
--        if (atom_name) {
--            target = Glib::ScopedPtr<char>(atom_name).get(); //This frees the gchar*.
--        }
--
--        listTargets.push_back(target);
--    }" | while read line
-do
-patch -p0
-done
+## default options have been pulled from CMakeLists.txt
+  cmake \
+    -DCMAKE_C_FLAGS:STRING="$SLKCFLAGS" \
+    -DCMAKE_CXX_FLAGS:STRING="$SLKCFLAGS" \
+    -DCMAKE_C_FLAGS_RELEASE:STRING="$SLKCFLAGS" \
+    -DCMAKE_CXX_FLAGS_RELEASE:STRING="$SLKCFLAGS" \
+    -DCMAKE_C_COMPILER=${COMPILER} \
+    -DCMAKE_CXX_COMPILER=${COMPILER_CXX} \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr/local \
+    -DWITH_NLS="ON" \
+    -DWITH_DBUS="OFF" \
+    -DENABLE_LCMS="ON" \
+    -DWITH_GNOME_VFS="ON" \
+    -DWITH_SVG2="ON" \
+    -DWITH_LPETOOL="OFF" \
+    -DWITH_INKJAR="ON" \
+    -DWITH_OPENMP="ON" \
+    -DWITH_PROFILING="OFF" \
+    -DENABLE_POPPLER="ON" \
+    -DENABLE_POPPLER_CAIRO="ON" \
+    -DWITH_IMAGE_MAGICK="ON" \
+    -DWITH_LIBCDR="ON" \
+    -DWITH_LIBVISIO="ON" \
+    -DWITH_LIBWPG="ON" \
+    -DWITH_GTK3_EXPERIMENTAL="OFF" \
+    -DENABLE_BINRELOC="OFF" \
+    ..
 
-## fix for: ui/tools/flood-tool.cpp:255:49: error: call of overloaded ‘abs(guint32)’ is ambiguous
-## thank you, Debian bug #853453
-echo "--- src/ui/tools/flood-tool.cpp
-+++ src/ui/tools/flood-tool.cpp
-@@ -196,6 +196,21 @@
- }
- 
- /**
-+ * \brief Check whether two unsigned integers are close to each other
-+ *
-+ * \param[in] a The 1st unsigned int
-+ * \param[in] b The 2nd unsigned int
-+ * \param[in] d The threshold for comparison
-+ *
-+ * \return true if |a-b| <= d; false otherwise
-+ */
-+static bool compare_guint32(guint32 const a, guint32 const b, guint32 const d)
-+{
-+    const int difference = std::abs(static_cast<int>(a) - static_cast<int>(b));
-+    return difference <= d;
-+}
-+
-+/**
-  * Compare a pixel in a pixel buffer with another pixel to determine if a point should be included in the fill operation.
-  * @param check The pixel in the pixel buffer to check.
-  * @param orig The original selected pixel to use as the fill target color.
-@@ -232,27 +247,35 @@
-     
-     switch (method) {
-         case FLOOD_CHANNELS_ALPHA:
--            return abs(static_cast<int>(ac) - ao) <= threshold;
-+            return compare_guint32(ac, ao, threshold);
-         case FLOOD_CHANNELS_R:
--            return abs(static_cast<int>(ac ? unpremul_alpha(rc, ac) : 0) - (ao ? unpremul_alpha(ro, ao) : 0)) <= threshold;
-+            return compare_guint32(ac ? unpremul_alpha(rc, ac) : 0,
-+                                   ao ? unpremul_alpha(ro, ao) : 0,
-+                                   threshold);
-         case FLOOD_CHANNELS_G:
--            return abs(static_cast<int>(ac ? unpremul_alpha(gc, ac) : 0) - (ao ? unpremul_alpha(go, ao) : 0)) <= threshold;
-+            return compare_guint32(ac ? unpremul_alpha(gc, ac) : 0,
-+                                   ao ? unpremul_alpha(go, ao) : 0,
-+                                   threshold);
-         case FLOOD_CHANNELS_B:
--            return abs(static_cast<int>(ac ? unpremul_alpha(bc, ac) : 0) - (ao ? unpremul_alpha(bo, ao) : 0)) <= threshold;
-+            return compare_guint32(ac ? unpremul_alpha(bc, ac) : 0,
-+                                   ao ? unpremul_alpha(bo, ao) : 0,
-+                                   threshold);
-         case FLOOD_CHANNELS_RGB:
--            guint32 amc, rmc, bmc, gmc;
--            //amc = 255*255 - (255-ac)*(255-ad); amc = (amc + 127) / 255;
--            //amc = (255-ac)*ad + 255*ac; amc = (amc + 127) / 255;
--            amc = 255; // Why are we looking at desktop? Cairo version ignores destop alpha
--            rmc = (255-ac)*rd + 255*rc; rmc = (rmc + 127) / 255;
--            gmc = (255-ac)*gd + 255*gc; gmc = (gmc + 127) / 255;
--            bmc = (255-ac)*bd + 255*bc; bmc = (bmc + 127) / 255;
--
--            diff += abs(static_cast<int>(amc ? unpremul_alpha(rmc, amc) : 0) - (amop ? unpremul_alpha(rmop, amop) : 0));
--            diff += abs(static_cast<int>(amc ? unpremul_alpha(gmc, amc) : 0) - (amop ? unpremul_alpha(gmop, amop) : 0));
--            diff += abs(static_cast<int>(amc ? unpremul_alpha(bmc, amc) : 0) - (amop ? unpremul_alpha(bmop, amop) : 0));
--            return ((diff / 3) <= ((threshold * 3) / 4));
--        
-+            {
-+                guint32 amc, rmc, bmc, gmc;
-+                //amc = 255*255 - (255-ac)*(255-ad); amc = (amc + 127) / 255;
-+                //amc = (255-ac)*ad + 255*ac; amc = (amc + 127) / 255;
-+                amc = 255; // Why are we looking at desktop? Cairo version ignores destop alpha
-+                rmc = (255-ac)*rd + 255*rc; rmc = (rmc + 127) / 255;
-+                gmc = (255-ac)*gd + 255*gc; gmc = (gmc + 127) / 255;
-+                bmc = (255-ac)*bd + 255*bc; bmc = (bmc + 127) / 255;
-+
-+                int diff = 0; // The total difference between each of the 3 color components
-+                diff += std::abs(static_cast<int>(amc ? unpremul_alpha(rmc, amc) : 0) - static_cast<int>(amop ? unpremul_alpha(rmop, amop) : 0));
-+                diff += std::abs(static_cast<int>(amc ? unpremul_alpha(gmc, amc) : 0) - static_cast<int>(amop ? unpremul_alpha(gmop, amop) : 0));
-+                diff += std::abs(static_cast<int>(amc ? unpremul_alpha(bmc, amc) : 0) - static_cast<int>(amop ? unpremul_alpha(bmop, amop) : 0));
-+                return ((diff / 3) <= ((threshold * 3) / 4));
-+            }
-         case FLOOD_CHANNELS_H:
-             return ((int)(fabs(hsl_check[0] - hsl_orig[0]) * 100.0) <= threshold);
-         case FLOOD_CHANNELS_S:" | while read line
-do
-patch -p0
-done
-
-
-LDFLAGS="$SLKLDFLAGS" \
-CFLAGS="$SLKCFLAGS" \
-CXXFLAGS="$SLKCFLAGS -std=c++11" \
-CC=${COMPILER} \
-CXX=${COMPILER_CXX} \
-./configure ${NLS:-} \
-  --prefix=/usr/local \
-  --libdir=/usr/lib${LIBDIRSUFFIX} \
-  --mandir=/usr/man \
-  --disable-static
-  
 make_fn
-# remove all man pages ..
-rm -rf $PKG/usr/man
-# .. and re-install those required
-# English always ..
-make DESTDIR=$PKG install-man1
-# .. and other languages when required
-for PO in $I18N; do [[ -s inkscape.$PO.1 ]] && make DESTDIR=$PKG install-man$(echo $PO|tr [:upper:] [:lower:] | tr -d "_")DATA;done
+
+## only package man pages for required locales
+{ for locale in $I18N
+ do
+ mv $PKG/usr/local/share/man/man1/inkscape.$locale.1 $TEMP_DIR
+ done
+rm $PKG/usr/local/share/man/man1/inkscape.*.1
+mv $TEMP_DIR/* $PKG/usr/local/share/man/man1/
+} || true
 
 installdocs_fn
 
-mangzip_fn
-
+#mangzip_fn
 
 strip_fn
 
@@ -241,7 +177,7 @@ $PRGNAM:
 $PRGNAM:
 $PRGNAM:
 $PRGNAM: With language support for:
-$PRGNAM: en $(echo $langs)
+$PRGNAM: en $(echo $(cat ../po/LINGUAS))
 $PRGNAM:
 $PRGNAM: Homepage: http://www.inkscape.org/
 " > $PKG/install/slack-desc
@@ -249,7 +185,7 @@ $PRGNAM: Homepage: http://www.inkscape.org/
 cat <<EOINS >> $PKG/install/doinst.sh
 # Update the desktop database:
 if [ -x usr/bin/update-desktop-database ]; then
-  chroot . /usr/bin/update-desktop-database /usr/local/share//applications > /dev/null 2>&1
+  chroot . /usr/bin/update-desktop-database /usr/local/share/applications > /dev/null 2>&1
 fi
 
 # Update hicolor theme cache:

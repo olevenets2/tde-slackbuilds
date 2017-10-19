@@ -518,10 +518,10 @@ export PREPEND=$(cat $TMPVARS/PREPEND)
 # See which compiler was selected and use the appropriate C++ compiler
 [[ $(cat $TMPVARS/COMPILER) == gcc ]] && export COMPILER_CXX="g++" || export COMPILER_CXX="clang++"
 
-LIBDIRSUFFIX=""
+
 # Is this a 64 bit system?
 # 'uname -m' won't identify a 32 bit system with a 64 bit kernel
-[[ -d /lib64 ]] && LIBDIRSUFFIX="64"
+[[ ! -d /lib64 ]] && LIBDIRSUFFIX="" || LIBDIRSUFFIX="64"
 
 TQTDIR=$INSTALL_TDE/lib$LIBDIRSUFFIX/tqt3
 
@@ -541,6 +541,8 @@ export CPLUS_INCLUDE_PATH
 export PKG_CONFIG_PATH
 export PATH
 export TQT_INCLUDE_PATH
+## to provide an ARCH suffix for the package name - see makepkg_fn in get-source.sh
+export ARM_FABI=$(readelf -Ah $(which bash)|grep -oE "soft|hard")
 
 ### set up variables for the summary list:
 ## New build
