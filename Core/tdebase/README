@@ -1,8 +1,11 @@
 Add this to  /etc/rc.d/rc.4 to start tdm
 
 # Start TDM:
-if [ -x /usr/bin/tdm ]; then
-  exec /usr/bin/tdm -nodaemon
+if [ -x /opt/trinity/bin/tdm ]; then
+  echo "Using TDM (Trinity Login Manager)."
+  echo
+#  log_cleanup "/var/log/tdm.log"
+  exec /opt/trinity/bin/tdm -nodaemon -error /var/log/tdm.log
 fi
 
 If you installed with a different prefix than /usr then you need to
