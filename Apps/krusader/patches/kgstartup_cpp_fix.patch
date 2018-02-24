@@ -1,0 +1,26 @@
+--- krusader/krusader/Konfigurator/kgstartup.cpp.orig	2018-02-24 12:32:45.764587103 +0300
++++ krusader/krusader/Konfigurator/kgstartup.cpp	2018-02-24 12:58:24.063479590 +0300
+@@ -55,15 +55,18 @@
+   TQStringList profileList = ProfileManager::availableProfiles( "Panel" );
+   profileList.push_front( "<" + i18n( "Last session" ) + ">" );
+ 
+-  KONFIGURATOR_NAME_VALUE_PAIR comboItems[ profileList.count() ];
+-  for(unsigned int i=0; i != profileList.count(); i++ )
+-    comboItems[ i ].text = comboItems[ i ].value = profileList [ i ];    
++  const int profileListCount = profileList.count();
++  KONFIGURATOR_NAME_VALUE_PAIR *comboItems = new KONFIGURATOR_NAME_VALUE_PAIR[ profileListCount ];
++  for( unsigned int i=0; i != profileListCount; i++ )
++    comboItems[ i ].text = comboItems[ i ].value = profileList[ i ];
+   comboItems[ 0 ].value = "";
+ 
+-  profileCombo = createComboBox( "Startup", "Starter Profile Name", comboItems[ 0 ].value, comboItems, profileList.count(), panelsGrp, false, false );
+-  profileCombo->setSizePolicy(  TQSizePolicy::Expanding, TQSizePolicy::Fixed);
++  profileCombo = createComboBox( "Startup", "Starter Profile Name", comboItems[ 0 ].value, comboItems, profileListCount, panelsGrp, false, false );
++  profileCombo->setSizePolicy( TQSizePolicy::Expanding, TQSizePolicy::Fixed );
+   panelsGrid->addWidget( profileCombo, 0, 1 );
+ 
++  delete [] comboItems;
++
+   //------------------------------------------------
+   panelsGrid->addMultiCellWidget( createLine( panelsGrp, "lookSep3" ), 1, 1, 0, 1 );
+ 
