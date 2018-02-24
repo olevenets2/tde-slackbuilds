@@ -39,6 +39,9 @@ ltoolupdate_fn
 
 chown_fn
 
+patch -p1 < $SRCDIR/patches/kgstartup_cpp_fix.patch
+patch -p1 < $SRCDIR/patches/krview_geticon_fix.patch
+
 cd_builddir_fn
 
 LDFLAGS="${SLKLDFLAGS}" \
