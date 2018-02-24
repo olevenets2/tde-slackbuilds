@@ -1,0 +1,18 @@
+--- krusader/krusader/Panel/krview.h.orig	2018-02-24 13:39:09.875308651 +0300
++++ krusader/krusader/Panel/krview.h	2018-02-24 13:42:54.566292947 +0300
+@@ -206,6 +206,7 @@
+   virtual TQString statistics();
+   virtual const KrViewProperties* properties() const { return _properties; }
+   virtual KrViewOperator* op() const { return _operator; }
++  static TQPixmap getIcon(vfile *vf);
+ 
+   /////////////////////////////////////////////////////////////
+   // the following functions have a default and minimalistic //
+@@ -224,7 +225,6 @@
+   virtual ~KrView();
+ protected:
+   KrView(TDEConfig *cfg = krConfig);
+-  static TQPixmap getIcon(vfile *vf);
+   void changeSelection(const KRQuery& filter, bool select, bool includeDirs = false);
+ 
+ 
