@@ -27,7 +27,7 @@ PRGNAM=inkscape
 VERSION=${VERSION:-0.92.2}
 BUILD=${BUILD:-1}
 
-SRCURL="https://media.inkscape.org/dl/resources/file/$PRGNAM-$VERSION.tar.bz2"
+SRCURL="https://inkscape.org/en/gallery/item/11254/$PRGNAM-$VERSION.tar.bz2"
 source ../../get-source.sh
 getsource_fn
 
