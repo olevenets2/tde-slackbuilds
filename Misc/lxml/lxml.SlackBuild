@@ -32,7 +32,7 @@ VERSION=${VERSION:-3.5.0}
 BUILD=${BUILD:-1}
 TAG=${TAG:-}
 
-SRCURL="http://pypi.python.org/packages/source/l/$PRGNAM/$PRGNAM-$VERSION.tar.gz"
+SRCURL="https://pypi.python.org/packages/8b/be/ed850baac891aca25c832fb8d7b9c0e7a5077a30e336d95ffc7d649aaa06/$PRGNAM-$VERSION.tar.gz"
 ARCHIVE_TYPE="tar.gz"
 source ../../get-source.sh
 getsource_fn
