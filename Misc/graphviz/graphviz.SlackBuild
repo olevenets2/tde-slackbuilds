@@ -30,7 +30,7 @@ VERSION=${VERSION:-2.38.0}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_tde}
 
-SRCURL="http://graphviz.org/pub/graphviz/stable/SOURCES/$PRGNAM-$VERSION.tar.gz"
+SRCURL="http://pkgs.fedoraproject.org/repo/pkgs/${PRGNAM}/${PRGNAM}-${VERSION}.tar.gz/5b6a829b2ac94efcd5fa3c223ed6d3ae/${PRGNAM}-${VERSION}.tar.gz"
 ARCHIVE_TYPE="tar.gz"
 source ../../get-source.sh
 getsource_fn
