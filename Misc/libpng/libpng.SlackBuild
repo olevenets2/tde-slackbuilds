@@ -25,7 +25,7 @@ VERSION=${VERSION:-1.4.20}
 BUILD=${BUILD:-1}
 TAG=${TAG:-}
 
-SRCURL="https://downloads.sourceforge.net/project/libpng/libpng14/$VERSION/libpng-$VERSION.tar.xz"
+SRCURL="http://mirror.sobukus.de/files/src/$PRGNAM/libpng-$VERSION.tar.xz"
 ARCHIVE_TYPE="tar.xz"
 
 source ../../get-source.sh
