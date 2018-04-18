@@ -4,11 +4,11 @@ if [ ! -L etc/X11/tdm ]; then
     mkdir -p etc/tde/tdm
     cp -a etc/X11/tdm/* etc/tde/tdm
     rm -rf etc/X11/tdm
-    ( cd etc/X11 ; ln -sf /etc/tde/tdm tdm )
+    ( cd etc/X11 ; ln -sf /etc/trinity/tdm tdm )
   fi
 elif [ ! -e etc/X11/tdm ]; then
   mkdir -p etc/X11
-  ( cd etc/X11 ; ln -sf /etc/tde/tdm tdm )
+  ( cd etc/X11 ; ln -sf /etc/trinity/tdm tdm )
 fi
 
 
