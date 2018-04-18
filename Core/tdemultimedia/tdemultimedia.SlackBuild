@@ -43,6 +43,8 @@ listdocs_fn
 
 chown_fn
 
+patch -p1 < $SRCDIR/patches/build-with-clang.patch
+
 if [ ! "${USECMAKE:-}" == "no" ]
 then
 # Ummm...so this just builds kmix....? lmao
