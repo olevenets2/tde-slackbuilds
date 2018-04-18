@@ -52,7 +52,7 @@ cd_builddir_fn
     -DCMAKE_CXX_COMPILER=${COMPILER_CXX} \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=${INSTALL_TDE} \
-    -DSYSCONF_INSTALL_DIR="/etc/tde" \
+    -DSYSCONF_INSTALL_DIR="/etc/trinity" \
     -DMAN_INSTALL_DIR=${INSTALL_TDE}/man \
     -DLIB_SUFFIX=${LIBDIRSUFFIX} \
     -DWITH_OPENEXR="ON" \
@@ -98,9 +98,9 @@ sed "s|\${INSTALL_TDE}|${INSTALL_TDE}|g" < $SRCDIR/profile.d/tde.csh > $PKG/etc/
 chmod 755 $PKG/etc/profile.d/tde.{,c}sh
 
 # Add some configuration files / scripts needed by TDE.
-mkdir -p ${PKG}/etc/tde
-mv ${PKG}/${INSTALL_TDE}/share/config/tdm ${PKG}/etc/tde/tdm
-( cd ${PKG}/${INSTALL_TDE}/share/config ; ln -sf /etc/tde/tdm tdm )
+mkdir -p ${PKG}/etc/trinity
+mv ${PKG}/${INSTALL_TDE}/share/config/tdm ${PKG}/etc/trinity/tdm
+( cd ${PKG}/${INSTALL_TDE}/share/config ; ln -sf /etc/trinity/tdm tdm )
 
 # Set sane permissions for the include files.
 if [ -d ${PKG}/${INSTALL_TDE}/include ]; then
@@ -112,14 +112,14 @@ mkdir -p ${PKG}/usr/share/apps/tdm/sessions
 cp ${PKG}/${INSTALL_TDE}/share/apps/tdm/sessions/tde.desktop ${PKG}/usr/share/apps/tdm/sessions/
 
 # Setup config files for TDM:
-${PKG}/${INSTALL_TDE}/bin/gentdmconf --no-old --no-old-scripts --no-backup --in ${PKG}/etc/tde/tdm
+${PKG}/${INSTALL_TDE}/bin/gentdmconf --no-old --no-old-scripts --no-backup --in ${PKG}/etc/trinity/tdm
 # Allow root to login
-cat ${PKG}/etc/tde/tdm/tdmrc | perl -pi -e 's|AllowRootLogin=false|AllowRootLogin=true|' > ${PKG}/etc/tde/tdm/tdmrc.new
-mv ${PKG}/etc/tde/tdm/Xsession ${PKG}/etc/tde/tdm/Xsession.orig
-cat ${SRCDIR}/config/Xsession | sed "s|PREFIX|${INSTALL_TDE}|g" > ${PKG}/etc/tde/tdm/Xsession
-mv ${PKG}/etc/tde/tdm/backgroundrc ${PKG}/etc/tde/tdm/backgroundrc.new
-if [[ -r ${PKG}/${INSTALL_TDE}/etc/tde/tdm/README ]]; then
-   sed -i "s|${TMP}/package-tdebase/etc/tde/tdm|/etc/tde/tdm|" ${PKG}/${INSTALL_TDE}/etc/tde/tdm/README
+cat ${PKG}/etc/trinity/tdm/tdmrc | perl -pi -e 's|AllowRootLogin=false|AllowRootLogin=true|' > ${PKG}/etc/trinity/tdm/tdmrc.new
+mv ${PKG}/etc/trinity/tdm/Xsession ${PKG}/etc/trinity/tdm/Xsession.orig
+cat ${SRCDIR}/config/Xsession | sed "s|INSTALL_TDE|${INSTALL_TDE}|g" > ${PKG}/etc/trinity/tdm/Xsession
+mv ${PKG}/etc/trinity/tdm/backgroundrc ${PKG}/etc/trinity/tdm/backgroundrc.new
+if [[ -r ${PKG}/${INSTALL_TDE}/etc/trinity/tdm/README ]]; then
+   sed -i "s|${TMP}/package-tdebase/etc/trinity/tdm|/etc/trinity/tdm|" ${PKG}/${INSTALL_TDE}/etc/trinity/tdm/README
 fi
 
 mkdir_install_fn
