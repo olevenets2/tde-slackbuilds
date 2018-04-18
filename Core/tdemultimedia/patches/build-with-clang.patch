@@ -1,0 +1,11 @@
+--- tdemultimedia/noatun/library/noatunarts/StereoVolumeControl_impl.cpp.orig	2018-02-23 15:44:47.153688003 +0300
++++ tdemultimedia/noatun/library/noatunarts/StereoVolumeControl_impl.cpp	2018-02-23 15:46:40.653680071 +0300
+@@ -71,7 +71,7 @@
+ 	void percent(float p) { mPercent=p; }
+ 	float percent() { return mPercent; }
+ 
+-	void calculateBlock(unsigned long samples)
++	void calculateBlock(unsigned long samples) __attribute__((noinline))
+ 	{
+ #ifdef HAVE_X86_SSE
+ 		float *left=inleft;
