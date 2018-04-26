@@ -58,7 +58,7 @@ CXX="g++" \
    --mandir=${INSTALL_TDE}/man \
    --disable-rpath \
    --enable-closure \
-   --enable-k3bdevices
+   --enable-k3bdevices # do not activate hal/dbus support (use k3bdevice instead)
 
 make_fn
 

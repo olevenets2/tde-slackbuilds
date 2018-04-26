@@ -44,6 +44,7 @@ chown_fn
 cd_builddir_fn
 
 ## If changing any of these options, READ CMakeLists.txt for info on interdependencies ..
+## GADU & MEANWHILE require libgadu and meanwhile installed.
   cmake \
     -DCMAKE_C_FLAGS:STRING="$SLKCFLAGS $TQT_INCLUDE_PATH" \
     -DCMAKE_CXX_FLAGS:STRING="$SLKCFLAGS" \

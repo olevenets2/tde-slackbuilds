@@ -36,6 +36,7 @@ listdocs_fn
 
 chown_fn
 
+## See CMakeLists.txt for specific laptop support
 cd_builddir_fn
   cmake \
     -DCMAKE_C_FLAGS:STRING="$SLKCFLAGS" \

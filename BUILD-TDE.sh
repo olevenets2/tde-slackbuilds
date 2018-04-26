@@ -99,23 +99,13 @@ Set the directory that TDE is to be installed in.
 
 
 rm -f $TMPVARS/COMPILER
-dialog --cr-wrap --nocancel --no-shadow --colors --title " Select The Compiler You Wish To Use " --menu \
+dialog --cr-wrap --no-shadow --colors --yes-label "clang" --no-label "gcc" --defaultno --title " Compiler " --yesno \
 "
-Here you can select the compiler you wish to use to compile TDE.
-Your choices are \Zb\Z3GCC\Zn and \Zb\Z3Clang\Zn
-
-This is a matter of personal preference and not a necessity, but the option exist.
-
-If you're not sure which to select, you should probably just use \Zb\Z3GCC\Zn.
-
-Please note: the corresponding \Zb\Z3C++\Zn compiler will be chosen for you based on your \Zb\Z3C\Zn compiler selection.
-
-So if you choose \Zb\Z3GCC\Zn, the \Zb\Z3g++\Zn compiler will be used. And if you choose \Zb\Z3Clang\Zn then \Zb\Z3clang++\Zn will be used.
+Choose which compiler to use - \Zb\Z6gcc/g++\Zn or \Zb\Z6clang/clang++\Zn
 " \
-23 77 2 \
-"gcc" "GCC" \
-"clang" "Clang" \
-2> $TMPVARS/COMPILER
+8 75
+[[ $? == 0 ]] && echo clang > $TMPVARS/COMPILER
+[[ $? == 1 ]] && echo gcc > $TMPVARS/COMPILER
 
 
 rm -f $TMPVARS/SET_MARCH
@@ -162,7 +152,7 @@ dialog --cr-wrap --defaultno --no-shadow --colors --ok-label " 2 / 3 " --cancel-
 \Zb\Z0  [[ use any arrow key x2 to activate the input box for editing ]]\Zn
  
 " \
-21 75 "$(echo $NATIVE_MARCH)" \
+18 75 "$(echo $NATIVE_MARCH)" \
 2> $TMPVARS/SET_MARCH && break
 EXITVAL=$?
 [[ $EXITVAL == 1 ]] && echo $DEFAULT_MARCH > $TMPVARS/SET_MARCH && break
@@ -200,7 +190,7 @@ Set the number of simultaneous jobs for make to whatever your system will suppor
 " \
 11 75 ${NUMJOBS:-"-j6"} \
 2> $TMPVARS/NUMJOBS
-## 
+
 
 rm -f $TMPVARS/I18N
 EXITVAL=2
@@ -341,7 +331,7 @@ dialog --cr-wrap --nocancel --no-shadow --colors --title " TDE Packages Selectio
 "
 Required builds for a basic working TDE are marked \Zb\Zr\Z4R\Zn.
 
-The packages selected form the build list and so dependencies are listed before the packages that need them.
+The packages selected form the build list and so dependencies are listed before the packages that need them. After the \Zb\Zr\Z4R\Znequired packages, the listing is grouped Core/Libs/Apps and then alphabetically, excluding tde prefixes added to package names, and the dependencies.
 
 Look out for messages in the bottom line of the screen, especially relating to dependencies.
 
@@ -354,29 +344,29 @@ Non-TDE apps are in the Misc category and don't need the \Zb\Zr\Z4R\Znequired TD
 "Deps/dbus-1-tqt" "\Zb\Zr\Z4R\Zn D-Bus bindings" ${SELECT:-off} "\Zb\Z6   \Zn" \
 "Deps/libart_lgpl" "\Zb\Zr\Z4R\Zn The LGPL'd component of libart" ${SELECT:-off} "\Zb\Z6   \Zn" \
 "Deps/tqca-tls" "\Zb\Zr\Z4R\Zn Plugin to provide SSL/TLS capability" ${SELECT:-off} "\Zb\Z6   \Zn" \
-"Deps/avahi-tqt" "Avahi support" off "\Zb\Z6 Requires Avahi  \Zn" \
+"Deps/avahi-tqt" "Avahi support" off "\Zb\Z6 Requires Avahi. Optional for tdelibs and used by default if installed. \Zn" \
 "Core/tdelibs" "\Zb\Zr\Z4R\Zn TDE libraries" ${SELECT:-off} "\Zb\Z6   \Zn" \
 "Core/tdebase" "\Zb\Zr\Z4R\Zn TDE base" ${SELECT:-off} "\Zb\Z6   \Zn" \
-"Core/tdeutils" "Collection of utilities including ark" off "\Zb\Z6   \Zn" \
-"Core/tdemultimedia" "Multimedia packages for TDE" off "\Zb\Z6   \Zn" \
+"Core/tde-i18n" "Additional language support for TDE" off "\Zb\Z6 Required when \Zb\Z3Additional language support\Zb\Z6 has been selected \Zn" \
+"Core/tdeaccessibility" "Accessibility programs" off "\Zb\Z6  \Zn" \
+"Core/tdeadmin" "System admin packages" off "\Zb\Z6  \Zn" \
 "Core/tdeartwork" "Extra artwork/themes/wallpapers for TDE" off "\Zb\Z6   \Zn" \
-"Core/tdegraphics" "Misc graphics apps" off "\Zb\Z6   \Zn" \
+"Core/tdeedu" "Educational software" off "\Zb\Z6   \Zn" \
 "Core/tdegames" "Games for TDE - atlantik, kasteroids, katomic, etc." off "\Zb\Z6   \Zn" \
+"Core/tdegraphics" "Misc graphics apps" off "\Zb\Z6   \Zn" \
+"Core/tdemultimedia" "Multimedia packages for TDE" off "\Zb\Z6   \Zn" \
+" Misc/speex" "Audio compression format designed for speech" off "\Zb\Z6 Buildtime option for tdenetwork and amarok. Requires l/speexdsp  \Zn" \
+"Core/tdenetwork" "Networking applications for TDE" off "\Zb\Z6 Optional build-time dependency - speex \Zn" \
 "Deps/libcaldav" "Calendaring Extensions to WebDAV" off "\Zb\Z6 Optional dependency for korganizer [tdepim] \Zn" \
 "Deps/libcarddav" "Online address support" off "\Zb\Z6 Optional dependency for korganizer [tdepim] \Zn" \
 "Core/tdepim" "Personal Information Management" off "\Zb\Z6   \Zn" \
-"Core/tdeaddons" "Additional plugins and scripts" off "\Zb\Z6   \Zn" \
+"Core/tdeaddons" "Additional plugins and scripts" off "\Zb\Z6 Optional plugins from tdegames, tdemultimedia, tdepim \Zn" \
 "Core/tdesdk" "Tools used by TDE developers" off "\Zb\Z6 Requires tdepim \Zn" \
-"Core/tdevelop" "TDE development programs" off "\Zb\Z6 Requires tdesdk  \Zn" \
 "Core/tdetoys" "TDE Amusements" off "\Zb\Z6   \Zn" \
-"Core/tdeedu" "Educational software" off "\Zb\Z6   \Zn" \
-"Core/tdewebdev" "Quanta Plus and other applications" off "\Zb\Z6   \Zn" \
+"Core/tdeutils" "Collection of utilities including ark" off "\Zb\Z6   \Zn" \
+"Core/tdevelop" "TDE development programs" off "\Zb\Z6 Requires tdesdk  \Zn" \
 " Misc/tidy-html5" "Corrects and cleans up HTML and XML documents" off "\Zb\Z6 Runtime option for Quanta+ [tdewebdev] \Zn" \
-" Misc/speex" "Audio compression format designed for speech" off "\Zb\Z6 Buildtime option for tdenetwork and amarok. Requires l/speexdsp  \Zn" \
-"Core/tdenetwork" "Networking applications for TDE" off "\Zb\Z6 Optional build-time dependency - speex \Zn" \
-"Core/tdeadmin" "System admin packages" off "\Zb\Z6  \Zn" \
-"Core/tdeaccessibility" "Accessibility programs" off "\Zb\Z6  \Zn" \
-"Core/tde-i18n" "Additional language support for TDE" off "\Zb\Z6 Required when \Zb\Z3Additional language support\Zb\Z6 has been selected \Zn" \
+"Core/tdewebdev" "Quanta Plus and other applications" off "\Zb\Z6   \Zn" \
 "Libs/tdelibkdcraw" "Decode RAW picture files" off "\Zb\Z6 Required for digikam, tdegwenview and ksquirrel \Zn" \
 "Libs/tdelibkexiv2" "Library to manipulate picture metadata" off "\Zb\Z6 Required for digikam, tdegwenview and ksquirrel. Needs l/exiv2... \Zn" \
 "Libs/tdelibkipi" "A common plugin structure" off "\Zb\Z6 Required for digikam, tdegwenview and ksquirrel \Zn" \
@@ -385,9 +375,9 @@ Non-TDE apps are in the Misc category and don't need the \Zb\Zr\Z4R\Znequired TD
 "Libs/libksquirrel" "A set of image codecs for KSquirrel" off "\Zb\Z6 Required for ksquirrel. Buildtime options include l/netpbm, t/transfig [fig2dev], Misc/xmedcon \Zn" \
 "Apps/abakus" "PC calculator" off "\Zb\Z6 optional dependency l/mpfr which requires l/gmp \Zn" \
 " Misc/libmp4v2" "Create and modify mp4 files" off "\Zb\Z6 Buildtime option for Amarok  \Zn" \
+" Misc/moodbar" "GStreamer plugin for Amarok for moodbar feature" off "\Zb\Z6 Runtime option for Amarok \Zn" \
 " Misc/yauap" "simple commandline audio player" off "\Zb\Z6 Provides an optional engine for Amarok \Zn" \
 "Apps/tdeamarok" "A Music Player" off "\Zb\Z6 Optional dependencies - xine-lib, libmp4v2, speex, moodbar \Zn" \
-" Misc/moodbar" "GStreamer plugin for Amarok for moodbar feature" off "\Zb\Z6 Runtime option for Amarok \Zn" \
 "Apps/digikam" "A digital photo management application + Showfoto viewer" off "\Zb\Z6 Requires kipi-plugins tdelibkdcraw tdelibkexiv2 tdelibkipi.  \Zn" \
 "Apps/dolphin" "Dolphin file manager for TDE" off "\Zb\Z6 A d3lphin.desktop file is included - see dolphin.SlackBuild.  \Zn" \
 "Apps/tdefilelight" "Graphical diskspace display" off "\Zb\Z6 Runtime requirement x/xdpyinfo \Zn" \
@@ -397,46 +387,74 @@ Non-TDE apps are in the Misc category and don't need the \Zb\Zr\Z4R\Znequired TD
 "Apps/tdegwenview-i18n" "Internationalization files for gwenview." off "\Zb\Z6 Required for tdegwenview when \Zb\Z3Additional language support\Zb\Z6 has been selected  \Zn" \
 "Apps/tdek3b" "The CD Creator" off "\Zb\Z6   \Zn" \
 "Apps/tdek3b-i18n" "Internationalization files for tdek3b." off "\Zb\Z6 Required for tdek3b when \Zb\Z3Additional language support\Zb\Z6 has been selected  \Zn" \
-"Apps/k9copy" "A DVD backup utility" off "\Zb\Z6 Requires tdek3b and ffmpeg \Zn" \
+"Apps/k9copy" "A DVD backup utility" off "\Zb\Z6 Requires [tde]k3b and ffmpeg \Zn" \
+"Apps/kaffeine" "Media player for TDE" off "\Zb\Z6   \Zn" \
+"Apps/kbfx" "Alternate menu for TDE" off "\Zb\Z6   \Zn" \
 "Apps/kbookreader" "Twin-panel text files viewer esp. for reading e-books." off "\Zb\Z6   \Zn" \
+"Apps/kdbg" "GUI for gdb using TDE" off "\Zb\Z6   \Zn" \
+"Apps/kdbusnotification" "A DBUS notification to TDE interface" off "\Zb\Z6   \Zn" \
 "Apps/kile" "A TEX and LATEX source editor and shell" off "\Zb\Z6   \Zn" \
 "Apps/knemo" "The TDE Network Monitor" off "\Zb\Z6   \Zn" \
 "Apps/knights" "A graphical chess interface" off "\Zb\Z6   \Zn" \
 "Apps/knmap" "A graphical nmap interface" off "\Zb\Z6 Might need tdesudo \Zn" \
-" Misc/GraphicsMagick" "Swiss army knife of image processing" off "\Zb\Z6 Buildtime option for chalk[krita]  \Zn" \
+" Misc/GraphicsMagick" "Swiss army knife of image processing" off "\Zb\Z6 Buildtime option for chalk[krita] in koffice \Zn" \
 "Apps/koffice" "Office Suite" off "\Zb\Z6 Optional build-time dependencies - GraphicsMagick/libpng14 [for chalk/krita]  \Zn" \
 "Apps/koffice-i18n" "Internationalization files for koffice" off "\Zb\Z6 Required for koffice when \Zb\Z3Additional language support\Zb\Z6 has been selected  \Zn" \
+"Apps/krusader" "File manager for TDE" off "\Zb\Z6   \Zn" \
 "Apps/ksensors" "A graphical interface for sensors" off "\Zb\Z6 Runtime requirement ap/lm_sensors \Zn" \
-"Apps/kscope" "A source-editing environment for C and C-style languages." off "\Zb\Z6 Runtime options cscope [d/cscope], ctags [ap/vim], dot [graphviz] \Zn" \
 " Misc/graphviz" "Graph Visualization" off "\Zb\Z6 Runtime option for kscope. pdf/html docs not built by default  \Zn" \
+"Apps/kscope" "A source-editing environment for C and C-style languages." off "\Zb\Z6 Runtime options cscope [d/cscope], ctags [ap/vim], dot [graphviz] \Zn" \
 "Apps/kshutdown" "Shutdown utility for TDE" off "\Zb\Z6   \Zn" \
 "Apps/ksquirrel" "An image viewer with OpenGL and KIPI support." off "\Zb\Z6 Requires kipi-plugins tdelibkdcraw tdelibkexiv2 tdelibkipi libksquirrel. \Zn" \
-"Apps/kvpnc" "TDE frontend for various vpn clients" off "\Zb\Z6 Miscellaneous documentation will be in $(cat $TMPVARS/INSTALL_TDE)/doc/kvpnc-$(cat $TMPVARS/TDEVERSION)  \Zn" \
 "Apps/tdektorrent" "A BitTorrent client for TDE" off "\Zb\Z6   \Zn" \
-"Apps/kaffeine" "Media player for TDE" off "\Zb\Z6   \Zn" \
-"Apps/rosegarden" "Audio sequencer and musical notation editor" off "\Zb\Z6 Requires jack-audio-connection-kit liblo and dssi for proper funtionality \Zn" \
-"Apps/kbfx" "Alternate menu for TDE" off "\Zb\Z6   \Zn" \
+"Apps/kvkbd" "A virtual keyboard for TDE" off "\Zb\Z6   \Zn" \
+"Apps/kvpnc" "TDE frontend for various vpn clients" off "\Zb\Z6 Miscellaneous documentation will be in $(cat $TMPVARS/INSTALL_TDE)/doc/kvpnc-$(cat $TMPVARS/TDEVERSION)  \Zn" \
+"Apps/piklab" "IDE for PIC microcontrollers" off "\Zb\Z6   \Zn" \
 " Misc/potrace" "For tracing bitmaps to a vector graphics format" off "\Zb\Z6 Required for potracegui \Zn" \
 "Apps/potracegui" "A GUI for potrace" off "\Zb\Z6 Requires potrace \Zn" \
+"Apps/rosegarden" "Audio sequencer and musical notation editor" off "\Zb\Z6 Requires jack-audio-connection-kit liblo and dssi for proper funtionality \Zn" \
+"Apps/soundkonverter" "frontend to various audio converters" off "\Zb\Z6   \Zn" \
 "Apps/tde-style-lipstik" "lipstik theme" off "\Zb\Z6   \Zn" \
 "Apps/tde-style-qtcurve" "QtCurve theme" off "\Zb\Z6   \Zn" \
 "Apps/tdeio-locate" "TDE frontend for the locate command" off "\Zb\Z6   \Zn" \
 "Apps/tdesudo" "Graphical frontend for the sudo command" off "\Zb\Z6   \Zn" \
-"Apps/twin-style-crystal" "twin theme" off "\Zb\Z6   \Zn" \
 "Apps/tdmtheme" "tdm theme editor module" off "\Zb\Z6   \Zn" \
-"Apps/kdbg" "GUI for gdb using TDE" off "\Zb\Z6   \Zn" \
+"Apps/twin-style-crystal" "twin theme" off "\Zb\Z6   \Zn" \
 "Apps/yakuake" "Quake-style terminal emulator" off "\Zb\Z6   \Zn" \
-"Apps/soundkonverter" "frontend to various audio converters" off "\Zb\Z6   \Zn" \
-"Apps/krusader" "File manager for TDE" off "\Zb\Z6   \Zn" \
-"Apps/piklab" "IDE fot PIC microcontrollers" off "\Zb\Z6   \Zn" \
-"Apps/kdbusnotification" "A DBUS notification to TDE interface" off "\Zb\Z6   \Zn" \
-"Apps/kvkbd" "A virtual keyboard for TDE" off "\Zb\Z6   \Zn" \
-" Misc/inkscape" "SVG editor" off "\Zb\Z6 Requires lxml if online help facility is required. \Zn" \
 " Misc/lxml" "Python bindings for libxml2 and libxslt" off "\Zb\Z6 Required to use Inkscape online help \Zn" \
+" Misc/inkscape" "SVG editor - an alternative to potrace, potracegui [and GraphicsMagick]." off "\Zb\Z6 Requires lxml if online help facility is required. \Zn" \
 2> $TMPVARS/TDEbuilds
 # successful builds are removed from the TDEbuilds list by '$dir ' so add a space to the last entry
 # and the " needs to be removed because the Misc entries are double-quoted
 sed -i -e 's|$| |' -e 's|"||g' $TMPVARS/TDEbuilds
+
+
+## only run this if tdebase has been selected
+[[ $(grep -o tdebase $TMPVARS/TDEbuilds) ]] && {
+rm $TMPVARS/RUNLEVEL
+EXITVAL=2
+until [[ $EXITVAL -lt 2 ]] ; do
+dialog --cr-wrap --no-shadow --yes-label "4" --no-label "3" --help-button --help-label "README" --colors --defaultno --title " TDM " --yesno \
+"
+TDM is included in the tdebase build.
+
+Choose whether to boot into the GUI and login with TDM - runlevel \Zb\Z64\Zn
+or
+boot into a terminal - runlevel \Zb\Z63\Zn - the Slackware default.
+
+This option can be overridden later by editing /etc/inittab.
+" \
+13 75
+EXITVAL=$?
+[[ $EXITVAL == 0 ]] && echo 4 > $TMPVARS/RUNLEVEL
+[[ $EXITVAL == 1 ]] && echo 3 > $TMPVARS/RUNLEVEL
+[[ $EXITVAL == 2 ]] && dialog --cr-wrap --no-shadow --colors --ok-label "Return" --msgbox \
+"
+$(cat Core/tdebase/README)
+" \
+30 75
+done
+}
 
 
 ## only run this if building koffice has been selected
@@ -502,6 +520,7 @@ fi;fi;fi
 export TDEVERSION=$(cat $TMPVARS/TDEVERSION)
 export INSTALL_TDE=$(cat $TMPVARS/INSTALL_TDE)
 export COMPILER=$(cat $TMPVARS/COMPILER)
+[[ $COMPILER == gcc ]] && export COMPILER_CXX="g++" || export COMPILER_CXX="clang++"
 export SET_march=$(cat $TMPVARS/SET_MARCH)
 export ARCH=$(cat $TMPVARS/ARCH)	# set again for the 'continue' option
 export TDE_MIRROR=mirror.ppa.trinitydesktop.org/trinity
@@ -511,13 +530,10 @@ export TQT_DOCS=$(cat $TMPVARS/TQT_DOCS)
 export EXIT_FAIL=$(cat $TMPVARS/EXIT_FAIL)
 export KEEP_BUILD=$(cat $TMPVARS/KEEP_BUILD)
 export PREPEND=$(cat $TMPVARS/PREPEND)
+export RUNLEVEL=$(cat $TMPVARS/RUNLEVEL)
 # these exports are for koffice.SB
 [[ $(cat $TMPVARS/Krita_OPTS) == *krita* ]] && export REVERT=yes
 [[ $(cat $TMPVARS/Krita_OPTS) == *libpng14* ]] && export USE_PNG14=yes
-
-# See which compiler was selected and use the appropriate C++ compiler
-[[ $(cat $TMPVARS/COMPILER) == gcc ]] && export COMPILER_CXX="g++" || export COMPILER_CXX="clang++"
-
 
 # Is this a 64 bit system?
 # 'uname -m' won't identify a 32 bit system with a 64 bit kernel
@@ -549,15 +565,18 @@ export ARM_FABI=$(readelf -Ah $(which bash)|grep -oE "soft|hard")
 [[ $(cat $TMPVARS/build-new) != no ]] && NEW_BUILD=yes || NEW_BUILD='no - re-use existing'
 ## Action on failure
 AOF=$(echo $EXIT_FAIL|cut -d" " -f1)
+## if tdebase selected, runlevel selected
+[[ $(grep -o tdebase $TMPVARS/TDEbuilds) ]] && [[ $RUNLEVEL ]] && {
+TDMRL=\\Zb\\Z6$RUNLEVEL\\Zn
+} && SHADERL=" "
 ## koffice - only if it is being built
-[[ $(sed 's|koffice-||' $TMPVARS/TDEbuilds | grep -o Apps/koffice) ]] && \
-{
+[[ $(sed 's|koffice-||' $TMPVARS/TDEbuilds | grep -o Apps/koffice) ]] && {
 [[ $REVERT == yes ]] && RVT=\\Zb\\Z6yes\\Zn || RVT=\\Zb\\Z6no\\Zn
 } && {
 [[ $(cat $TMPVARS/Krita_OPTS) == *useGM* ]] && USE_GM=\\Zb\\Z6yes\\Zn || USE_GM\\Zb\\Z6=no\\Zn
 } && {
 [[ $USE_PNG14 == yes ]] && USE_PNG=\\Zb\\Z6yes\\Zn || USE_PNG=\\Zb\\Z6no\\Zn
-} && SHADE=" "
+} && SHADEKO=" "
 ## start dialog
 EXITVAL=2
 until [[ $EXITVAL -lt 2 ]] ; do
@@ -576,7 +595,8 @@ Include tqt html docs                   \Zb\Z6$TQT_DOCS\Zn
 Action on failure                       \Zb\Z6${AOF:-continue}\Zn
 Keep the temporary build files          \Zb\Z6$KEEP_BUILD\Zn
 Pre-select required [\Zb\Zr\Z4R\Zn] builds          \Zb\Z6$(cat $TMPVARS/SELECT|sed 's|off|no|;s|on|yes|')\Zn
-Prepend TDE libs paths                  \Zb\Z6${PREPEND:-no}\Zn${SHADE:-\Z0\Zb}
+Prepend TDE libs paths                  \Zb\Z6${PREPEND:-no}\Zn${SHADERL:-\Z0\Zb}
+Runlevel for TDM                        ${TDMRL:-n/a}\Zn${SHADEKO:-\Z0\Zb}
 koffice:
  revert chalk to krita                  ${RVT:-n/a}
  build with libpng14                    ${USE_PNG:-n/a}

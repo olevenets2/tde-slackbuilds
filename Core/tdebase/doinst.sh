@@ -1,14 +1,14 @@
 # Save old config files:
 if [ ! -L etc/X11/tdm ]; then
   if [ -d etc/X11/tdm ]; then
-    mkdir -p etc/tde/tdm
-    cp -a etc/X11/tdm/* etc/tde/tdm
+    mkdir -p etc/trinity/tdm
+    cp -a etc/X11/tdm/* etc/trinity/tdm
     rm -rf etc/X11/tdm
-    ( cd etc/X11 ; ln -sf /etc/tde/tdm tdm )
+    ( cd etc/X11 ; ln -sf /etc/trinity/tdm tdm )
   fi
 elif [ ! -e etc/X11/tdm ]; then
   mkdir -p etc/X11
-  ( cd etc/X11 ; ln -sf /etc/tde/tdm tdm )
+  ( cd etc/X11 ; ln -sf /etc/trinity/tdm tdm )
 fi
 
 
@@ -23,8 +23,8 @@ config() {
   fi
   # Otherwise, we leave the .new copy for the admin to consider...
 }
-config etc/tde/tdm/tdmrc.new
-config etc/tde/tdm/backgroundrc.new
+config etc/trinity/tdm/tdmrc.new
+config etc/trinity/tdm/backgroundrc.new
 
 # Update the desktop database:
 if [ -x usr/bin/update-desktop-database ]; then

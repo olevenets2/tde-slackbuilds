@@ -39,6 +39,19 @@ source ../../get-source.sh
 getsource_fn
 
 untar_fn
+
+## patch for building with clang
+echo $'
+--- noatun/library/noatunarts/StereoVolumeControl_impl.cpp
++++ noatun/library/noatunarts/StereoVolumeControl_impl.cpp
+@@ -74,1 +74,1 @@
+-	void calculateBlock(unsigned long samples)
++	void calculateBlock(unsigned long samples) __attribute__((noinline))
+' | while read line
+do
+patch -p0
+done
+
 listdocs_fn
 
 chown_fn

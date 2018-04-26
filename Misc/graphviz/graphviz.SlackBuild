@@ -26,16 +26,17 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PRGNAM=graphviz
-VERSION=${VERSION:-2.38.0}
+VERSION=${VERSION:-2.40.1}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_tde}
 
-SRCURL="http://graphviz.org/pub/graphviz/stable/SOURCES/$PRGNAM-$VERSION.tar.gz"
+SRCURL="https://ftp.osuosl.org/pub/blfs/conglomeration/graphviz/graphviz-$VERSION.tar.gz"
 ARCHIVE_TYPE="tar.gz"
 source ../../get-source.sh
 getsource_fn
 
 untar_fn
+
 listdocs_fn
 
 chown_fn

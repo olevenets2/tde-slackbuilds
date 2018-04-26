@@ -43,6 +43,7 @@ langs="";for Lang in $I18N;do [[ -e po/$Lang/gtkqtengine.po ]] && langs="$langs 
 
 chown_fn
 
+## BONOBO will be included in the build if installed
 cd_builddir_fn
   cmake \
     -DCMAKE_C_FLAGS:STRING="$SLKCFLAGS" \

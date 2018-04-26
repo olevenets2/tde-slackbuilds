@@ -1,3 +1,0 @@
-If ksquirrel is to be built with exif and Kipi Plugins support, build and install kipi-plugins first.
-
-Needs libksquirrel.

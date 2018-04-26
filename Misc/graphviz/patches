@@ -13,14 +13,15 @@ sed -i 's|/php/modules|/php/extensions|' configure
 
 
 patches() {
-echo $'--- lib/cgraph/scan.l
-+++ lib/cgraph/scan.l
-@@ -152,1 +152,1 @@
--	agerr(AGWARN,agxbuse(&xb));
-+	agerr(AGWARN, "%s", agxbuse(&xb));
-@@ -228,1 +228,1 @@
--	agerr(AGERR,agxbuse(&xb));
-+	agerr(AGERR, "%s", agxbuse(&xb));
+echo $'#scan.l patch not required for 2.40.1
+#--- lib/cgraph/scan.l
+#+++ lib/cgraph/scan.l
+#@@ -152,1 +152,1 @@
+#-	agerr(AGWARN,agxbuse(&xb));
+#+	agerr(AGWARN, "%s", agxbuse(&xb));
+#@@ -228,1 +228,1 @@
+#-	agerr(AGERR,agxbuse(&xb));
+#+	agerr(AGERR, "%s", agxbuse(&xb));
 --- plugin/gs/gvloadimage_gs.c
 +++ plugin/gs/gvloadimage_gs.c
 @@ -72,11 +72,11 @@

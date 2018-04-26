@@ -33,6 +33,38 @@ getsource_fn
 
 untar_fn
 
+## patches for building with clang
+echo $'
+--- krusader/Konfigurator/kgstartup.cpp
++++ krusader/Konfigurator/kgstartup.cpp
+@@ -58,3 +58,4 @@
+-  KONFIGURATOR_NAME_VALUE_PAIR comboItems[ profileList.count() ];
+-  for(unsigned int i=0; i != profileList.count(); i++ )
+-    comboItems[ i ].text = comboItems[ i ].value = profileList [ i ];    
++  const int profileListCount = profileList.count();
++  KONFIGURATOR_NAME_VALUE_PAIR *comboItems = new KONFIGURATOR_NAME_VALUE_PAIR[ profileListCount ];
++  for( unsigned int i=0; i != profileListCount; i++ )
++  comboItems[ i ].text = comboItems[ i ].value = profileList[ i ];
+@@ -63,2 +64,2 @@
+-  profileCombo = createComboBox( "Startup", "Starter Profile Name", comboItems[ 0 ].value, comboItems, profileList.count(), panelsGrp, false, false );
+-  profileCombo->setSizePolicy(  TQSizePolicy::Expanding, TQSizePolicy::Fixed);
++  profileCombo = createComboBox( "Startup", "Starter Profile Name", comboItems[ 0 ].value, comboItems, profileListCount, panelsGrp, false, false );
++  profileCombo->setSizePolicy( TQSizePolicy::Expanding, TQSizePolicy::Fixed );
+@@ -65,0 +67,2 @@
++
++  delete [] comboItems;
+--- krusader/Panel/krview.h
++++ krusader/Panel/krview.h
+@@ -209 +209 @@
+-
++  static TQPixmap getIcon(vfile *vf);
+@@ -227 +226,0 @@
+-  static TQPixmap getIcon(vfile *vf);
+' | while read line
+do
+patch -p0
+done
+
 listdocs_fn
 
 ltoolupdate_fn

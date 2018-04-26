@@ -1,19 +1,34 @@
-Add this to  /etc/rc.d/rc.4 to start tdm
+TDM
 
-# Start TDM:
-if [ -x /usr/bin/tdm ]; then
-  exec /usr/bin/tdm -nodaemon
-fi
+\ZuInstalling tdebase\ZU
+In line with normal practice, tdmrc will not be overwritten and tdmrc.new will be installed for admin decision on whether to use it as tdmrc. Where tdmrc doesn't exist, it will be created by doinst.sh from tdmrc.new.
 
-If you installed with a different prefix than /usr then you need to
-adjust the path to the tdm binary.
+\Zuroot logins\ZU
+AllowRootLogin is set to true in tdmrc.new, and will therefore be the default for new installations.
 
---------------------
+\Zurc.4.local\ZU
+This has been included on the assumption that the standard entry in rc.4[.new] from the package sysvinit-scripts exists:
 
-Konqueror file manager as-built defaults to 'Icon View' when starting.
-Setting 'Tree View' and saving that view profile should then default
-to 'Tree View' when starting kfm or opening it in a new tab - the former
-works but not the latter.
+    # If you'd like to start something different or in a
+    # different order than the options below, create your
+    # own startup script /etc/rc.d/rc.4.local and make it
+    # executable and it will be used instead:
+        if [ -x /etc/rc.d/rc.4.local ]; then
+          exec /bin/bash /etc/rc.d/rc.4.local
+        fi
+
+To enable tdm if this isn't the case, either
+[1] add this test to rc.4 above other session manager options
+or
+[2] copy the contents of rc.4.local to rc.4 above other session manager options
+
+\ZuRunlevel\ZU
+Set this to 4 and tdm should work out-of-the-box, especially for new installations.
+
+------------------
+
+\ZuKonqueror file manager\ZU as-built defaults to 'Icon View' when starting.
+Setting 'Tree View' and saving that view profile should then default to 'Tree View' when starting kfm or opening it in a new tab - the former works but not the latter.
 
 The problem seems to be that TDE lacks the entry in konquerorrc that exists in KDE3:
 [MainView Settings]
@@ -28,4 +43,3 @@ Until this is sorted out in the source code, this hack works:
 
 3] echo -e "\n\n[MainView Settings]\nViewMode=konq_treeview" >> ~/.trinity/share/config/konquerorrc
 
-That's it.

@@ -32,11 +32,22 @@ source ../../get-source.sh
 getsource_fn
 
 untar_fn
+
+## patch for building with clang
+echo $'
+--- tdeabc/tests/testaddresseelist.cpp
++++ tdeabc/tests/testaddresseelist.cpp
+@@ -20,1 +20,1 @@
+-int main(int /*argc*/,char /* **argv*/)
++int main(int /*argc*/, char** /*argv*/)
+' | while read line
+do
+patch -p0
+done
+
 listdocs_fn
 
 chown_fn
-
-patch -p1 < $SRCDIR/patches/build-with-clang.patch
 
 # Check for avahi-tqt
 [[ $(ls /var/log/packages/avahi-tqt-*) ]] && AVAHI="ON"
