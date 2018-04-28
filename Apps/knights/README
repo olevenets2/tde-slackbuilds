@@ -1,11 +1,6 @@
-There is a Spanish language file in the source, but it has no translations in it ..
-the included es.po file is a collaboration between Google translate,
-my Spanish-English-Spanish dictionary, and various other sources.
+There is a Spanish language file in the source, but it has no translations in it .. the included es.po file is a collaboration between Google translate, my Spanish-English-Spanish dictionary, and various other sources.
 
 Any involvement from a Spanish speaker to check and correct will be welcome.
 Kbabel is not necessary, it will display in a text editor just fine.
 
-
 Tested with gnuchess-6.2.2, stockfish-7-linux, and komodo-7, in UCI mode.
-
-

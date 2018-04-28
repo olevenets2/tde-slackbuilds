@@ -36,7 +36,7 @@ Required packages for a basic working TDE are:
 
 i18n support [locale and html/help docs] in the packages is restricted to whatever is selected in BUILD-TDE.sh and, of that, to whatever is available in the package source.
 
-TDM may need some manual setting up - see Core/tdebase/README
+TDM may need some manual setting up - see Core/tdebase/README, which can also be viewed while running BUILD-TDE.sh if tdebase is selected.
 
 See https://wiki.trinitydesktop.org/How_to_Build_TDE_Core_Modules for more information
 

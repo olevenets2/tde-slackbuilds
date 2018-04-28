@@ -490,6 +490,35 @@ PNG_VERSION=$(grep VERSION:- $ROOT/Misc/libpng/libpng.SlackBuild|cut -d- -f2|cut
 [[ ! $(ls $LIBPNG_TMP/libpng-${PNG_VERSION}-*-1.txz) ]] && \
 sed -i 's|Apps/koffice|Misc/libpng &|' $TMPVARS/TDEbuilds
 }
+
+
+## this dialog will only run if any of the selected packages has a README
+rm -f $TMPVARS/READMEs
+## generate list of READMEs ..
+RM_LIST=$(find . -name "*README*" | grep -v tdebase | grep -o "[ACDLM][a-z]*/[-_0-z]*")
+for package in $(cat $TMPVARS/TDEbuilds)
+do
+[[ $RM_LIST == *$package* ]] && {
+echo "\Zb\Z6\Zu$package\ZU\Zn" >> $TMPVARS/READMEs
+echo >> $TMPVARS/READMEs
+echo "$(cat $package/README)" >> $TMPVARS/READMEs
+echo >> $TMPVARS/READMEs
+}
+done
+## .. if there is a list, run dialog
+[[ $(cat $TMPVARS/READMEs) ]] && {
+dialog --cr-wrap --defaultno --no-shadow --colors --title " READMEs " --yesno \
+"
+A number of selected packages have READMEs in their SlackBuilds directories.
+
+Do you want to read the READMEs?
+ " \
+10 75
+[[ $? == 0 ]] && dialog --no-collapse --cr-wrap --no-shadow --colors --ok-label "Close" --msgbox \
+"
+$(cat $TMPVARS/READMEs)" \
+30 75
+}
 }
 
 [[ ! -e $TMPVARS/TDEbuilds ]] && run_dialog

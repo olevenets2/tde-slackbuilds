@@ -38,6 +38,23 @@ untar_fn
 
 ## add -march and -mtune options to CFLAGS where they've been set in BUILD-TDE.sh
 sed -i "s|^QMAKE_CFLAGS[^_].*$|& $SET_march|" mkspecs/linux-g++/qmake.conf
+## allow building with clang
+echo $'--- mkspecs/linux-g++/qmake.conf
++++ mkspecs/linux-g++/qmake.conf
+@@ -11 +11 @@
+-QMAKE_CC		= gcc
++QMAKE_CC		= $(COMPILER)
+@@ -29 +29 @@
+-QMAKE_CXX		= g++
++QMAKE_CXX		= $(COMPILER_CXX)
+@@ -49,2 +49,2 @@
+-QMAKE_LINK		= g++
+-QMAKE_LINK_SHLIB	= g++
++QMAKE_LINK		= $(COMPILER_CXX)
++QMAKE_LINK_SHLIB	= $(COMPILER_CXX)' | while read line
+do
+patch -p0
+done
 
 listdocs_fn
 
@@ -45,17 +62,15 @@ chown_fn
 
 #cd_builddir_fn
 
-[[ $COMPILER_CXX == "g++" ]] && NO_EXCEP="-no-exceptions "
 echo "yes" | CFLAGS="$SLKCFLAGS" CXXFLAGS="$SLKCFLAGS" \
-CC=${COMPILER} \
-CXX=${COMPILER_CXX} \
- ./configure ${NO_EXCEP:-}\
- -prefix $TQTDIR-${VERSION} \
+ ./configure \
+ -no-exceptions \
+ -prefix $TQTDIR-$VERSION \
  -release \
  -verbose \
  -I/usr/include/freetype2 \
  -I/usr/include/mysql \
- -L/usr/lib${LIBDIRSUFFIX} \
+ -L/usr/lib$LIBDIRSUFFIX \
  -system-zlib \
  -qt-imgfmt-png \
  -qt-imgfmt-mng \
@@ -89,7 +104,7 @@ make install INSTALL_ROOT=$PKG || exit 1
 [[ $TQT_DOCS == "no" ]] && rm -rf $PKG$TQTDIR-$VERSION/doc
 
 # Link the shared libraries
-( cd $PKG${INSTALL_TDE}/lib${LIBDIRSUFFIX}
+( cd $PKG$INSTALL_TDE/lib$LIBDIRSUFFIX
   for file in $PRGNAM-$VERSION/lib/*.so* ; do
     ln -sf $file .
   done
@@ -100,38 +115,38 @@ installdocs_fn
 mkdir -p $PKG/etc/profile.d
 # JD: adapt these to the correct value of LIBDIRSUFFIX
 # later changed to TQTDIR
-sed "s|\$TQTDIR|$TQTDIR|g" < $SRCDIR/profile.d/${PRGNAM}.sh > $PKG/etc/profile.d/${PRGNAM}.sh
-sed "s|\$TQTDIR|$TQTDIR|g" < $SRCDIR/profile.d/${PRGNAM}.csh > $PKG/etc/profile.d/${PRGNAM}.csh
+sed "s|\$TQTDIR|$TQTDIR|g" < $SRCDIR/profile.d/$PRGNAM.sh > $PKG/etc/profile.d/$PRGNAM.sh
+sed "s|\$TQTDIR|$TQTDIR|g" < $SRCDIR/profile.d/$PRGNAM.csh > $PKG/etc/profile.d/$PRGNAM.csh
 chmod 755 $PKG/etc/profile.d/*
 
 strip_fn
 
 # Put a ton of links to more "normal" places.
-mkdir -p $PKG${INSTALL_TDE}/bin
-( cd $PKG${INSTALL_TDE}/bin
+mkdir -p $PKG$INSTALL_TDE/bin
+( cd $PKG$INSTALL_TDE/bin
   for file in tqassistant tqdesigner tqlinguist tqlrelease tqlupdate tqmoc tqm2ts tqmake tqtconfig tquic ; do
     ln -sf $TQTDIR-$VERSION/bin/$file .
   done
 )
 
-mkdir -p $PKG${INSTALL_TDE}/lib${LIBDIRSUFFIX}/pkgconfig
-( cd $PKG${INSTALL_TDE}/lib${LIBDIRSUFFIX}/pkgconfig
-  ln -sf $TQTDIR-${VERSION}/lib/pkgconfig/tqt-mt.pc .
+mkdir -p $PKG$INSTALL_TDE/lib$LIBDIRSUFFIX/pkgconfig
+( cd $PKG$INSTALL_TDE/lib$LIBDIRSUFFIX/pkgconfig
+  ln -sf $TQTDIR-$VERSION/lib/pkgconfig/tqt-mt.pc .
 )
 
 # Add desktop files to launch some programs:
-mkdir -p $PKG${INSTALL_TDE}/share/applications/tde
-cp -a $SRCDIR/apps/tqtconfig.desktop $PKG${INSTALL_TDE}/share/applications/tde/tqtconfig.desktop
-cp -a $SRCDIR/apps/tqlinguist.desktop $PKG${INSTALL_TDE}/share/applications/tde/tqlinguist.desktop
-cp -a $SRCDIR/apps/tqdesigner.desktop $PKG${INSTALL_TDE}/share/applications/tde/tqdesigner.desktop
-cp -a $SRCDIR/apps/tqassistant.desktop $PKG${INSTALL_TDE}/share/applications/tde/tqassistant.desktop
+mkdir -p $PKG$INSTALL_TDE/share/applications/tde
+cp -a $SRCDIR/apps/tqtconfig.desktop $PKG$INSTALL_TDE/share/applications/tde/tqtconfig.desktop
+cp -a $SRCDIR/apps/tqlinguist.desktop $PKG$INSTALL_TDE/share/applications/tde/tqlinguist.desktop
+cp -a $SRCDIR/apps/tqdesigner.desktop $PKG$INSTALL_TDE/share/applications/tde/tqdesigner.desktop
+cp -a $SRCDIR/apps/tqassistant.desktop $PKG$INSTALL_TDE/share/applications/tde/tqassistant.desktop
 
 # Symlink tqt3 includes to qt3, to provide it for non-tde software as well =]
-mkdir -p $PKG${INSTALL_TDE}/include
-( cd $PKG${INSTALL_TDE}/include ; ln -sf $TQTDIR-${VERSION}/include qt3 )
+mkdir -p $PKG$INSTALL_TDE/include
+( cd $PKG$INSTALL_TDE/include ; ln -sf $TQTDIR-$VERSION/include qt3 )
 
 # Symlink all of it:
-( cd $PKG${INSTALL_TDE}/lib${LIBDIRSUFFIX} ; ln -sf ${PRGNAM}-${VERSION} ${PRGNAM})
+( cd $PKG$INSTALL_TDE/lib$LIBDIRSUFFIX ; ln -sf $PRGNAM-$VERSION $PRGNAM)
 
 mkdir_install_fn
 
@@ -161,8 +176,8 @@ $PRGNAM: Home: https://wiki.trinitydesktop.org/Trinity_Desktop_Environment
 [[ $PREPEND != yes ]] && \
 cat <<EOINS >> $PKG/install/doinst.sh
 # Add TQt library directories to /etc/ld.so.conf:
-if ! grep ${INSTALL_TDE}/lib${LIBDIRSUFFIX} /etc/ld.so.conf 1> /dev/null 2> /dev/null ; then
-  echo "${INSTALL_TDE}/lib${LIBDIRSUFFIX}" >> /etc/ld.so.conf
+if ! grep $INSTALL_TDE/lib$LIBDIRSUFFIX /etc/ld.so.conf 1> /dev/null 2> /dev/null ; then
+  echo "$INSTALL_TDE/lib$LIBDIRSUFFIX" >> /etc/ld.so.conf
 fi
 if ! grep $TQTDIR-$VERSION/lib /etc/ld.so.conf 1> /dev/null 2> /dev/null ; then
   echo "$TQTDIR-$VERSION/lib" >> /etc/ld.so.conf
@@ -172,10 +187,10 @@ if [ -x /sbin/ldconfig ]; then
 fi
 
 # Update PKG_CONFIG_PATH:
-if ! grep ${INSTALL_TDE}/lib${LIBDIRSUFFIX}/pkgconfig /etc/profile.d/pkgconfig.sh
+if ! grep $INSTALL_TDE/lib$LIBDIRSUFFIX/pkgconfig /etc/profile.d/pkgconfig.sh
 then
-sed -i "s|pkgconfig$|pkgconfig:${INSTALL_TDE}/lib${LIBDIRSUFFIX}/pkgconfig|g" /etc/profile.d/pkgconfig.sh
-sed -i "s|pkgconfig$|pkgconfig:${INSTALL_TDE}/lib${LIBDIRSUFFIX}/pkgconfig|g" /etc/profile.d/pkgconfig.csh
+sed -i "s|pkgconfig$|pkgconfig:$INSTALL_TDE/lib$LIBDIRSUFFIX/pkgconfig|g" /etc/profile.d/pkgconfig.sh
+sed -i "s|pkgconfig$|pkgconfig:$INSTALL_TDE/lib$LIBDIRSUFFIX/pkgconfig|g" /etc/profile.d/pkgconfig.csh
 fi
 
 EOINS
@@ -185,30 +200,30 @@ EOINS
 [[ $PREPEND == yes ]] && \
 cat <<EOINS >> $PKG/install/doinst.sh
 # Add TQt library directories to /etc/ld.so.conf:
-sed -i "\|${INSTALL_TDE}/lib${LIBDIRSUFFIX}|d" /etc/ld.so.conf
-sed -i "1i ${INSTALL_TDE}/lib${LIBDIRSUFFIX}" /etc/ld.so.conf
+sed -i "\|$INSTALL_TDE/lib$LIBDIRSUFFIX|d" /etc/ld.so.conf
+sed -i "1i $INSTALL_TDE/lib$LIBDIRSUFFIX" /etc/ld.so.conf
 sed -i "1i $TQTDIR-$VERSION/lib" /etc/ld.so.conf
 if [ -x /sbin/ldconfig ]; then
   /sbin/ldconfig 2> /dev/null
 fi
 
 # Update PKG_CONFIG_PATH:
-sed -i "s|${INSTALL_TDE}/lib${LIBDIRSUFFIX}/pkgconfig||g;s|:$||g" /etc/profile.d/pkgconfig.{,c}sh
-sed -i "s|PKG_CONFIG_PATH=|PKG_CONFIG_PATH=${INSTALL_TDE}/lib${LIBDIRSUFFIX}/pkgconfig:|g;s|::|:|g" /etc/profile.d/pkgconfig.sh
-sed -i "s|PKG_CONFIG_PATH |PKG_CONFIG_PATH ${INSTALL_TDE}/lib${LIBDIRSUFFIX}/pkgconfig:|g;s|::|:|g" /etc/profile.d/pkgconfig.csh
+sed -i "s|$INSTALL_TDE/lib$LIBDIRSUFFIX/pkgconfig||g;s|:$||g" /etc/profile.d/pkgconfig.{,c}sh
+sed -i "s|PKG_CONFIG_PATH=|PKG_CONFIG_PATH=$INSTALL_TDE/lib$LIBDIRSUFFIX/pkgconfig:|g;s|::|:|g" /etc/profile.d/pkgconfig.sh
+sed -i "s|PKG_CONFIG_PATH |PKG_CONFIG_PATH $INSTALL_TDE/lib$LIBDIRSUFFIX/pkgconfig:|g;s|::|:|g" /etc/profile.d/pkgconfig.csh
 
 EOINS
 
 cat <<EOINS >> $PKG/install/doinst.sh
 # Update the desktop database:
 if [ -x usr/bin/update-desktop-database ]; then
-  chroot . /usr/bin/update-desktop-database ${INSTALL_TDE}/share/applications > /dev/null 2>&1
+  chroot . /usr/bin/update-desktop-database $INSTALL_TDE/share/applications > /dev/null 2>&1
 fi
 
 # Update hicolor theme cache:
 if [ -d usr/share/icons/hicolor ]; then
   if [ -x /usr/bin/gtk-update-icon-cache ]; then
-    chroot . /usr/bin/gtk-update-icon-cache -f -t ${INSTALL_TDE}/share/icons/hicolor 1> /dev/null 2> /dev/null
+    chroot . /usr/bin/gtk-update-icon-cache -f -t $INSTALL_TDE/share/icons/hicolor 1> /dev/null 2> /dev/null
   fi
 fi
 
