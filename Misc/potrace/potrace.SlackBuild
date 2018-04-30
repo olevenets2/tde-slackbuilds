@@ -24,11 +24,11 @@
 #   SUCH DAMAGE.
 
 PRGNAM=potrace
-VERSION=${VERSION:-1.13}
+VERSION=${VERSION:-1.15}
 BUILD=${BUILD:-1}
 TAG=${TAG:-}
 
-SRCURL="http://$PRGNAM.sourceforge.net/download/$VERSION/$PRGNAM-$VERSION.tar.gz"
+SRCURL="https://sourceforge.net/projects/potrace/files/$VERSION/potrace-$VERSION.tar.gz"
 ARCHIVE_TYPE="tar.gz"
 source ../../get-source.sh
 getsource_fn
@@ -43,11 +43,11 @@ cd_builddir_fn
 LDFLAGS="$SLKLDFLAGS" \
 CFLAGS="$SLKCFLAGS" \
 CXXFLAGS="$SLKCFLAGS" \
-CC=${COMPILER} \
-CXX=${COMPILER_CXX} \
+CC=$COMPILER \
+CXX=$COMPILER_CXX \
 ../configure \
   --prefix=/usr/local \
-  --libdir=/usr/lib${LIBDIRSUFFIX} \
+  --libdir=/usr/lib$LIBDIRSUFFIX \
   --with-libpotrace \
   --mandir=/usr/man \
   

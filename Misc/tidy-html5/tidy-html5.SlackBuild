@@ -38,35 +38,38 @@ source ../../get-source.sh
 getsource_fn
 
 cd $TMP/tmp-$PRGNAM
-unzip ${SOURCE}
+unzip $SOURCE
 
-cd ${PRGNAM}-${VERSION}
+cd $PRGNAM-$VERSION
 VERSION=$(head -n 1 version.txt)
 
 listdocs_fn
 
-# don't build in other locales if tidy doesn't support those set as additional languages
+# Include tidy support only for additional languages set by I18N
+## Set SUPPORT_LOCALIZATIONS default option to OFF
+sed -i 's|languages." ON|languages." OFF|' CMakeLists.txt
 I18N=$(echo $I18N | tr '[:upper:]' '[:lower:]')
 for lang in $I18N
 do
-[[ $(ls -1 src/language_*.h|grep _$lang) != "" ]] && LOCALize="ON" && langs="$lang ${langs:-}"
+[[ $(ls -1 src/language_*.h|grep _$lang) != "" ]] && {
+langs="${langs:-}$lang "
+sed -i "s|\"locale.h\"|&\n#include \"language_$lang.h\"|" src/language.c
+sed -i "s|        \&language_en,|& \&language_$lang,|" src/language.c
+}
 done
-[[ ${langs:-} != "" ]] && langs=$langs" + other locales"
-
 
 cd build/cmake
 
 cmake ../.. \
--DCMAKE_C_COMPILER=${COMPILER} \
--DCMAKE_CXX_COMPILER=${COMPILER_CXX} \
+-DCMAKE_C_COMPILER=$COMPILER \
+-DCMAKE_CXX_COMPILER=$COMPILER_CXX \
 -DCMAKE_BUILD_TYPE=Release \
 -DCMAKE_INSTALL_PREFIX=/usr/local \
--DLIB_SUFFIX=${LIBDIRSUFFIX:-} \
+-DLIB_SUFFIX=$LIBDIRSUFFIX \
 -DBUILD_SHARED_LIB="ON" \
 -DTIDY_CONSOLE_SHARED="ON" \
 -DBUILD_TAB2SPACE="ON" \
--DBUILD_SAMPLE_CODE="OFF" \
--DSUPPORT_LOCALIZATIONS=${LOCALize:-"OFF"}
+-DBUILD_SAMPLE_CODE="OFF"
 
 chown_fn
 
@@ -88,16 +91,16 @@ echo "
 # exactly 11 lines for the formatting to be correct.  It's also customary to
 # leave one space after the ':'.
        |-----handy-ruler------------------------------------------------------|
-$PRGNAM: $PRGNAM (corrects and cleans up HTML and XML documents)
-$PRGNAM:
 $PRGNAM: Tidy corrects and cleans up HTML and XML documents by fixing markup
 $PRGNAM: errors and upgrading legacy code to modern standards.
 $PRGNAM: Optional with Quanta+
 $PRGNAM:
 $PRGNAM: http://www.html-tidy.org
 $PRGNAM:
+$PRGNAM:
+$PRGNAM:
 $PRGNAM: For languages:
-$PRGNAM: en $(echo ${langs:-})
+$PRGNAM: en ${langs:-}
 $PRGNAM:
 $PRGNAM:
 " > $PKG/install/slack-desc

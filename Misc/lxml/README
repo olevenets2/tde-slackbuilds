@@ -6,3 +6,4 @@ Required for online help functions for Inkscape.
 
 Cython, python3 and pysetuptools are optional build dependencies.
 cssselect and html5lib are optional runtime dependencies.
+ 

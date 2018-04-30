@@ -24,17 +24,14 @@
 #   SUCH DAMAGE.
 
 PRGNAM=inkscape
-VERSION=${VERSION:-0.92.2}
+VERSION=${VERSION:-0.92.3}
 BUILD=${BUILD:-1}
 
-SRCURL="https://media.inkscape.org/dl/resources/file/$PRGNAM-$VERSION.tar.bz2"
+SRCURL="https://media.inkscape.org/dl/resources/file/inkscape-$VERSION.tar.bz2"
 source ../../get-source.sh
 getsource_fn
 
 untar_fn
-
-## patch for poppler-0.58+
-patch -p1 < $SRCDIR/93ccf03162cd2e46d962822d5507865f3451168c.diff
 
 ## install to .../lib64 on 64-bit system
 [[ -d /lib64 ]] && \
@@ -118,8 +115,8 @@ cd_builddir_fn
     -DCMAKE_CXX_FLAGS:STRING="$SLKCFLAGS" \
     -DCMAKE_C_FLAGS_RELEASE:STRING="$SLKCFLAGS" \
     -DCMAKE_CXX_FLAGS_RELEASE:STRING="$SLKCFLAGS" \
-    -DCMAKE_C_COMPILER=${COMPILER} \
-    -DCMAKE_CXX_COMPILER=${COMPILER_CXX} \
+    -DCMAKE_C_COMPILER=$COMPILER \
+    -DCMAKE_CXX_COMPILER=$COMPILER_CXX \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr/local \
     -DWITH_NLS="ON" \

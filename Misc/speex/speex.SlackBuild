@@ -30,11 +30,11 @@
 # All rights reserved.
 
 PRGNAM=speex
-VERSION=${VERSION:-1.2rc2}
+VERSION=${VERSION:-1.2.0}
 BUILD=${BUILD:-1}
 TAG=${TAG:-}
 
-SRCURL="http://downloads.xiph.org/releases/${PRGNAM}/${PRGNAM}-${VERSION}.tar.gz"
+SRCURL="https://ftp.osuosl.org/pub/xiph/releases/speex/speex-$VERSION.tar.gz"
 ARCHIVE_TYPE="tar.gz"
 source ../../get-source.sh
 getsource_fn
@@ -53,11 +53,11 @@ cd_builddir_fn
 LDFLAGS="$SLKLDFLAGS" \
 CFLAGS="$SLKCFLAGS" \
 CXXFLAGS="$SLKCFLAGS" \
-CC=${COMPILER} \
-CXX=${COMPILER_CXX} \
+CC=$COMPILER \
+CXX=$COMPILER_CXX \
 ../configure \
   --prefix=/usr \
-  --libdir=/usr/lib${LIBDIRSUFFIX} \
+  --libdir=/usr/lib$LIBDIRSUFFIX \
   --mandir=/usr/man \
   --enable-static=no \
   --enable-binaries \
@@ -70,7 +70,7 @@ installdocs_fn
 mangzip_fn
 
 # Fix libspeex.la Thanks SBo script:
-sed -i "s|-L$PKG.*/lib${LIBDIRSUFFIX} ||" $PKG/usr/lib${LIBDIRSUFFIX}/libspeex.la
+sed -i "s|-L$PKG.*/lib$LIBDIRSUFFIX ||" $PKG/usr/lib$LIBDIRSUFFIX/libspeex.la
 
 strip_fn
 

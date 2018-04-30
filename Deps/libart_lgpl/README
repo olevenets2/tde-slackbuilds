@@ -7,3 +7,4 @@ libart-lgpl is another dependency package that the Trinity Project has taken ove
 This version of libart provided by the Trinity Project includes those patches and is intended to be a replacement for any version of libart currently installed by any distro.
 
 Build this patched version of libart and replace the stock libart installed with the distro.
+ 
