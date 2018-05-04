@@ -25,7 +25,7 @@
 
 PRGNAM=koffice
 VERSION=${VERSION:-$TDEVERSION}
-BUILD=${BUILD:-3}
+BUILD=${BUILD:-4}
 TAG=${TAG:-_tde}
 
 
@@ -44,6 +44,25 @@ source ../../get-source.sh
 getsource_fn
 
 untar_fn
+
+## patch for clang
+## first hunk based on 0004-fix-an-FTBFS-when-build-with-clang.patch
+## @ http://trinity-devel.pearsoncomputing.net/?0::11397[:get:6]
+echo $'
+--- kexi/migration/keximigratetest.cpp
++++ kexi/migration/keximigratetest.cpp
+@@ -41 +41 @@
+-	TDEApplication app(argc, argv, "Kexi Migrate Test");
++	TDEApplication app(argc, argv, TQCString("Kexi Migrate Test"));
+--- filters/kword/mswrite/mswriteimport.h
++++ filters/kword/mswrite/mswriteimport.h
+@@ -26 +26 @@
+-class MSWrite::InternalParser;
++namespace MSWrite { class InternalParser; }
+' | while read line
+do
+patch -p0
+done
 
 ## fix chalk crashing - set liblcms as a direct dependency - see issue 37 for details
 sed -i '2iLCMS1LIBS = -llcms' chalk/Makefile.am
@@ -90,17 +109,25 @@ chown_fn
 cd_builddir_fn
 
 # Refusing to compile with Clang =[
-LDFLAGS="${SLKLDFLAGS}" \
-CFLAGS="${SLKCFLAGS} $TQT_INCLUDE_PATH" \
-CXXFLAGS="${SLKCFLAGS}" \
-CC="gcc" \
-CXX="g++" \
+LDFLAGS=$SLKLDFLAGS \
+CFLAGS="$SLKCFLAGS $TQT_INCLUDE_PATH" \
+CXXFLAGS=$SLKCFLAGS \
+CC=$COMPILER \
+CXX=$COMPILER_CXX \
 ../configure \
-   --prefix=${INSTALL_TDE} \
+   --prefix=$INSTALL_TDE \
    --sysconfdir="/etc/trinity" \
-   --mandir=${INSTALL_TDE}/man \
+   --mandir=$INSTALL_TDE/man \
    --disable-rpath \
    --enable-closure
+
+## Hack for this clang build error:
+#In file included from ../../../../kspread/plugins/scripting/scripting.cc:30:
+#In file included from ../../../../lib/kross/main/manager.h:31:
+#../../../../lib/kross/main/../api/object.h:145:9: error: cannot use 'throw' with exceptions disabled
+#        throw TDESharedPtr<Exception>( new Exception(TQString("Object \"%1\" invalid.").arg(object ? object->getClassName() : "")) );
+#        ^
+[[ $COMPILER == clang ]] && sed -i 's|-fno-exceptions|-fexceptions|' kspread/plugins/scripting/Makefile
 
 make_fn
 
@@ -135,13 +162,13 @@ $PRGNAM:
 cat <<EOINS >> $PKG/install/doinst.sh
 # Update the desktop database:
 if [ -x usr/bin/update-desktop-database ]; then
-  chroot . /usr/bin/update-desktop-database ${INSTALL_TDE}/share/applications > /dev/null 2>&1
+  chroot . /usr/bin/update-desktop-database $INSTALL_TDE/share/applications > /dev/null 2>&1
 fi
 
 # Update hicolor theme cache:
 if [ -d usr/share/icons/hicolor ]; then
   if [ -x /usr/bin/gtk-update-icon-cache ]; then
-    chroot . /usr/bin/gtk-update-icon-cache -f -t ${INSTALL_TDE}/share/icons/hicolor 1> /dev/null 2> /dev/null
+    chroot . /usr/bin/gtk-update-icon-cache -f -t $INSTALL_TDE/share/icons/hicolor 1> /dev/null 2> /dev/null
   fi
 fi
 EOINS

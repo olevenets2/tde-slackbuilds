@@ -41,6 +41,18 @@ langs="";for Lang in $I18N;do [[ -e po/$Lang".po" ]] && langs="$langs $Lang"".po
 sed -i "s|POFILES =.*$|POFILES =$langs|" po/Makefile.am
 langs=$(echo $langs | sed "s|.po||g")
 
+## patch for clang
+echo $'
+--- kaffeine/src/input/audiobrowser/urllistview.h
++++ kaffeine/src/input/audiobrowser/urllistview.h
+@@ -35 +35 @@
+-class TDEIO::Job;
++namespace TDEIO { class Job; }
+' | while read line
+do
+patch -p0
+done
+
 ltoolupdate_fn
 
 chown_fn
@@ -48,13 +60,13 @@ chown_fn
 cd_builddir_fn
 
 # Refusing to compile with Clang 
-LDFLAGS="${SLKLDFLAGS}" \
-CFLAGS="${SLKCFLAGS} $TQT_INCLUDE_PATH" \
-CXXFLAGS="${SLKCFLAGS}" \
-CC="gcc" \
-CXX="g++" \
+LDFLAGS=$SLKLDFLAGS \
+CFLAGS="$SLKCFLAGS $TQT_INCLUDE_PATH" \
+CXXFLAGS=$SLKCFLAGS \
+CC=$COMPILER \
+CXX=$COMPILER_CXX \
 ../configure \
-   --prefix=${INSTALL_TDE} \
+   --prefix=$INSTALL_TDE \
    --sysconfdir="/etc/trinity" \
    --mandir=${INSTALL_TDE}/man \
    --disable-rpath \
@@ -94,13 +106,13 @@ $PRGNAM:
 cat <<EOINS >> $PKG/install/doinst.sh
 # Update the desktop database:
 if [ -x usr/bin/update-desktop-database ]; then
-  chroot . /usr/bin/update-desktop-database ${INSTALL_TDE}/share/applications > /dev/null 2>&1
+  chroot . /usr/bin/update-desktop-database $INSTALL_TDE/share/applications > /dev/null 2>&1
 fi
 
 # Update hicolor theme cache:
 if [ -d usr/share/icons/hicolor ]; then
   if [ -x /usr/bin/gtk-update-icon-cache ]; then
-    chroot . /usr/bin/gtk-update-icon-cache -f -t ${INSTALL_TDE}/share/icons/hicolor 1> /dev/null 2> /dev/null
+    chroot . /usr/bin/gtk-update-icon-cache -f -t $INSTALL_TDE/share/icons/hicolor 1> /dev/null 2> /dev/null
   fi
 fi
 

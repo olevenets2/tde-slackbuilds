@@ -1,4 +1,4 @@
-Build TDE [Trinity Desktop Environment] for Slackware 14.2 and current on i586+, x86_64, or Raspberry Pi3 [see README-Raspberry-Pi3.md].
+Build TDE [Trinity Desktop Environment] for Slackware 14.2 and current** on i586+, x86_64, or Raspberry Pi3 [see README-Raspberry-Pi3.md].
 
 Run ./BUILD-TDE.sh - a dialog based script with a series of screens for user input.
 
@@ -44,5 +44,7 @@ See https://wiki.trinitydesktop.org/How_to_Build_TDE_Core_Modules for more infor
 
 NOTE: The Misc directory contains SlackBuilds for software that might already be installed from slackbuilds.org or elsewhere.
 Please check because any misc builds selected here could overwrite them.
+
+** Not tested on current since the Mass Rebuild of 2018-04-19. **
 
 ***Please be sure to read the KNOWN-ISSUES file prior to building.***

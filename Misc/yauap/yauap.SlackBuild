@@ -34,6 +34,19 @@ source ../../get-source.sh
 getsource_fn
 
 untar_fn
+
+## patch for clang
+echo $'
+--- Makefile
++++ Makefile
+@@ -21 +21 @@
+-CC=cc
++CC=$(COMPILER)
+' | while read line
+do
+patch -p0
+done
+
 listdocs_fn
 
 chown_fn

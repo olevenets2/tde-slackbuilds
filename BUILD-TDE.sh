@@ -99,9 +99,9 @@ Set the directory that TDE is to be installed in.
 
 
 rm -f $TMPVARS/COMPILER
-dialog --cr-wrap --no-shadow --colors --yes-label "clang" --no-label "gcc" --defaultno --title " Compiler " --yesno \
+dialog --cr-wrap --no-shadow --colors --yes-label "Clang" --no-label "Gcc" --defaultno --title " Compiler " --yesno \
 "
-Choose which compiler to use - \Zb\Z6gcc/g++\Zn or \Zb\Z6clang/clang++\Zn
+Choose which compiler to use - <\Z1C\Zb\Z0lang/clang++\Zn> or \Zr\Z4\ZbGcc/g++\Zn
 " \
 8 75
 [[ $? == 0 ]] && echo clang > $TMPVARS/COMPILER
@@ -595,17 +595,14 @@ export ARM_FABI=$(readelf -Ah $(which bash)|grep -oE "soft|hard")
 ## Action on failure
 AOF=$(echo $EXIT_FAIL|cut -d" " -f1)
 ## if tdebase selected, runlevel selected
-[[ $(grep -o tdebase $TMPVARS/TDEbuilds) ]] && [[ $RUNLEVEL ]] && {
-TDMRL=\\Zb\\Z6$RUNLEVEL\\Zn
-} && SHADERL=" "
+[[ $(grep -o tdebase $TMPVARS/TDEbuilds) ]] && [[ $RUNLEVEL ]] && TDMRL=\\Zb\\Z6$RUNLEVEL\\Zn && SHADERL=" "
 ## koffice - only if it is being built
 [[ $(sed 's|koffice-||' $TMPVARS/TDEbuilds | grep -o Apps/koffice) ]] && {
 [[ $REVERT == yes ]] && RVT=\\Zb\\Z6yes\\Zn || RVT=\\Zb\\Z6no\\Zn
-} && {
-[[ $(cat $TMPVARS/Krita_OPTS) == *useGM* ]] && USE_GM=\\Zb\\Z6yes\\Zn || USE_GM\\Zb\\Z6=no\\Zn
-} && {
+[[ $(cat $TMPVARS/Krita_OPTS) == *useGM* ]] && USE_GM=\\Zb\\Z6yes\\Zn || USE_GM=\\Zb\\Z6no\\Zn
 [[ $USE_PNG14 == yes ]] && USE_PNG=\\Zb\\Z6yes\\Zn || USE_PNG=\\Zb\\Z6no\\Zn
-} && SHADEKO=" "
+SHADEKO=" "
+}
 ## start dialog
 EXITVAL=2
 until [[ $EXITVAL -lt 2 ]] ; do

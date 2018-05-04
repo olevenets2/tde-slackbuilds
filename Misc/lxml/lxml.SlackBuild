@@ -43,11 +43,12 @@ listdocs_fn
 chown_fn
 
 #cd_builddir_fn
+CC=$COMPILER \
+python setup.py install --with-unicode-strings --root=$PKG || exit 1
 
-python setup.py build --with-unicode-strings || exit 1
-python setup.py install --skip-build --root=$PKG || exit 1
 
 if $(python3 -c 'import os' 2>/dev/null); then
+  CC=$COMPILER \
   python3 setup.py build --with-unicode-strings || exit 1
   python3 setup.py install --skip-build --root=$PKG || exit 1
 fi

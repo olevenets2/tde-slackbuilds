@@ -40,21 +40,33 @@ listdocs_fn
 langs="";for Lang in $I18N;do [[ -e translations/$Lang ]] && langs="$langs $Lang";done
 sed -i "s|SUBDIRS=.*$|SUBDIRS=$langs|" translations/Makefile.am
 
+## patch for clang
+echo $'
+--- src/kile/kileprojectview.h
++++ src/kile/kileprojectview.h
+@@ -28 +28 @@
+-class KileDocument::Info;
++namespace KileDocument { class Info; }
+' | while read line
+do
+patch -p0
+done
+
 ltoolupdate_fn
 
 chown_fn
 
 cd_builddir_fn
 
-LDFLAGS="${SLKLDFLAGS}" \
-CFLAGS="${SLKCFLAGS} $TQT_INCLUDE_PATH" \
-CXXFLAGS="${SLKCFLAGS}" \
-CC="gcc" \
-CXX="g++" \
+LDFLAGS=$SLKLDFLAGS \
+CFLAGS="$SLKCFLAGS $TQT_INCLUDE_PATH" \
+CXXFLAGS=$SLKCFLAGS \
+CC=$COMPILER \
+CXX=$COMPILER_CXX \
 ../configure \
-   --prefix=${INSTALL_TDE} \
+   --prefix=$INSTALL_TDE \
    --sysconfdir="/etc/trinity" \
-   --mandir=${INSTALL_TDE}/man \
+   --mandir=$INSTALL_TDE/man \
    --disable-rpath \
    --enable-closure
 
@@ -83,7 +95,7 @@ $PRGNAM:
 $PRGNAM:
 $PRGNAM: With language support for:
 $PRGNAM:
-$PRGNAM: en $(echo $langs)
+$PRGNAM: en$langs
 $PRGNAM:
 $PRGNAM:
 " > $PKG/install/slack-desc

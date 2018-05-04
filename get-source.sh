@@ -125,6 +125,18 @@ cd $TMP/tmp-$PRGNAM
 echo -e "\n unpacking $(basename ${SOURCE}) ... \n"
 tar -xf ${SOURCE}
 [[ $TDEMIR_SUBDIR != misc ]] && cd ./$(echo $TDEMIR_SUBDIR | cut -d / -f 2) && cd ${PRGNAM} || cd ${PRGNAM}-${VERSION}
+
+## patch to allow automake 1.16.x
+[[ -s admin/cvs.sh ]] && echo $'
+--- admin/cvs.sh
++++ admin/cvs.sh
+@@ -59 +59 @@
+-  automake*1.6.* | automake*1.7* | automake*1.8* | automake*1.9* | automake*1.10* | automake*1.11* | automake*1.12* | automake*1.13* | automake*1.14* | automake*1.15* )
++  automake*1.6.[1-9] | automake*1.[7-9].* | automake*1.1[0-6].* )
+' | while read line
+do
+patch -p0
+done || true
 }
 
 listdocs_fn ()

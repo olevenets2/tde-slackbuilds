@@ -47,8 +47,6 @@ cd_builddir_fn
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=${INSTALL_TDE} \
     -DLIB_SUFFIX=${LIBDIRSUFFIX} \
-    -DSYSCONF_INSTALL_DIR="/etc/trinity" \
-    -DMAN_INSTALL_DIR=${INSTALL_TDE}/man \
     ..
 make_fn
 
