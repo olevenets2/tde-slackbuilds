@@ -46,9 +46,13 @@ getsource_fn
 untar_fn
 
 ## patch for clang
-## first hunk based on 0004-fix-an-FTBFS-when-build-with-clang.patch
-## @ http://trinity-devel.pearsoncomputing.net/?0::11397[:get:6]
+## second hunk based on 0004-fix-an-FTBFS-when-build-with-clang.patch @ http://trinity-devel.pearsoncomputing.net/?0::11397
 echo $'
+--- kspread/plugins/scripting/Makefile.am
++++ kspread/plugins/scripting/Makefile.am
+@@ -23,0 +24,2 @@
++
++KDE_CXXFLAGS = $(USE_EXCEPTIONS)
 --- kexi/migration/keximigratetest.cpp
 +++ kexi/migration/keximigratetest.cpp
 @@ -41 +41 @@
@@ -108,7 +112,6 @@ chown_fn
 
 cd_builddir_fn
 
-# Refusing to compile with Clang =[
 LDFLAGS=$SLKLDFLAGS \
 CFLAGS="$SLKCFLAGS $TQT_INCLUDE_PATH" \
 CXXFLAGS=$SLKCFLAGS \
@@ -120,14 +123,6 @@ CXX=$COMPILER_CXX \
    --mandir=$INSTALL_TDE/man \
    --disable-rpath \
    --enable-closure
-
-## Hack for this clang build error:
-#In file included from ../../../../kspread/plugins/scripting/scripting.cc:30:
-#In file included from ../../../../lib/kross/main/manager.h:31:
-#../../../../lib/kross/main/../api/object.h:145:9: error: cannot use 'throw' with exceptions disabled
-#        throw TDESharedPtr<Exception>( new Exception(TQString("Object \"%1\" invalid.").arg(object ? object->getClassName() : "")) );
-#        ^
-[[ $COMPILER == clang ]] && sed -i 's|-fno-exceptions|-fexceptions|' kspread/plugins/scripting/Makefile
 
 make_fn
 
