@@ -69,8 +69,7 @@ patch -p0
 done
 
 ## fix chalk crashing - set liblcms as a direct dependency - see issue 37 for details
-sed -i '2iLCMS1LIBS = -llcms' chalk/Makefile.am
-sed -i 's|LDADD) \\$(LIBS)|& \\$(LCMS1LIBS)|' admin/am_edit
+sed -i '23iKDE_CXXFLAGS = $(LCMS_LIBS)' chalk/Makefile.am
 
 ## building with installation directory /usr - see issue #43 for details
 [[ $INSTALL_TDE == /usr ]] && \
