@@ -51,23 +51,6 @@ CFLAGS=$SLKCFLAGS \
 ## it may pick up the wrong march/mtune flags, or none at all - use SET_march as set up in BUILD-TDE.sh
 sed -i "s|-march=.*-mtune=[a-z,0-9,-]*||;s|fvisibility-inlines-hidden|& $SET_march|" Makefile
 
-## allow building with clang
-echo $'
---- Makefile
-+++ Makefile
-@@ -12,2 +12,2 @@
--CC       = gcc
--CXX      = g++
-+CC       = $(COMPILER)
-+CXX      = $(COMPILER_CXX)
-@@ -21 +21 @@
--LINK     = g++
-+LINK     = $(COMPILER_CXX)
-' | while read line
-do
-patch -p0
-done
-
 make $NUMJOBS || exit 1
 
 mkdir -p $PKG$TQTDIR-$VERSION/plugins/crypto/

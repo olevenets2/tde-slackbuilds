@@ -28,28 +28,28 @@ config etc/trinity/tdm/backgroundrc.new
 
 # Update the desktop database:
 if [ -x usr/bin/update-desktop-database ]; then
-  chroot . /usr/bin/update-desktop-database ${INSTALL_TDE}/share/applications > /dev/null 2>&1
+  chroot . /usr/bin/update-desktop-database $INSTALL_TDE/share/applications > /dev/null 2>&1
 fi
 
 # Update hicolor theme cache:
 if [ -d usr/share/icons/hicolor ]; then
   if [ -x /usr/bin/gtk-update-icon-cache ]; then
-    chroot . /usr/bin/gtk-update-icon-cache -f -t ${INSTALL_TDE}/share/icons/hicolor 1> /dev/null 2> /dev/null
+    chroot . /usr/bin/gtk-update-icon-cache -f -t $INSTALL_TDE/share/icons/hicolor 1> /dev/null 2> /dev/null
   fi
 fi
 
 # Update the mime database:
 if [ -x usr/bin/update-mime-database ]; then
-  chroot . /usr/bin/update-mime-database ${INSTALL_TDE}/share/mime >/dev/null 2>&1
+  chroot . /usr/bin/update-mime-database $INSTALL_TDE/share/mime >/dev/null 2>&1
 fi
 
 
 # update PATH
 # upgradepkg runs this twice, so even though $TQTDIR/bin will be
 # a new PATH, it needs to be tested for the second run
-if ! grep ${INSTALL_TDE}/bin /etc/profile
+if ! grep $INSTALL_TDE/bin /etc/profile
 then
-echo "PATH=\$PATH:${INSTALL_TDE}/bin:$TQTDIR/bin" >> /etc/profile
+echo "PATH=\$PATH:$INSTALL_TDE/bin:$TQTDIR/bin" >> /etc/profile
 else
 if ! grep $TQTDIR/bin /etc/profile
 then
@@ -59,9 +59,9 @@ fi
 
 
 # update MANPATH
-if ! grep ${INSTALL_TDE}/man /etc/profile
+if ! grep $INSTALL_TDE/man /etc/profile
 then
-echo "export MANPATH=\$MANPATH:${INSTALL_TDE}/man" >> /etc/profile
+echo "export MANPATH=\$MANPATH:$INSTALL_TDE/man" >> /etc/profile
 fi
 
 
