@@ -1,9 +1,0 @@
-The source unpacked is ~950MB, so to save on build space, the
-SlackBuild script extracts, builds, and removes source for each
-language package one at a time.
-
-Any number of packages can be built - set by the I18N variable
-
-Language identification is shown in the 
-'\Zb\Z3Select Additional Languages\Zn' screen README.
- 

@@ -14,7 +14,7 @@ dialog --cr-wrap --no-shadow --colors --title " Introduction " --msgbox \
 
  Source archives must be placed in the 'src' directory or will be downloaded during the build from a geoIP located mirror site.
 
- A package build list is created and successfully built and installed packages are removed from that list as the build progresses.
+ A package build list is created, and successfully built and installed packages are removed from that list as the build progresses.
 
  US English is the default language and support for additional languages can be added.
 
@@ -197,10 +197,9 @@ EXITVAL=2
 until [[ $EXITVAL -lt 2 ]] ; do
 dialog --cr-wrap --nocancel --no-shadow --colors --help-button --help-label "README" --title " Select Additional Languages " --inputbox \
 "
- Additional language support
+ This is the complete list of additional languages supported by TDE.
 
- This is the complete list for tde-i18n - and will also apply for other packages.
- Other package sources may not have support for all these additional languages, but they will be included in the build for that package when the translations are included in the source.
+ Other package sources may not have support for all these additional languages, but they will be included in the build for that package when the translations are included in its source.
  If any other translation is included in the package source, it can be added here but won't be supported by TDE.
 
  Multiple selections may be made - space separated.
@@ -208,19 +207,19 @@ dialog --cr-wrap --nocancel --no-shadow --colors --help-button --help-label "REA
  Build language packages/support for any of:
 \Zb\Z6af ar az be bg bn br bs ca cs csb cy da de el en_GB eo es et eu fa fi fr fy ga gl he hi hr hu is it ja kk km ko lt lv mk mn ms nb nds nl nn pa pl pt pt_BR ro ru rw se sk sl sr sr@Latn ss sv ta te tg th tr uk uz uz@cyrillic vi wa zh_CN zh_TW\Zn
 " \
-26 75 \
+24 75 \
 2> $TMPVARS/I18N && break
 [[ $EXITVAL == 2 ]] && dialog --cr-wrap --defaultno --yes-label "Ascii" --no-label "Utf-8" --no-shadow --colors --no-collapse --yesno \
 "
-If you can see the two 'y' like characters, then you've probably got
-a suitable terminal font installed and can choose \Zr\Z4\ZbUtf-8\Zb\Zn,
-otherwise choose \Z1A\Zb\Z0scii\Zn.
+The source unpacked is ~950MB, so to save on build space, the SlackBuild script extracts, builds, and removes source for each language package one at a time.
+
+If you can see the two 'y' like characters, then you've probably got a suitable terminal font installed and can choose \Zr\Z4\ZbUtf-8\Zb\Zn, otherwise choose \Z1A\Zb\Z0scii\Zn.
 
                             <<\Z3\Zb ҷ ɣ \Zn>>
 
 \Zb\Z0A suitable font in a utf8 enabled terminal is needed to display all the extended characters in this list. Liberation Mono in an 'xterm' is known to work. Setting up a 'tty' is not worth the effort.\Zn
 " \
-15 75
+19 75
 EXVAL=$?
 [[ $EXVAL == 1 ]] && dialog --cr-wrap --no-shadow --colors --no-collapse --ok-label "Return" --msgbox \
 "
@@ -331,7 +330,7 @@ dialog --cr-wrap --nocancel --no-shadow --colors --title " TDE Packages Selectio
 "
 Required builds for a basic working TDE are marked \Zb\Zr\Z4R\Zn.
 
-The packages selected form the build list and so dependencies are listed before the packages that need them. After the \Zb\Zr\Z4R\Znequired packages, the listing is grouped Core/Libs/Apps and then alphabetically, excluding tde prefixes added to package names, and the dependencies.
+The packages selected form the build list and so dependencies are listed before the packages that need them. After the \Zb\Zr\Z4R\Znequired packages, the listing is grouped Core/Libs/Apps and then alphabetically within those groups, excluding tde prefixes added to package names, and the dependencies.
 
 Look out for messages in the bottom line of the screen, especially relating to dependencies.
 
@@ -450,7 +449,7 @@ EXITVAL=$?
 [[ $EXITVAL == 1 ]] && echo 3 > $TMPVARS/RUNLEVEL
 [[ $EXITVAL == 2 ]] && dialog --cr-wrap --no-shadow --colors --ok-label "Return" --msgbox \
 "
-$(cat Core/tdebase/README)
+$(cat Core/tdebase/README|sed "s|/{TDE_installation_dir}|$(cat $TMPVARS/INSTALL_TDE)|;s|(|\\\Z6\\\Zb|;s|)|\\\Zn|")
 " \
 30 75
 done
@@ -482,12 +481,12 @@ There are three options that can be set up for building the imaging app in koffi
 GM_VERSION=$(grep VERSION:- $ROOT/Misc/GraphicsMagick/GraphicsMagick.SlackBuild|cut -d- -f2|cut -d} -f1)
 [[ $(cat $TMPVARS/Krita_OPTS) == *useGM* ]] && \
 [[ $(cat $TMPVARS/TDEbuilds) != *GraphicsMagick* ]] && \
-[[ ! $(ls /var/log/packages/GraphicsMagick-${GM_VERSION}*) ]] && \
+[[ ! $(ls /var/log/packages/GraphicsMagick-$GM_VERSION*) ]] && \
 sed -i 's|Apps/koffice|Misc/GraphicsMagick &|' $TMPVARS/TDEbuilds
 ## If libpng-1.4 has been selected and hasn't already been built, add it to the build list before koffice
 PNG_VERSION=$(grep VERSION:- $ROOT/Misc/libpng/libpng.SlackBuild|cut -d- -f2|cut -d} -f1)
 [[ $(cat $TMPVARS/Krita_OPTS) == *libpng14* ]] && \
-[[ ! $(ls $LIBPNG_TMP/libpng-${PNG_VERSION}-*-1.txz) ]] && \
+[[ ! $(ls $LIBPNG_TMP/libpng-$PNG_VERSION-*-1.txz) ]] && \
 sed -i 's|Apps/koffice|Misc/libpng &|' $TMPVARS/TDEbuilds
 }
 
@@ -495,14 +494,14 @@ sed -i 's|Apps/koffice|Misc/libpng &|' $TMPVARS/TDEbuilds
 ## this dialog will only run if any of the selected packages has a README
 rm -f $TMPVARS/READMEs
 ## generate list of READMEs ..
-RM_LIST=$(find . -name "*README*" | grep -v tdebase | grep -o "[ACDLM][a-z]*/[-_0-z]*")
+RM_LIST=$(find . -name "README" | grep -v tdebase | grep -o "[ACDLM][a-z]*/[-_0-z]*")
 for package in $(cat $TMPVARS/TDEbuilds)
 do
 [[ $RM_LIST == *$package* ]] && {
-echo "\Zb\Z6\Zu$package\ZU\Zn" >> $TMPVARS/READMEs
-echo >> $TMPVARS/READMEs
-echo "$(cat $package/README)" >> $TMPVARS/READMEs
-echo >> $TMPVARS/READMEs
+echo "\Zb\Z6\Zu$package\ZU\Zn
+
+$(cat $package/README)
+" >> $TMPVARS/READMEs
 }
 done
 ## .. if there is a list, run dialog
@@ -511,7 +510,7 @@ dialog --cr-wrap --defaultno --no-shadow --colors --title " READMEs " --yesno \
 "
 A number of selected packages have READMEs in their SlackBuilds directories.
 
-Do you want to read the READMEs?
+Do you want to read them?
  " \
 10 75
 [[ $? == 0 ]] && dialog --no-collapse --cr-wrap --no-shadow --colors --ok-label "Close" --msgbox \
@@ -665,17 +664,17 @@ do
   cd $ROOT/$dir || ${EXIT_FAIL:-"true"}
 
   # Get the version
-  version=$(cat ${package}.SlackBuild | grep "VERSION:" | head -n1 | cut -d "-" -f2 | rev | cut -c 2- | rev)
+  version=$(cat $package.SlackBuild | grep "VERSION:" | head -n1 | cut -d "-" -f2 | rev | cut -c 2- | rev)
 
   # Get the build
-  build=$(cat ${package}.SlackBuild | grep "BUILD:" | cut -d "-" -f2 | rev | cut -c 2- | rev)
+  build=$(cat $package.SlackBuild | grep "BUILD:" | cut -d "-" -f2 | rev | cut -c 2- | rev)
 
   # The real build starts here
-  script -c "sh ${package}.SlackBuild" $TMP/${package}-build-log || ${EXIT_FAIL:-"true"}
+  script -c "sh $package.SlackBuild" $TMP/$package-build-log || ${EXIT_FAIL:-"true"}
 
 # remove colorizing escape sequences from build-log
 # Re: http://serverfault.com/questions/71285/in-centos-4-4-how-can-i-strip-escape-sequences-from-a-text-file
-  sed -ri "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g" $TMP/${package}-build-log || ${EXIT_FAIL:-"true"}
+  sed -ri "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g" $TMP/$package-build-log || ${EXIT_FAIL:-"true"}
 
 checkinstall ()
 {
@@ -684,9 +683,9 @@ checkinstall ()
 ## otherwise test for the libpng package only, not installed
 {
 {
-[[ ${package} != libpng ]] && [[ $(ls /var/log/packages/${package}-*$(eval echo $version)-*-${build}*) ]]
+[[ $package != libpng ]] && [[ $(ls /var/log/packages/$package-*$(eval echo $version)-*-$build*) ]]
 } || {
-[[ ${package} == libpng ]] && [[ $(ls $LIBPNG_TMP/${package}-$(eval echo $version)-*-${build}*.txz) ]]
+[[ $package == libpng ]] && [[ $(ls $LIBPNG_TMP/$package-$(eval echo $version)-*-$build*.txz) ]]
 }
 } && \
 ## if either test is successful, the above will exit 0, then remove 'package' from the build list \
@@ -694,8 +693,8 @@ sed -i "s|$dir ||" $TMPVARS/TDEbuilds || \
 ## if unsuccessful, display error message \
 {
 echo "
-      Error:  ${package} package build failed
-      Check the build log $TMP/${package}-build-log
+      Error:  $package package build failed
+      Check the build log $TMP/$package-build-log
       "
 ## if koffice was building with libpng14, restore the libpng16 headers for any following builds
 [[ ${USE_PNG14:-} == yes ]] && source $ROOT/get-source.sh && libpng16_fn || true
@@ -705,13 +704,13 @@ ${EXIT_FAIL:-":"}
 # tde-i18n package installation is handled in tde-i18n.SlackBuild because if more than one i18n package is being built, only the last one will be installed by upgradepkg
 ## tidy-html5 is a special case because the version number is not in the archive name
 ## create libpng-1.4 package only - it will be installed by the koffice.SB because it overrides libpng headers which for Sl14.2/current point to libpng16.
-[[ ${package} == tidy-html5 ]] && version=$(unzip -c tidy-html5-master.zip | grep -A 1 version.txt | tail -n 1)
-if [[ $INST == 1 ]] && [[ ${package} != tde-i18n ]] && [[ ${package} != libpng ]]; then upgradepkg --install-new --reinstall $TMP/${package}-$(eval echo $version)-*-${build}*.txz
+[[ $package == tidy-html5 ]] && version=$(unzip -c tidy-html5-master.zip | grep -A 1 version.txt | tail -n 1)
+if [[ $INST == 1 ]] && [[ $package != tde-i18n ]] && [[ $package != libpng ]]; then upgradepkg --install-new --reinstall $TMP/$package-$(eval echo $version)-*-$build*.txz
 checkinstall
 ## test for last language in the I18N list to ensure they've all been built
-elif [[ $INST == 1 ]] && [[ ${package} == tde-i18n ]]; then package=${package}-$(cat $TMPVARS/LASTLANG)
+elif [[ $INST == 1 ]] && [[ $package == tde-i18n ]]; then package=$package-$(cat $TMPVARS/LASTLANG)
 checkinstall
-elif [[ ${package} == libpng ]]; then checkinstall
+elif [[ $package == libpng ]]; then checkinstall
 fi
 
   # back to original directory

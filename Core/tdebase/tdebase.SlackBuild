@@ -99,8 +99,8 @@ chmod 755 $PKG/etc/profile.d/tde.{,c}sh
 
 # Add some configuration files / scripts needed by TDE.
 mkdir -p $PKG/etc/trinity
-mv $PKG/$INSTALL_TDE/share/config/tdm $PKG/etc/trinity/tdm
-( cd $PKG/$INSTALL_TDE/share/config ; ln -sf /etc/trinity/tdm tdm )
+mv $PKG$INSTALL_TDE/share/config/tdm $PKG/etc/trinity/tdm
+( cd $PKG$INSTALL_TDE/share/config ; ln -sf /etc/trinity/tdm tdm )
 
 # Add rc.4.local to give TDM priority over rc.4 X11 session manager options
 # Assumes that rc.4.new from sysvinit-scripts still has the rc.4.local option
@@ -109,16 +109,16 @@ sed "s|\$INSTALL_TDE|$INSTALL_TDE|" < $SRCDIR/rc.4.local > $PKG/etc/rc.d/rc.4.lo
 chmod 755 $PKG/etc/rc.d/rc.4.local
 
 # Set sane permissions for the include files.
-if [ -d $PKG/$INSTALL_TDE/include ]; then
-   find $PKG/$INSTALL_TDE/include -type f -exec chmod 0644 {} \;
+if [ -d $PKG$INSTALL_TDE/include ]; then
+   find $PKG$INSTALL_TDE/include -type f -exec chmod 0644 {} \;
 fi
 
 # Ensure correct login manager session file is available.
 mkdir -p $PKG/usr/share/apps/tdm/sessions
-cp $PKG/$INSTALL_TDE/share/apps/tdm/sessions/tde.desktop $PKG/usr/share/apps/tdm/sessions/ || true
+cp $PKG$INSTALL_TDE/share/apps/tdm/sessions/tde.desktop $PKG/usr/share/apps/tdm/sessions/ || true
 
 # Setup config files for TDM:
-$PKG/$INSTALL_TDE/bin/gentdmconf --no-old --no-old-scripts --no-backup --in $PKG/etc/trinity/tdm
+$PKG$INSTALL_TDE/bin/gentdmconf --no-old --no-old-scripts --no-backup --in $PKG/etc/trinity/tdm
 ## set correct paths for config files
 sed -i 's|/opt/trinity/share/config/tdm/|/etc/trinity/tdm/|' $PKG/etc/trinity/tdm/tdmrc
 # Allow root to login
@@ -129,8 +129,8 @@ rm $PKG/etc/trinity/tdm/tdmrc
 mv $PKG/etc/trinity/tdm/Xsession $PKG/etc/trinity/tdm/Xsession.orig
 cat $SRCDIR/config/Xsession | sed "s|\$INSTALL_TDE|$INSTALL_TDE|" > $PKG/etc/trinity/tdm/Xsession
 mv $PKG/etc/trinity/tdm/backgroundrc $PKG/etc/trinity/tdm/backgroundrc.new
-if [[ -r $PKG/$INSTALL_TDE/etc/trinity/tdm/README ]]; then
- sed -i "s|$TMP/package-tdebase/etc/trinity/tdm|/etc/trinity/tdm|" $PKG/$INSTALL_TDE/etc/trinity/tdm/README
+if [[ -r $PKG$INSTALL_TDE/etc/trinity/tdm/README ]]; then
+ sed -i "s|$TMP/package-tdebase/etc/trinity/tdm|/etc/trinity/tdm|" $PKG$INSTALL_TDE/etc/trinity/tdm/README
 fi
 
 mkdir_install_fn

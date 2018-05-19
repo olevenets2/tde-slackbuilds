@@ -1,12 +1,12 @@
 TDM
 
-\ZuInstalling tdebase\ZU
+(Installing tdebase)
 In line with normal practice, tdmrc will not be overwritten and tdmrc.new will be installed for admin decision on whether to use it as tdmrc. Where tdmrc doesn't exist, it will be created by doinst.sh from tdmrc.new.
 
-\Zuroot logins\ZU
+(root logins)
 AllowRootLogin is set to true in tdmrc.new, and will therefore be the default for new installations.
 
-\Zurc.4.local\ZU
+(rc.4.local)
 This has been included on the assumption that the standard entry in rc.4[.new] from the package sysvinit-scripts exists:
 
     # If you'd like to start something different or in a
@@ -22,24 +22,30 @@ To enable tdm if this isn't the case, either
 or
 [2] copy the contents of rc.4.local to rc.4 above other session manager options
 
-\ZuRunlevel\ZU
+(Runlevel)
 Set this to 4 and tdm should work out-of-the-box, especially for new installations.
 
 ------------------
 
-\ZuKonqueror file manager\ZU as-built defaults to 'Icon View' when starting.
-Setting 'Tree View' and saving that view profile should then default to 'Tree View' when starting kfm or opening it in a new tab - the former works but not the latter.
+(Konqueror file manager) as-built defaults to 'Icon View' when starting.
+Setting 'another View' and saving that view profile should, but doesn't, override this.
 
-The problem seems to be that TDE lacks the entry in konquerorrc that exists in KDE3:
-[MainView Settings]
-ToggableViewsShown=konq_sidebartng
-ViewMode=konq_treeview
+The problem seems to be that TDE lacks the [MainView Settings] entry in konquerorrc that exists in KDE3.
 
-Until this is sorted out in the source code, this hack works:
+Until this is fixed, to set 'Tree View' for example:
 
-1] Start kfm to generate the ~/.trinity/share/config/konquerorrc file.
+VIEWMODE=konq_treeview
+sed -i "s|konq_iconview|$VIEWMODE|" /{TDE_installation_dir}/share/apps/konqueror/profiles/filemanagement
+echo "[MainView Settings]
+ViewMode=$VIEWMODE" > ~/.trinity/share/config/konquerorrc
 
-2] Close kfm
+The ViewMode options are:
 
-3] echo -e "\n\n[MainView Settings]\nViewMode=konq_treeview" >> ~/.trinity/share/config/konquerorrc
+konq_iconview
+konq_multicolumnview
+konq_treeview
+konq_infolistview
+konq_detailedlistview
+konq_textview
+fsview_part [File Size]
 

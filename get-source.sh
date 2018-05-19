@@ -49,8 +49,8 @@ getsource_fn ()
 
 # Where do we look for sources?
 SRCDIR=$(cd $(dirname $0); pwd)
-[[ ! -s $SRCDIR/../../src/${PRGNAM}-${VERSION}.${ARCHIVE_TYPE:-"tar.bz2"} ]] && rm $SRCDIR/../../src/${PRGNAM}-${VERSION}.${ARCHIVE_TYPE:-"tar.bz2"} 2>/dev/null
-ln -sf $SRCDIR/../../src/${PRGNAM}-${VERSION}.${ARCHIVE_TYPE:-"tar.bz2"} $SRCDIR
+[[ ! -s $SRCDIR/../../src/$PRGNAM-$VERSION.${ARCHIVE_TYPE:-"tar.bz2"} ]] && rm $SRCDIR/../../src/$PRGNAM-$VERSION.${ARCHIVE_TYPE:-"tar.bz2"} 2>/dev/null
+ln -sf $SRCDIR/../../src/$PRGNAM-$VERSION.${ARCHIVE_TYPE:-"tar.bz2"} $SRCDIR
 
 # Place to build (TMP) package (PKG) and output (OUTPUT) the program:
 TMP=${TMP:-/tmp/build}
@@ -60,9 +60,9 @@ OUTPUT=${OUTPUT:-/tmp}
 # remove any previous builds
 [[ $KEEP_BUILD != "yes" ]] && rm -rf $TMP/{tmp,package}*
 
-SOURCE=$SRCDIR/${PRGNAM}-${VERSION}.${ARCHIVE_TYPE:-"tar.bz2"}
+SOURCE=$SRCDIR/$PRGNAM-$VERSION.${ARCHIVE_TYPE:-"tar.bz2"}
 # SRCURL for non-TDE archives, set in the SB, will override the Trinity default *tar.bz2 URL
-SRCURL=${SRCURL:-"http://$TDE_MIRROR/releases/${VERSION}$TDEMIR_SUBDIR/${PRGNAM}-${VERSION}.tar.bz2"}
+SRCURL=${SRCURL:-"http://$TDE_MIRROR/releases/$VERSION$TDEMIR_SUBDIR/$PRGNAM-$VERSION.tar.bz2"}
 
 # Automatically determine the architecture we're building on:
 ## 2017-09 removed - ARCH is set in BUILD-TDE.sh
@@ -76,7 +76,7 @@ SRCURL=${SRCURL:-"http://$TDE_MIRROR/releases/${VERSION}$TDEMIR_SUBDIR/${PRGNAM}
 
 # Exit the script on errors:
 set -e
-trap 'echo "$0 FAILED at line ${LINENO}" | tee $OUTPUT/error-${PRGNAM}.log' ERR
+trap 'echo "$0 FAILED at line $LINENO" | tee $OUTPUT/error-$PRGNAM.log' ERR
 # Catch unitialized variables:
 set -u
 P1=${1:-1}
@@ -94,21 +94,21 @@ rm -rf $TMP/tmp-$PRGNAM/*
 rm -rf $OUTPUT/{checkout,configure,make,install,error,makepkg,patch}-$PRGNAM.log
 
 # Source file availability:
-if ! [ -f ${SOURCE} ]; then
-  echo "Source '$(basename ${SOURCE})' not available yet..."
+if ! [ -f $SOURCE ]; then
+  echo "Source '$(basename $SOURCE)' not available yet..."
   # Check if the $SRCDIR is writable at all - if not, download to $OUTPUT
   [ -w "$SRCDIR" ] || SOURCE="$OUTPUT/$(basename $SOURCE)"
-  if [ -f ${SOURCE} ]; then echo "Ah, found it!"; continue; fi
-  if ! [ "x${SRCURL}" == "x" ]; then
+  if [ -f $SOURCE ]; then echo "Ah, found it!"; continue; fi
+  if ! [ "x$SRCURL" == "x" ]; then
     echo "Will download file to $(dirname $SOURCE)"
-    wget -T 20 -O "${SOURCE}" "${SRCURL}" 
-    if [ $? -ne 0 -o ! -s "${SOURCE}" ]; then
-      echo "Downloading '$(basename ${SOURCE})' failed... aborting the build."
-      mv -f "${SOURCE}" "${SOURCE}".FAIL
+    wget -T 20 -O "$SOURCE" "$SRCURL" 
+    if [ $? -ne 0 -o ! -s "$SOURCE" ]; then
+      echo "Downloading '$(basename $SOURCE)' failed... aborting the build."
+      mv -f "$SOURCE" "$SOURCE".FAIL
       ${EXIT_FAIL:-":"}
     fi
   else
-    echo "File '$(basename ${SOURCE})' not available... aborting the build."
+    echo "File '$(basename $SOURCE)' not available... aborting the build."
     ${EXIT_FAIL:-":"}
   fi
 fi
@@ -122,9 +122,9 @@ fi
 untar_fn ()
 {
 cd $TMP/tmp-$PRGNAM
-echo -e "\n unpacking $(basename ${SOURCE}) ... \n"
-tar -xf ${SOURCE}
-[[ $TDEMIR_SUBDIR != misc ]] && cd ./$(echo $TDEMIR_SUBDIR | cut -d / -f 2) && cd ${PRGNAM} || cd ${PRGNAM}-${VERSION}
+echo -e "\n unpacking $(basename $SOURCE) ... \n"
+tar -xf $SOURCE
+[[ $TDEMIR_SUBDIR != misc ]] && cd ./$(echo $TDEMIR_SUBDIR | cut -d / -f 2) && cd $PRGNAM || cd $PRGNAM-$VERSION
 
 ## patch to allow automake 1.16.x
 [[ -s admin/cvs.sh ]] && echo $'
@@ -162,8 +162,8 @@ make -f admin/Makefile.common
 
 cd_builddir_fn ()
 {
-mkdir -p build-${PRGNAM}
-cd build-${PRGNAM}
+mkdir -p build-$PRGNAM
+cd build-$PRGNAM
 }
 
 make_fn ()
@@ -175,11 +175,11 @@ make DESTDIR=$PKG install || exit 1
 installdocs_fn ()
 {
 [[ $TDEMIR_SUBDIR == misc || $PRGNAM == libart-lgpl ]] && INSTALL_TDE=/usr
-mkdir -p $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
-(cd $DOCDIR;cp -a --parents ${DOCS:-} $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION) || true
-cat $SRCDIR/$(basename $0) > $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
-chown -R root:root $PKG${INSTALL_TDE}/doc/$PRGNAM-$VERSION
-find $PKG${INSTALL_TDE}/doc -type f -exec chmod 644 {} \;
+mkdir -p $PKG$INSTALL_TDE/doc/$PRGNAM-$VERSION
+(cd $DOCDIR;cp -a --parents ${DOCS:-} $PKG$INSTALL_TDE/doc/$PRGNAM-$VERSION) || true
+cat $SRCDIR/$(basename $0) > $PKG$INSTALL_TDE/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
+chown -R root:root $PKG$INSTALL_TDE/doc/$PRGNAM-$VERSION
+find $PKG$INSTALL_TDE/doc -type f -exec chmod 644 {} \;
 }
 
 mangzip_fn ()
@@ -206,10 +206,10 @@ makepkg_fn ()
 cd $PKG
 [[ ! $ARM_FABI ]] || { [[ $ARM_FABI == hard ]] && ARCH=${ARCH}_hf || ARCH=${ARCH}_sf
 }
-makepkg --linkadd y --chown n $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}.${PKGTYPE:-txz} 
+makepkg --linkadd y --chown n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD.${PKGTYPE:-txz} 
 cd $OUTPUT
-md5sum ${PRGNAM}-${VERSION}-${ARCH}-${BUILD}.${PKGTYPE:-txz} > ${PRGNAM}-${VERSION}-${ARCH}-${BUILD}.${PKGTYPE:-txz}.md5
-cat $PKG/install/slack-desc | grep "^${PRGNAM}" | grep -v handy > $OUTPUT/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}.txt
+md5sum $PRGNAM-$VERSION-$ARCH-$BUILD.${PKGTYPE:-txz} > $PRGNAM-$VERSION-$ARCH-$BUILD.${PKGTYPE:-txz}.md5
+cat $PKG/install/slack-desc | grep "^$PRGNAM" | grep -v handy > $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD.txt
 
 # Restore the original umask:
 umask ${_UMASK_}

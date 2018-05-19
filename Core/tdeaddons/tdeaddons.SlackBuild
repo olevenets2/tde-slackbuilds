@@ -35,7 +35,61 @@ untar_fn
 listdocs_fn
 
 # patch for TDE bug 2043
-patch -p0 < $SRCDIR/arkplugin-diffs-1
+echo $'
+--- konq-plugins/arkplugin/arkplugin.cpp
++++ konq-plugins/arkplugin/arkplugin.cpp
+@@ -307 +306,0 @@
+-        {
+@@ -309,2 +307,0 @@
+-            m_archiveMimeTypes << "application/x-tbz2";
+-        }
+@@ -382 +379 @@
+-        m_archiveMimeTypes << "application/x-lzma";
++        m_extractMimeTypes << "application/x-lzma";
+@@ -389 +386 @@
+-        m_archiveMimeTypes << "application/x-xz";
++        m_extractMimeTypes << "application/x-xz";
+@@ -398 +394,0 @@
+-        {
+@@ -400,2 +395,0 @@
+-            m_extractMimeTypes << "application/x-tbz2";
+-        }
+@@ -405 +399 @@
+-            m_extractMimeTypes << "application/x-lzma";
++            m_extractMimeTypes << "application/x-tlz";
+' | while read line
+do
+patch -p0
+done
+
+## Set the default compression as tar.xz
+## enable jar & ar compression in Compress As menu
+## remove application/x-rar-compressed
+echo $'
+--- konq-plugins/arkplugin/arkplugin.cpp
++++ konq-plugins/arkplugin/arkplugin.cpp
+@@ -96 +96 @@
+-        m_ext = m_conf->readEntry( "LastExtension", ".tar.gz" );
++        m_ext = m_conf->readEntry( "LastExtension", ".tar.xz" );
+@@ -107 +107 @@
+-                                    "LastMimeType", "application/x-tgz" ) )->comment(),
++                                    "LastMimeType", "application/x-txz" ) )->comment(),
+@@ -323 +323 @@
+-        if ( m_conf->readBoolEntry( "UseJar", false ) )
++        if ( m_conf->readBoolEntry( "UseJar", true ) )
+@@ -328 +328 @@
+-        m_archiveMimeTypes << "application/x-rar" << "application/x-rar-compressed";
++        m_archiveMimeTypes << "application/x-rar";
+@@ -346 +346 @@
+-    if ( !TDEStandardDirs::findExe( "ar" ).isNull() && m_conf->readBoolEntry( "UseAr", false ) )
++    if ( !TDEStandardDirs::findExe( "ar" ).isNull() && m_conf->readBoolEntry( "UseAr", true ) )
+@@ -411 +411 @@
+-        m_extractMimeTypes << "application/x-rar" << "application/x-rar-compressed";
++        m_extractMimeTypes << "application/x-rar";
+' | while read line
+do
+patch -p0
+done
 
 chown_fn
 
@@ -50,17 +104,17 @@ chown_fn
 
 cd_builddir_fn
   cmake \
-    -DCMAKE_C_FLAGS:STRING="$SLKCFLAGS" \
-    -DCMAKE_CXX_FLAGS:STRING="$SLKCFLAGS" \
-    -DCMAKE_C_FLAGS_RELEASE:STRING="$SLKCFLAGS" \
-    -DCMAKE_CXX_FLAGS_RELEASE:STRING="$SLKCFLAGS" \
-    -DCMAKE_C_COMPILER=${COMPILER} \
-    -DCMAKE_CXX_COMPILER=${COMPILER_CXX} \
+    -DCMAKE_C_FLAGS:STRING=$SLKCFLAGS \
+    -DCMAKE_CXX_FLAGS:STRING=$SLKCFLAGS \
+    -DCMAKE_C_FLAGS_RELEASE:STRING=$SLKCFLAGS \
+    -DCMAKE_CXX_FLAGS_RELEASE:STRING=$SLKCFLAGS \
+    -DCMAKE_C_COMPILER=$COMPILER \
+    -DCMAKE_CXX_COMPILER=$COMPILER_CXX \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=${INSTALL_TDE} \
+    -DCMAKE_INSTALL_PREFIX=$INSTALL_TDE \
     -DSYSCONF_INSTALL_DIR="/etc/trinity" \
-    -DMAN_INSTALL_DIR=${INSTALL_TDE}/man \
-    -DLIB_SUFFIX=${LIBDIRSUFFIX} \
+    -DMAN_INSTALL_DIR=$INSTALL_TDE/man \
+    -DLIB_SUFFIX=$LIBDIRSUFFIX \
     -DWITH_ALL_OPTIONS="ON" \
     -DBUILD_ALL="ON" \
     -DBUILD_ATLANTIKDESIGNER=${ATLANTIKDESIGNER:-"OFF"} \
@@ -101,19 +155,19 @@ $PRGNAM: Home: http://www.trinitydesktop.org/
 cat <<EOINS >> $PKG/install/doinst.sh
 # Update the desktop database:
 if [ -x usr/bin/update-desktop-database ]; then
-  chroot . /usr/bin/update-desktop-database ${INSTALL_TDE}/share/applications > /dev/null 2>&1
+  chroot . /usr/bin/update-desktop-database $INSTALL_TDE/share/applications > /dev/null 2>&1
 fi
 
 # Update hicolor theme cache:
 if [ -d usr/share/icons/hicolor ]; then
   if [ -x /usr/bin/gtk-update-icon-cache ]; then
-    chroot . /usr/bin/gtk-update-icon-cache -f -t ${INSTALL_TDE}/share/icons/hicolor 1> /dev/null 2> /dev/null
+    chroot . /usr/bin/gtk-update-icon-cache -f -t $INSTALL_TDE/share/icons/hicolor 1> /dev/null 2> /dev/null
   fi
 fi
 
 # Update the mime database:
 if [ -x usr/bin/update-mime-database ]; then
-  chroot . /usr/bin/update-mime-database ${INSTALL_TDE}/share/mime >/dev/null 2>&1
+  chroot . /usr/bin/update-mime-database $INSTALL_TDE/share/mime >/dev/null 2>&1
 fi
 
 EOINS
