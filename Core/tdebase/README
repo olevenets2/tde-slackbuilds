@@ -23,29 +23,5 @@ or
 [2] copy the contents of rc.4.local to rc.4 above other session manager options
 
 (Runlevel)
-Set this to 4 and tdm should work out-of-the-box, especially for new installations.
-
-------------------
-
-(Konqueror file manager) as-built defaults to 'Icon View' when starting.
-Setting 'another View' and saving that view profile should, but doesn't, override this.
-
-The problem seems to be that TDE lacks the [MainView Settings] entry in konquerorrc that exists in KDE3.
-
-Until this is fixed, to set 'Tree View' for example:
-
-VIEWMODE=konq_treeview
-sed -i "s|konq_iconview|$VIEWMODE|" /{TDE_installation_dir}/share/apps/konqueror/profiles/filemanagement
-echo "[MainView Settings]
-ViewMode=$VIEWMODE" > ~/.trinity/share/config/konquerorrc
-
-The ViewMode options are:
-
-konq_iconview
-konq_multicolumnview
-konq_treeview
-konq_infolistview
-konq_detailedlistview
-konq_textview
-fsview_part [File Size]
-
+Set this to 4 and tdm should work out-of-the-box.
+ 

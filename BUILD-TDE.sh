@@ -400,9 +400,9 @@ Non-TDE apps are in the Misc category and don't need the \Zb\Zr\Z4R\Znequired TD
 "Apps/koffice" "Office Suite" off "\Zb\Z6 Optional build-time dependencies - GraphicsMagick/libpng14 [for chalk/krita]  \Zn" \
 "Apps/koffice-i18n" "Internationalization files for koffice" off "\Zb\Z6 Required for koffice when \Zb\Z3Additional language support\Zb\Z6 has been selected  \Zn" \
 "Apps/krusader" "File manager for TDE" off "\Zb\Z6   \Zn" \
-"Apps/ksensors" "A graphical interface for sensors" off "\Zb\Z6 Runtime requirement ap/lm_sensors \Zn" \
 " Misc/graphviz" "Graph Visualization" off "\Zb\Z6 Runtime option for kscope. pdf/html docs not built by default  \Zn" \
 "Apps/kscope" "A source-editing environment for C and C-style languages." off "\Zb\Z6 Runtime options cscope [d/cscope], ctags [ap/vim], dot [graphviz] \Zn" \
+"Apps/ksensors" "A graphical interface for sensors" off "\Zb\Z6 Runtime requirement ap/lm_sensors \Zn" \
 "Apps/kshutdown" "Shutdown utility for TDE" off "\Zb\Z6   \Zn" \
 "Apps/ksquirrel" "An image viewer with OpenGL and KIPI support." off "\Zb\Z6 Requires kipi-plugins tdelibkdcraw tdelibkexiv2 tdelibkipi libksquirrel. \Zn" \
 "Apps/tdektorrent" "A BitTorrent client for TDE" off "\Zb\Z6   \Zn" \
@@ -453,6 +453,24 @@ $(cat Core/tdebase/README|sed "s|/{TDE_installation_dir}|$(cat $TMPVARS/INSTALL_
 " \
 30 75
 done
+
+rm -f $TMPVARS/VIEWMODE
+dialog --cr-wrap --nocancel --no-shadow --colors --title " Konqueror file manager " --menu \
+"
+Konqueror file manager defaults to 'Icon View'. Setting 'another View' and saving that view profile should, but doesn't, override this.
+
+Until this is fixed [bug 2881], set the default view mode here.
+ 
+" \
+20 75 7 \
+"Icon" "konq_iconview" \
+"Multi Column" "konq_multicolumnview" \
+"Tree" "konq_treeview" \
+"Info List" "konq_infolistview" \
+"Detailed List" "konq_detailedlistview" \
+"Text" "konq_textview" \
+"File Size" "fsview_part" \
+2> $TMPVARS/VIEWMODE
 }
 
 
@@ -559,6 +577,7 @@ export EXIT_FAIL=$(cat $TMPVARS/EXIT_FAIL)
 export KEEP_BUILD=$(cat $TMPVARS/KEEP_BUILD)
 export PREPEND=$(cat $TMPVARS/PREPEND)
 export RUNLEVEL=$(cat $TMPVARS/RUNLEVEL)
+export VIEWMODE=$(grep "$(cat $TMPVARS/VIEWMODE)" $0 | grep -o [a-z]*_[a-z]*)
 # these exports are for koffice.SB
 [[ $(cat $TMPVARS/Krita_OPTS) == *krita* ]] && export REVERT=yes
 [[ $(cat $TMPVARS/Krita_OPTS) == *libpng14* ]] && export USE_PNG14=yes
@@ -593,8 +612,8 @@ export ARM_FABI=$(readelf -Ah $(which bash)|grep -oE "soft|hard")
 [[ $(cat $TMPVARS/build-new) != no ]] && NEW_BUILD=yes || NEW_BUILD='no - re-use existing'
 ## Action on failure
 AOF=$(echo $EXIT_FAIL|cut -d" " -f1)
-## if tdebase selected, runlevel selected
-[[ $(grep -o tdebase $TMPVARS/TDEbuilds) ]] && [[ $RUNLEVEL ]] && TDMRL=\\Zb\\Z6$RUNLEVEL\\Zn && SHADERL=" "
+## if tdebase selected
+[[ $(grep -o tdebase $TMPVARS/TDEbuilds) ]] && TDMRL=\\Zb\\Z6$RUNLEVEL\\Zn && V_MODE=\\Zb\\Z6$(cat $TMPVARS/VIEWMODE)\\Zn && SHADERL=" "
 ## koffice - only if it is being built
 [[ $(sed 's|koffice-||' $TMPVARS/TDEbuilds | grep -o Apps/koffice) ]] && {
 [[ $REVERT == yes ]] && RVT=\\Zb\\Z6yes\\Zn || RVT=\\Zb\\Z6no\\Zn
@@ -621,7 +640,8 @@ Action on failure                       \Zb\Z6${AOF:-continue}\Zn
 Keep the temporary build files          \Zb\Z6$KEEP_BUILD\Zn
 Pre-select required [\Zb\Zr\Z4R\Zn] builds          \Zb\Z6$(cat $TMPVARS/SELECT|sed 's|off|no|;s|on|yes|')\Zn
 Prepend TDE libs paths                  \Zb\Z6${PREPEND:-no}\Zn${SHADERL:-\Z0\Zb}
-Runlevel for TDM                        ${TDMRL:-n/a}\Zn${SHADEKO:-\Z0\Zb}
+Runlevel for TDM                        ${TDMRL:-n/a}
+Konqueror file manager view mode        ${V_MODE:-n/a}\Zn${SHADEKO:-\Z0\Zb}
 koffice:
  revert chalk to krita                  ${RVT:-n/a}
  build with libpng14                    ${USE_PNG:-n/a}

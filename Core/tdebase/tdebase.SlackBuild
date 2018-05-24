@@ -38,6 +38,8 @@ listdocs_fn
 
 ## patch for gcc7 twin/client.cpp:2978:38: error: ISO C++ forbids comparison between pointer and integer [-fpermissive]
 sed -i 's|data != None|data != 0|' twin/client.cpp
+## part 1/2 of setting konqueror filemanagement default view mode
+sed -i "s|konq_iconview|$VIEWMODE|" konqueror/profile_filemanagement.desktop
 
 chown_fn
 
@@ -164,5 +166,12 @@ echo "
 sed -i 's|id:[1-5]|id:4|' etc/inittab
 " >> $PKG/install/doinst.sh
 }
+## part 2/2 of setting konqueror filemanagement default view mode
+## add [MainView Settings] ViewMode to konquerorrc
+echo "
+mkdir -p .\$HOME/.trinity/share/config/
+echo '[MainView Settings]
+ViewMode=$VIEWMODE' > .\$HOME/.trinity/share/config/konquerorrc
+" >> $PKG/install/doinst.sh
 
 makepkg_fn
