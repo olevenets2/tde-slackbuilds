@@ -34,53 +34,61 @@ getsource_fn
 ## the source unpacked is ~950MB, so to save on build space
 ## extract, build, and remove source for each language package one at a time
 
-cd $TMP/tmp-${PRGNAM}
+cd $TMP_BUILD/tmp-$PRGNAM
+[[ $TDEVERSION == R14.0.4 ]] && {
 # extract the cmake source once only
 echo -e "\033[39;1m"
-echo "Extracting the cmake source from the ${PRGNAM} archive ..."
+echo "Extracting the cmake source from the $PRGNAM archive ..."
 echo -e "\033[0m"
-tar xf ${SOURCE} ${PRGNAM}/cmake
-
+tar xf $SOURCE $PRGNAM/cmake
+}
 for lang in $I18N
 do
+[[ $TDEVERSION == R14.0.4 ]] && {
 # extract the source for one language at a time for each iteration of the loop
 echo -e "\033[39;1m"
-echo "Extracting the ${PRGNAM}-$lang source from the ${PRGNAM} archive ..."
+echo "Extracting the $PRGNAM-$lang source from the $PRGNAM archive ..."
 echo -e "\033[0m"
-tar -xf ${SOURCE} ${PRGNAM}/${PRGNAM}-$lang
+tar -xf $SOURCE $PRGNAM/$PRGNAM-$lang
+cd $PRGNAM
+} || {
+mkdir $PRGNAM
+cd $PRGNAM
+cp -a $BUILD_TDE_ROOT/src/cgit/tdei18n/cgit/tde-i18n/plain/tde-i18n-$lang .
+cp -a $BUILD_TDE_ROOT/src/cgit/{admin,cmake} tde-i18n-$lang/
+}
 
-cd ${PRGNAM}
 
 chown_fn
 
-mkdir -p ${PRGNAM}-$lang/build
-cd ${PRGNAM}-$lang/build
+mkdir -p $PRGNAM-$lang/build
+cd $PRGNAM-$lang/build
   cmake \
     -DCMAKE_C_FLAGS:STRING="$SLKCFLAGS" \
     -DCMAKE_CXX_FLAGS:STRING="$SLKCFLAGS" \
-    -DCMAKE_C_COMPILER=${COMPILER} \
-    -DCMAKE_CXX_COMPILER=${COMPILER_CXX} \
+    -DCMAKE_C_COMPILER=$COMPILER \
+    -DCMAKE_CXX_COMPILER=$COMPILER_CXX \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=${INSTALL_TDE} \
+    -DCMAKE_INSTALL_PREFIX=$INSTALL_TDE \
     -DSYSCONF_INSTALL_DIR="/etc/trinity" \
-    -DMAN_INSTALL_DIR=${INSTALL_TDE}/man \
-    -DLIB_SUFFIX=${LIBDIRSUFFIX} \
+    -DMAN_INSTALL_DIR=$INSTALL_TDE/man \
+    -DLIB_SUFFIX=$LIBDIRSUFFIX \
     -DBUILD_ALL="ON" \
     ..
 
 make_fn
 
-mkdir -p $PKG/${INSTALL_TDE}/doc/${PRGNAM}-$VERSION
-#cp -a $DOCS $PKG${INSTALL_TDE}/doc/${PRGNAM}-$VERSION || true
-cat $SRCDIR/$(basename $0) > $PKG${INSTALL_TDE}/doc/${PRGNAM}-$VERSION/${PRGNAM}-${lang}.SlackBuild
-chown -R root:root $PKG${INSTALL_TDE}/doc/${PRGNAM}-$VERSION
-find $PKG${INSTALL_TDE}/doc -type f -exec chmod 644 {} \;
+mkdir -p $PKG/$INSTALL_TDE/doc/$PRGNAM-$VERSION
+#cp -a $DOCS $PKG$INSTALL_TDE/doc/$PRGNAM-$VERSION || true
+cat $SRCDIR/$(basename $0) > $PKG$INSTALL_TDE/doc/$PRGNAM-$VERSION/$PRGNAM-$lang.SlackBuild
+chown -R root:root $PKG$INSTALL_TDE/doc/$PRGNAM-$VERSION
+find $PKG$INSTALL_TDE/doc -type f -exec chmod 644 {} \;
 
 
 mkdir_install_fn
 
 # extract the name of the language from the source text - a bit messy but there is no standard format
-Lang=$(grep Language-Team: $TMP/tmp-$PRGNAM/$PRGNAM/tde-i18n-${lang}/messages/tdebase/*.po|sort -k2 | sed -e 's|Team: |\n|' -e 's| <|\n|' -e 's|akh\\n"|akh|' -e 's|an S|#|' | grep "[A-Z][a-z][a-z]*$"|head -n 1)
+Lang=$(grep Language-Team: $TMP_BUILD/tmp-$PRGNAM/$PRGNAM/tde-i18n-$lang/messages/tdebase/*.po|sort -k2 | sed -e 's|Team: |\n|' -e 's| <|\n|' -e 's|akh\\n"|akh|' -e 's|an S|#|' | grep "[A-Z][a-z][a-z]*$"|head -n 1)
 [[ "$lang" == "pt" ]] && Lang="Portuguese"
 [[ "$lang" == "fy" ]] && Lang="Frisian"
 
@@ -92,18 +100,18 @@ echo "
 # make exactly 11 lines for the formatting to be correct.  It's also
 # customary to leave one space after the ':'.
                |-----handy-ruler------------------------------------------------------|
-${PRGNAM}-$lang:
-${PRGNAM}-$lang: ${PRGNAM}-$lang
-${PRGNAM}-$lang:
-${PRGNAM}-$lang: Language support for TDE:
-${PRGNAM}-$lang:
-${PRGNAM}-$lang:              $(echo $Lang)
-${PRGNAM}-$lang:
-${PRGNAM}-$lang:
-${PRGNAM}-$lang:
-${PRGNAM}-$lang:
-${PRGNAM}-$lang:
-${PRGNAM}-$lang:
+$PRGNAM-$lang:
+$PRGNAM-$lang: $PRGNAM-$lang
+$PRGNAM-$lang:
+$PRGNAM-$lang: Language support for TDE:
+$PRGNAM-$lang:
+$PRGNAM-$lang:              $(echo $Lang)
+$PRGNAM-$lang:
+$PRGNAM-$lang:
+$PRGNAM-$lang:
+$PRGNAM-$lang:
+$PRGNAM-$lang:
+$PRGNAM-$lang:
 " > $PKG/install/slack-desc
 
 cat <<EOINS >> $PKG/install/doinst.sh
@@ -123,25 +131,24 @@ EOINS
 
 ARCH="noarch"
 cd $PKG
-makepkg --linkadd y --chown n $OUTPUT/${PRGNAM}-${lang}-${VERSION}-${ARCH}-${BUILD}.${PKGTYPE:-txz} 
+makepkg --linkadd y --chown n $OUTPUT/$PRGNAM-$lang-$VERSION-$ARCH-$BUILD.${PKGTYPE:-txz} 
 cd $OUTPUT
-md5sum ${PRGNAM}-${lang}-${VERSION}-${ARCH}-${BUILD}.${PKGTYPE:-txz} > ${PRGNAM}-${lang}-${VERSION}-${ARCH}-${BUILD}.${PKGTYPE:-txz}.md5
-cat $PKG/install/slack-desc | grep "^${PRGNAM}" | grep -v handy > $OUTPUT/${PRGNAM}-${lang}-${VERSION}-${ARCH}-${BUILD}.txt
+md5sum $PRGNAM-$lang-$VERSION-$ARCH-$BUILD.${PKGTYPE:-txz} > $PRGNAM-$lang-$VERSION-$ARCH-$BUILD.${PKGTYPE:-txz}.md5
+cat $PKG/install/slack-desc | grep "^$PRGNAM" | grep -v handy > $OUTPUT/$PRGNAM-$lang-$VERSION-$ARCH-$BUILD.txt
 
 # Restore the original umask:
 umask ${_UMASK_}
 
 rm -rf $PKG/*
-cd $TMP/tmp-${PRGNAM}
-rm -rf ${PRGNAM}/${PRGNAM}-${lang}
+cd $TMP_BUILD/tmp-$PRGNAM
+rm -rf $PRGNAM/$PRGNAM-$lang
 
 # Install i18n package(s) here because if more than one language pack is built,
 # upgradepkg [in BUILD-TDE.sh] can't process them in one command and the build will exit
 if [ $INST == 1 ]
 then
-upgradepkg --install-new --reinstall $OUTPUT/${PRGNAM}-${lang}-${VERSION}-${ARCH}-${BUILD}.${PKGTYPE:-txz}
+upgradepkg --install-new --reinstall $OUTPUT/$PRGNAM-$lang-$VERSION-$ARCH-$BUILD.${PKGTYPE:-txz}
 fi
-
 done
 
 echo $lang > $TMPVARS/LASTLANG

@@ -8,6 +8,8 @@ if [ ! -d $TMPVARS ]; then
   mkdir -p $TMPVARS
 fi
 
+rm $TMPVARS/got-this-far ## testing
+
 dialog --cr-wrap --no-shadow --colors --title " Introduction " --msgbox \
 "
  This is the set up script for TDE SlackBuilds on Slackware 14.2/current for setting user preferences and options.
@@ -70,7 +72,7 @@ build_core()
 export INST=1
 TMP=${TMP:-/tmp}
 export LIBPNG_TMP=$TMP
-ROOT=$(pwd)
+export BUILD_TDE_ROOT=$(pwd)
 
 
 ###################################################
@@ -81,31 +83,40 @@ ROOT=$(pwd)
 run_dialog()
 {
 rm -f $TMPVARS/TDEVERSION
-dialog --cr-wrap --nocancel --no-shadow --colors --title " TDE Version " --inputbox \
+dialog --cr-wrap --nocancel --no-shadow --colors --title " TDE Version " --menu \
 "
 Set the version of TDE to be built.
+ 
 " \
-10 75 R14.0.4 \
+12 75 2 \
+"R14.0.4" "the latest released version" \
+"cgit" "development source from Trinity git" \
 2> $TMPVARS/TDEVERSION
 
 
 rm -f $TMPVARS/INSTALL_TDE
-dialog --cr-wrap --nocancel --no-shadow --colors --title " TDE Installation Directory " --inputbox \
+dialog --cr-wrap --defaultno --no-shadow --colors --cancel-label "/opt/trinity" --ok-label "/usr" --title " TDE Installation Directory " --inputbox \
 "
-Set the directory that TDE is to be installed in.
+Select the directory that TDE is to be installed in, \Zb\Zr\Z4</....>\Zn.
+
+Use any arrow key x2 to activate the input box to edit for another installation directory.
+ 
 " \
-10 75 /opt/trinity \
+14 75 /usr \
 2> $TMPVARS/INSTALL_TDE
+[[ $? == 1 ]] && echo /opt/trinity > $TMPVARS/INSTALL_TDE
 
 
 rm -f $TMPVARS/COMPILER
-dialog --cr-wrap --no-shadow --colors --yes-label "Clang" --no-label "Gcc" --defaultno --title " Compiler " --yesno \
+dialog --cr-wrap --nocancel --no-shadow --colors --title " Compiler " --menu \
 "
-Choose which compiler to use - <\Z1C\Zb\Z0lang/clang++\Zn> or \Zr\Z4\ZbGcc/g++\Zn
+Choose which compiler to use.
+ 
 " \
-8 75
-[[ $? == 0 ]] && echo clang > $TMPVARS/COMPILER
-[[ $? == 1 ]] && echo gcc > $TMPVARS/COMPILER
+12 75 2 \
+"gcc" "gcc/g++" \
+"clang" "clang/clang++" \
+2> $TMPVARS/COMPILER
 
 
 rm -f $TMPVARS/SET_MARCH
@@ -496,13 +507,13 @@ There are three options that can be set up for building the imaging app in koffi
 " useGM" "Use GraphicsMagick" on "\Zb\Z6  \Zn" \
 2> $TMPVARS/Krita_OPTS
 ## If GM has been selected and isn't in the build list or installed, add it to the build list before koffice
-GM_VERSION=$(grep VERSION:- $ROOT/Misc/GraphicsMagick/GraphicsMagick.SlackBuild|cut -d- -f2|cut -d} -f1)
+GM_VERSION=$(grep VERSION:- $BUILD_TDE_ROOT/Misc/GraphicsMagick/GraphicsMagick.SlackBuild|cut -d- -f2|cut -d} -f1)
 [[ $(cat $TMPVARS/Krita_OPTS) == *useGM* ]] && \
 [[ $(cat $TMPVARS/TDEbuilds) != *GraphicsMagick* ]] && \
 [[ ! $(ls /var/log/packages/GraphicsMagick-$GM_VERSION*) ]] && \
 sed -i 's|Apps/koffice|Misc/GraphicsMagick &|' $TMPVARS/TDEbuilds
 ## If libpng-1.4 has been selected and hasn't already been built, add it to the build list before koffice
-PNG_VERSION=$(grep VERSION:- $ROOT/Misc/libpng/libpng.SlackBuild|cut -d- -f2|cut -d} -f1)
+PNG_VERSION=$(grep VERSION:- $BUILD_TDE_ROOT/Misc/libpng/libpng.SlackBuild|cut -d- -f2|cut -d} -f1)
 [[ $(cat $TMPVARS/Krita_OPTS) == *libpng14* ]] && \
 [[ ! $(ls $LIBPNG_TMP/libpng-$PNG_VERSION-*-1.txz) ]] && \
 sed -i 's|Apps/koffice|Misc/libpng &|' $TMPVARS/TDEbuilds
@@ -536,6 +547,30 @@ Do you want to read them?
 $(cat $TMPVARS/READMEs)" \
 30 75
 }
+
+
+[[ $(cat $TMPVARS/TDEVERSION) == cgit ]] && {
+rm -f $TMPVARS/CGIT
+dialog --cr-wrap --no-shadow --colors --defaultno --title " TDE development build " --yesno \
+"
+This routine creates and updates the git repositories local copies.
+
+If this is a first run, answer 'yes' - be patient, downloads from git are slowwww...
+
+For subsequent runs, 'yes' will update only.
+
+Local repositories are created/updated as for the single downloads for R14.0.4 builds.
+If the current build list includes new apps, and you don't want the existing repos updated, the new apps should be run as a new group initially as selective updating is not supported.
+
+Do you want to create or update the git repositories?
+ 
+" \
+20 75
+[[ $? == 0 ]] && echo yes > $TMPVARS/CGIT
+[[ $? == 1 ]] && echo no > $TMPVARS/CGIT
+}
+
+
 }
 
 [[ ! -e $TMPVARS/TDEbuilds ]] && run_dialog
@@ -577,7 +612,7 @@ export EXIT_FAIL=$(cat $TMPVARS/EXIT_FAIL)
 export KEEP_BUILD=$(cat $TMPVARS/KEEP_BUILD)
 export PREPEND=$(cat $TMPVARS/PREPEND)
 export RUNLEVEL=$(cat $TMPVARS/RUNLEVEL)
-export VIEWMODE=$(grep "$(cat $TMPVARS/VIEWMODE)" $0 | grep -o [a-z]*_[a-z]*)
+export VIEWMODE=$(grep "$(cat $TMPVARS/VIEWMODE)" $0 | grep -o "[a-z]*_[a-z]*")
 # these exports are for koffice.SB
 [[ $(cat $TMPVARS/Krita_OPTS) == *krita* ]] && export REVERT=yes
 [[ $(cat $TMPVARS/Krita_OPTS) == *libpng14* ]] && export USE_PNG14=yes
@@ -667,10 +702,15 @@ done
 
 ######################################################
 # package(s) build starts here
+## If there is a download failure in getsource_fn, it needs to be communicated to this script if the build is set to stop on failure
+## getsource_fn is a function in get-source.sh which is a child of the SlackBuild script which is a child of this script and that failure needs to be carried back here
+## $TMPVARS/download-failure will be created if needed for that purpose, so remove any possible previous file
+rm -f $TMPVARS/download-failure
 
 # Loop for all packages
 for dir in $(cat $TMPVARS/TDEbuilds)
 do
+[[ ! -e $TMPVARS/download-failure ]] && {
    { [[ $dir == Deps* ]] && export TDEMIR_SUBDIR="/dependencies"; } \
 || { [[ $dir == Core* ]] && export TDEMIR_SUBDIR=""; } \
 || { [[ $dir == Libs* ]] && export TDEMIR_SUBDIR="/libraries"; } \
@@ -681,7 +721,7 @@ do
   package=$(echo $dir | cut -f2- -d /)
 
   # Change to package directory
-  cd $ROOT/$dir || ${EXIT_FAIL:-"true"}
+  cd $BUILD_TDE_ROOT/$dir || ${EXIT_FAIL:-"true"}
 
   # Get the version
   version=$(cat $package.SlackBuild | grep "VERSION:" | head -n1 | cut -d "-" -f2 | rev | cut -c 2- | rev)
@@ -704,6 +744,7 @@ checkinstall ()
 {
 {
 [[ $package != libpng ]] && [[ $(ls /var/log/packages/$package-*$(eval echo $version)-*-$build*) ]]
+## testing #echo $(ls /var/log/packages/$package-*$(eval echo $version)-*-$build*) > $TMPVARS/libcaldav-package-build-failed
 } || {
 [[ $package == libpng ]] && [[ $(ls $LIBPNG_TMP/$package-$(eval echo $version)-*-$build*.txz) ]]
 }
@@ -717,7 +758,7 @@ echo "
       Check the build log $TMP/$package-build-log
       "
 ## if koffice was building with libpng14, restore the libpng16 headers for any following builds
-[[ ${USE_PNG14:-} == yes ]] && source $ROOT/get-source.sh && libpng16_fn || true
+[[ ${USE_PNG14:-} == yes ]] && source $BUILD_TDE_ROOT/get-source.sh && libpng16_fn || true
 ${EXIT_FAIL:-":"}
 }
 }
@@ -734,7 +775,8 @@ elif [[ $package == libpng ]]; then checkinstall
 fi
 
   # back to original directory
-  cd $ROOT
+  cd $BUILD_TDE_ROOT
+}
 done
 }
 

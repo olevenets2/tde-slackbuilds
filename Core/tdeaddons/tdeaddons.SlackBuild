@@ -35,6 +35,7 @@ untar_fn
 listdocs_fn
 
 # patch for TDE bug 2043
+[[ $TDEVERSION == R14.0.4 ]] && {
 echo $'
 --- konq-plugins/arkplugin/arkplugin.cpp
 +++ konq-plugins/arkplugin/arkplugin.cpp
@@ -62,6 +63,17 @@ do
 patch -p0
 done
 
+echo $'
+--- konq-plugins/arkplugin/arkplugin.cpp
++++ konq-plugins/arkplugin/arkplugin.cpp
+@@ -328 +328 @@
+-        m_archiveMimeTypes << "application/x-rar" << "application/x-rar-compressed";
++        m_archiveMimeTypes << "application/x-rar";
+' | while read line
+do
+patch -p0
+done
+}
 ## Set the default compression as tar.xz
 ## enable jar & ar compression in Compress As menu
 ## remove application/x-rar-compressed
@@ -77,9 +89,6 @@ echo $'
 @@ -323 +323 @@
 -        if ( m_conf->readBoolEntry( "UseJar", false ) )
 +        if ( m_conf->readBoolEntry( "UseJar", true ) )
-@@ -328 +328 @@
--        m_archiveMimeTypes << "application/x-rar" << "application/x-rar-compressed";
-+        m_archiveMimeTypes << "application/x-rar";
 @@ -346 +346 @@
 -    if ( !TDEStandardDirs::findExe( "ar" ).isNull() && m_conf->readBoolEntry( "UseAr", false ) )
 +    if ( !TDEStandardDirs::findExe( "ar" ).isNull() && m_conf->readBoolEntry( "UseAr", true ) )

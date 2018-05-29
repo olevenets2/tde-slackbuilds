@@ -39,6 +39,7 @@ untar_fn
 ## add -march and -mtune options to CFLAGS where they've been set in BUILD-TDE.sh
 sed -i "s|^QMAKE_CFLAGS[^_].*$|& $SET_march|" mkspecs/linux-g++/qmake.conf
 ## allow building with clang
+[[ ! $(grep COMPILER mkspecs/linux-g++/qmake.conf) ]] && {
 echo $'--- mkspecs/linux-g++/qmake.conf
 +++ mkspecs/linux-g++/qmake.conf
 @@ -11 +11 @@
@@ -55,6 +56,7 @@ echo $'--- mkspecs/linux-g++/qmake.conf
 do
 patch -p0
 done
+}
 
 listdocs_fn
 

@@ -36,7 +36,7 @@ untar_fn
 ## remove x-rar-compressed.desktop
 sed -i '/x-rar-compressed.desktop/d' mimetypes/application/{CMakeLists.txt,Makefile.am}
 
-## patch for building with clang
+## patch for building with clang - added '-N' and '|| true' for cgit build
 echo $'
 --- tdeabc/tests/testaddresseelist.cpp
 +++ tdeabc/tests/testaddresseelist.cpp
@@ -45,8 +45,8 @@ echo $'
 +int main(int /*argc*/, char** /*argv*/)
 ' | while read line
 do
-patch -p0
-done
+patch -N -p0
+done || true
 
 ## patch for 'Magic file type detection not working' - bug 2713 - commit f54496a1
 echo $'
@@ -60,8 +60,8 @@ echo $'
 +		int magic_flags = MAGIC_ERROR|MAGIC_MIME_TYPE/*|MAGIC_DEBUG*/;
 ' | while read line
 do
-patch -p0
-done
+patch -N -p0
+done || true
 
 listdocs_fn
 

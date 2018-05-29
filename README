@@ -2,6 +2,8 @@ Build TDE [Trinity Desktop Environment] for Slackware 14.2 and current** on i586
 
 Run ./BUILD-TDE.sh - a dialog based script with a series of screens for user input.
 
+This branch includes a beta build for the TDE development version from https://mirror.git.trinitydesktop.org/cgit/ [see README-git].
+
 =============================================================
 
 Any package, or set of packages, can be built by running BUILD-TDE.sh and selecting them from the 'TDE Packages Selection' screen.

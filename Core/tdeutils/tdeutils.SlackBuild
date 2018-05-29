@@ -37,12 +37,15 @@ untar_fn
 ## tdeio (KMimeType): WARNING: mimetype not valid '' (missing entry in the file ?)
 ## the other removals are a general clear out of the mimetype before they cause problems
 ## application/x-rar-compressed causes a double entry in the Compress As menu without adding any functionality
+## patch for ark/archiveformatinfo.cpp split to accommodate cgit build
 echo $'
 --- ark/archiveformatinfo.cpp
 +++ ark/archiveformatinfo.cpp
 @@ -55 +54,0 @@
 -  addFormatInfo( TAR_FORMAT, "application/x-tbz2", ".tar.bz2" );
-@@ -80 +78,0 @@
+--- ark/archiveformatinfo.cpp
++++ ark/archiveformatinfo.cpp
+@@ -79 +78,0 @@
 -  addFormatInfo( RAR_FORMAT, "application/x-rar-compressed", ".rar" );
 --- ark/tar.cpp
 +++ ark/tar.cpp
@@ -70,8 +73,8 @@ echo $'
 +MimeType=application/x-gzip;application/x-lha;application/x-tar;application/x-tgz;application/x-tbz;application/x-zip;application/x-bzip;application/x-tzo;application/x-lzop;application/x-rar;application/x-zoo;application/x-tarz;application/x-archive;application/x-bzip2;application/x-jar;application/x-deb;application/x-ace;application/x-7z;application/x-arc;application/x-arj;application/x-compress;application/x-cpio;application/x-pak;application/x-lzma;application/x-xz;application/x-tlz;application/x-txz
 ' | while read line
 do
-patch -p0
-done
+patch -N -p0
+done || true ## to avoid build failure because patch has skipped already applied patches [cgit]
 
 ## fix bug 2794 - ark can't open rar files
 echo $'
@@ -95,7 +98,7 @@ echo $'
 +        m_version += versionRegExp.cap(5).toShort();
 ' | while read line
 do
-patch -p0
+patch -N -p0
 done
 
 listdocs_fn
