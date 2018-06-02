@@ -57,7 +57,7 @@ for locale in $I18N
  done
 
 ## set up a directory to store the required locale files temporarily
-TEMP_DIR=$TMP/tmp-$PRGNAM/loc_tmp
+TEMP_DIR=$TMP_BUILD/tmp-$PRGNAM/loc_tmp
 mkdir $TEMP_DIR
 
 ## .. for READMEs

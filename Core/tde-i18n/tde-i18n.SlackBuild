@@ -52,7 +52,7 @@ echo -e "\033[0m"
 tar -xf $SOURCE $PRGNAM/$PRGNAM-$lang
 cd $PRGNAM
 } || {
-mkdir $PRGNAM
+mkdir -p $PRGNAM # need -p for git builds if more than one lang
 cd $PRGNAM
 cp -a $BUILD_TDE_ROOT/src/cgit/tdei18n/cgit/tde-i18n/plain/tde-i18n-$lang .
 cp -a $BUILD_TDE_ROOT/src/cgit/{admin,cmake} tde-i18n-$lang/

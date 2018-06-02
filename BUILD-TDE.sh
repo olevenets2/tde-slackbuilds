@@ -9,6 +9,8 @@ if [ ! -d $TMPVARS ]; then
 fi
 
 rm $TMPVARS/got-this-far ## testing
+## remove marker for git admin/cmake to update or clone only once per run of this script
+rm -f $TMPVARS/admin-cmake-done
 
 dialog --cr-wrap --no-shadow --colors --title " Introduction " --msgbox \
 "
@@ -95,16 +97,18 @@ Set the version of TDE to be built.
 
 
 rm -f $TMPVARS/INSTALL_TDE
-dialog --cr-wrap --defaultno --no-shadow --colors --cancel-label "/opt/trinity" --ok-label "/usr" --title " TDE Installation Directory " --inputbox \
+dialog --cr-wrap --nocancel --no-shadow --colors --title " TDE Installation Directory " --menu \
 "
-Select the directory that TDE is to be installed in, \Zb\Zr\Z4</....>\Zn.
+Select the directory that TDE is to be installed in.
 
-Use any arrow key x2 to activate the input box to edit for another installation directory.
+Any other option will have to be edited into BUILD-TDE.sh 
  
 " \
-14 75 /usr \
+14 75 3 \
+"/opt/trinity" "" \
+"/opt/tde" "" \
+"/usr" "" \
 2> $TMPVARS/INSTALL_TDE
-[[ $? == 1 ]] && echo /opt/trinity > $TMPVARS/INSTALL_TDE
 
 
 rm -f $TMPVARS/COMPILER
@@ -744,7 +748,6 @@ checkinstall ()
 {
 {
 [[ $package != libpng ]] && [[ $(ls /var/log/packages/$package-*$(eval echo $version)-*-$build*) ]]
-## testing #echo $(ls /var/log/packages/$package-*$(eval echo $version)-*-$build*) > $TMPVARS/libcaldav-package-build-failed
 } || {
 [[ $package == libpng ]] && [[ $(ls $LIBPNG_TMP/$package-$(eval echo $version)-*-$build*.txz) ]]
 }

@@ -50,12 +50,12 @@ cd_builddir_fn
   cmake \
     -DCMAKE_C_FLAGS:STRING="$SLKCFLAGS $TQT_INCLUDE_PATH" \
     -DCMAKE_CXX_FLAGS:STRING="$SLKCFLAGS" \
-    -DCMAKE_C_COMPILER=${COMPILER} \
-    -DCMAKE_CXX_COMPILER=${COMPILER_CXX} \
-    -DCMAKE_INSTALL_PREFIX=${INSTALL_TDE} \
-    -DLIB_SUFFIX=${LIBDIRSUFFIX} \
+    -DCMAKE_C_COMPILER=$COMPILER \
+    -DCMAKE_CXX_COMPILER=$COMPILER_CXX \
+    -DCMAKE_INSTALL_PREFIX=$INSTALL_TDE \
+    -DLIB_SUFFIX=$LIBDIRSUFFIX \
     -DSYSCONF_INSTALL_DIR="/etc/trinity" \
-    -DMAN_INSTALL_DIR=${INSTALL_TDE}/man \
+    -DMAN_INSTALL_DIR=$INSTALL_TDE/man \
     -DBUILD_ALL="ON" \
     -DBUILD_TRANSLATIONS=${TRANS:-OFF} \
     ..
@@ -79,7 +79,7 @@ echo "
 $PRGNAM|-----handy-ruler------------------------------------------------------|
 $PRGNAM: $PRGNAM (Alternate Menu)
 $PRGNAM:
-$PRGNAM: KBFX is an alternative to the classical K-Menu button and it's menu
+$PRGNAM: KBFX is an alternative to the classical K-Menu button and its menu
 $PRGNAM:
 $PRGNAM:
 $PRGNAM: With language support for:
@@ -93,13 +93,13 @@ $PRGNAM: Home: https://www.trinitydesktop.org/index.php
 cat <<EOINS >> $PKG/install/doinst.sh
 # Update the desktop database:
 if [ -x usr/bin/update-desktop-database ]; then
-  chroot . /usr/bin/update-desktop-database ${INSTALL_TDE}/share/applications > /dev/null 2>&1
+  chroot . /usr/bin/update-desktop-database $INSTALL_TDE/share/applications > /dev/null 2>&1
 fi
 
 # Update hicolor theme cache:
 if [ -d usr/share/icons/hicolor ]; then
   if [ -x /usr/bin/gtk-update-icon-cache ]; then
-    chroot . /usr/bin/gtk-update-icon-cache -f -t ${INSTALL_TDE}/share/icons/hicolor 1> /dev/null 2> /dev/null
+    chroot . /usr/bin/gtk-update-icon-cache -f -t $INSTALL_TDE/share/icons/hicolor 1> /dev/null 2> /dev/null
   fi
 fi
 

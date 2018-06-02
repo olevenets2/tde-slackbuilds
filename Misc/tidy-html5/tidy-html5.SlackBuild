@@ -37,7 +37,7 @@ ARCHIVE_TYPE="zip"
 source ../../get-source.sh
 getsource_fn
 
-cd $TMP/tmp-$PRGNAM
+cd $TMP_BUILD/tmp-$PRGNAM
 unzip $SOURCE
 
 cd $PRGNAM-$VERSION

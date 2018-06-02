@@ -116,76 +116,93 @@ fi
 
 {
 ## if not creating/updating git, nothing to do in this function for git builds
-## otherwise, now not R14.0.4 or misc, and creating/updating git, do admin/cmake:
+## otherwise, now not R14.0.4 or misc, and we are creating/updating git, so [1] start with admin/cmake:
 
 [[ $(cat $TMPVARS/CGIT) == yes ]] && {
-#mkdir -p $BUILD_TDE_ROOT/src/cgit
+
 cd $BUILD_TDE_ROOT/src/cgit
             echo yes8 >> $TMPVARS/got-this-far
+
+[[ ! -e $TMPVARS/admin-cmake-done ]] && {
+## if admin and cmake exist, update them
+[[ -d admin ]] && \
+(echo "Updating admin ..."
+cd admin
+git checkout -- *
+git pull)
+[[ -d cmake ]] && \
+(echo "Updating cmake ..."
+cd cmake
+git checkout -- *
+git pull)
 
 ## if admin and cmake don't exist, clone them
 [[ ! -d admin ]] && git clone https://mirror.git.trinitydesktop.org/cgit/tde-common-admin admin
 [[ ! -d cmake ]] && git clone https://mirror.git.trinitydesktop.org/cgit/tde-common-cmake cmake
-## update admin and cmake
-[[ -d admin ]] && echo "Updating admin ..." && (cd admin
-git checkout -- *
-git pull)
-[[ -d cmake ]] && echo "Updating cmake ..." && (cd cmake
-git checkout -- *
-git pull)
 
-## not tde-i18n, and creating/updating git, do PRGNAM
+## place a marker so that admin/cmake update or clone only once per run of BUILD-TDE.sh
+touch $TMPVARS/admin-cmake-done
+}
+
+## if not tde-i18n, [2] update or clone PRGNAM
 
 [[ $PRGNAM != tde-i18n ]] && {
             echo yes9 >> $TMPVARS/got-this-far
 
-## if the app repo doesn't exist, clone it ..
+## get latest commits if the local repository for PRGNAM exists
+[[ -d $PRGNAM ]] && \
+(echo "Updating $PRGNAM ..."
+cd $PRGNAM
+git checkout -- *
+git pull)
+## if the local repository for PRGNAM doesn't exist, clone it ..
 [[ ! -d $PRGNAM ]] && \
             echo "yes10 $PWD clone $PRGNAM" >> $TMPVARS/got-this-far && \
 git clone https://mirror.git.trinitydesktop.org/cgit/$PRGNAM
-## get latest commits
-[[ -d $PRGNAM ]] && echo "Updating $PRGNAM ..." && {
-(cd $PRGNAM
-git checkout -- *
-git pull)
 
 ## if arts/tdelibs, need libltdl
-
 [[ " arts tdelibs " == *$PRGNAM* ]] && {
-[[ ! -d libltdl ]] && \
-#rm -rf $PRGNAM/libltdl
-git clone https://mirror.git.trinitydesktop.org/cgit/libltdl
-#ln -s ../libltdl $PRGNAM/
 [[ -d libltdl ]] && \
 (echo "Updating libltdl ..."
 cd libltdl
 git checkout -- *
 git pull)
-}
+
+[[ ! -d libltdl ]] && \
+git clone https://mirror.git.trinitydesktop.org/cgit/libltdl
 }
 
-true # stop the following i18n download (attempts) if this routine fails
+
+## if tdenetwork, need libtdevnc
+[[ " tdenetwork " == *$PRGNAM* ]] && {
+[[ -d libtdevnc ]] && \
+(echo "Updating libtdevnc ..."
+cd libtdevnc
+git checkout -- *
+git pull)
+
+[[ ! -d libtdevnc ]] && \
+git clone https://mirror.git.trinitydesktop.org/cgit/libtdevnc
+}
+
+true # stop the following i18n download (attempts) if this routine fails and i18n not required
 } || \
 
 {
-## for tde-i18n-$lang, and creating/updating git do this:
+## still creating/updating git, so [3] for tde-i18n-$lang:
 
 ## Use wget to download the required i18n repos to avoid the ~1x10^6 byte download for the full tde-i18n
-## same for both creating and updating
-## this test not strictly logically necessary, but can run a second time if the previous fails
-## add this if the above 'true' causes problems
-## [[ $PRGNAM == tde-i18n ]] && {
+## - same for both creating and updating
 for lang in $I18N
 do
             echo "yes11 $PWD" >> $TMPVARS/got-this-far
 cd tdei18n
             echo "yes12 $PWD" >> $TMPVARS/got-this-far
 wget -m --no-parent --no-host-directories https://mirror.git.trinitydesktop.org/cgit/tde-i18n/plain/tde-i18n-$lang/
-##will give:
+##will download the tde-i18n-$lang files to:
 ##$BUILD_TDE_ROOT/src/cgit/tdei18n/cgit/tde-i18n/plain/tde-i18n-$lang/*
 cd ..
 done
-#}
 }
 }
 }
@@ -229,10 +246,13 @@ do
 patch -p0
 done || true
 } || {
+## don't copy .git directory:
+(cd $BUILD_TDE_ROOT/src/cgit
             echo "yes15 $PWD" >> $TMPVARS/got-this-far
-cp -a $BUILD_TDE_ROOT/src/cgit/$PRGNAM .
-cp -a $BUILD_TDE_ROOT/src/cgit/{admin,cmake} $PRGNAM/
-[[ " arts tdelibs " == *$PRGNAM* ]] && cp -a $BUILD_TDE_ROOT/src/cgit/libltdl $PRGNAM/
+cp -a --parents $PRGNAM/* $TMP_BUILD/tmp-$PRGNAM/
+cp -a --parents {admin,cmake}/* $TMP_BUILD/tmp-$PRGNAM/$PRGNAM/
+[[ " arts tdelibs " == *$PRGNAM* ]] && cp -a --parents libltdl/* $TMP_BUILD/tmp-$PRGNAM/$PRGNAM/
+[[ " tdenetwork " == *$PRGNAM* ]] && cp -a --parents libtdevnc/* $TMP_BUILD/tmp-$PRGNAM/$PRGNAM/)
             echo yes16 >> $TMPVARS/got-this-far
 } && {
 [[ $TDEVERSION == R14.0.4 && $TDEMIR_SUBDIR != misc ]] && cd ./$(echo $TDEMIR_SUBDIR | cut -d / -f 2) || true

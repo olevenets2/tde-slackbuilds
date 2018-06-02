@@ -1,6 +1,6 @@
 The individual TDE apps can be cloned from Trinity git, so the build is set up to do that - except for individual language packs of tde-i18n. The whole tde-i18n download is ~1x10^6 bytes, so to reduce that, wget is used to download individual tde-i18n-ab_CD packs as they are not git repositories.
 
-Once any git repository has been cloned, further downloads are updates only.
+Once any git repository has been cloned, further downloads are updates only[*].
 
 This gives the best options - only fetching what is needed, and incremental updates.
 
@@ -23,35 +23,18 @@ src
                     ├── tde-i18n-en_GB
                     └── tde-i18n-ru
 
-For the build, these repositories are copied to the build area where the R14.0.4 archives would otherwise be extracted. admin & cmake are also always copied, and libltdl where it's needed.
+For the build, these repositories are copied to the build area where the R14.0.4 archives would otherwise be extracted. admin & cmake are also always copied, and libltdl and libtdevnc where they're needed.
 
 This has resulted in most of the modifications being in the main scripts, BUILD-TDE.sh and get-source.sh [in getsource_fn and untar_fn]. tde-i18n.SlackBuild had to be modified because it doesn't use untar_fn. Some other *.SlackBuild modifications are work-arounds to accommodate the patching already included in the git sources.
 
-As this is in beta stage, I've left in the markers I use in get-source.sh to give a better idea of where the build is failing.
+As this is in beta stage, I've left in the markers I use in get-source.sh to give a better idea of where the build fails. However, all packages in the BUILD-TDE.sh " TDE Packages Selection " have now been tested and build using gcc - except kdbusnotification:
+
+	In file included from daemon.moc.cpp:9:0:
+	../../../src/daemon/daemon.h:25:42: error: expected initializer before ‘:’ token
+	 class TDEUI_EXPORT NotificationContainer : public TDEPassivePopupStackContainer
+                                          ^
+
+which I haven't been able to fix.
 
 
-First upload:
- modified:   BUILD-TDE.sh
- modified:   Core/tde-i18n/tde-i18n.SlackBuild
- modified:   Core/tdeaddons/tdeaddons.SlackBuild
- modified:   Core/tdelibs/tdelibs.SlackBuild
- modified:   Core/tdeutils/tdeutils.SlackBuild
- modified:   Deps/arts/arts.SlackBuild
- modified:   Deps/tqt3/tqt3.SlackBuild
- modified:   README
- modified:   get-source.sh
- tested:   tqt3
- tested:   tqtinterface
- tested:   arts
- tested:   dbus-tqt
- tested:   dbus-1-tqt
- tested:   libart_lgpl
- tested:   tqca-tls
- tested:   avahi-tqt
- tested:   tdelibs
- tested:   tdebase
- tested:   tde-i18n-en_GB
- tested:   tde-i18n-ru
- tested:   tdeaddons
- tested:   tdeutils
-
+[*] I'm sure that checking timestamps with wget did work when I set it up, but it doesn't now as the server doesn't seem to be delivering that information. The consequence is that if tde-i18n-$lang is a part of the build after its initial download, it will be downloaded again. As the latest update was a year ago, once built, there will probably be no need to do so again and so tde-i18n for a particular language will probably only be run once. On that basis I don't see this being a significant issue.

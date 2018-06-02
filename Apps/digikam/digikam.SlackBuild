@@ -33,6 +33,7 @@ getsource_fn
 
 untar_fn
 
+[[ $TDEVERSION == R14.0.4 ]] && {
 ## fix for gcc7:
 ##In file included from ../../../../../digikam/imageplugins/coreplugin/sharpnesseditor/matrix.cpp:35:0:
 ##/usr/include/stdlib.h:751:12: error: expected unqualified-id before ‘int’
@@ -58,6 +59,7 @@ echo '--- digikam/imageplugins/coreplugin/sharpnesseditor/clapack/f2c.h
 do
 patch -p0
 done
+}
 
 listdocs_fn
 

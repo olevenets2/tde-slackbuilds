@@ -41,13 +41,13 @@ chown_fn
 
 cd_builddir_fn
 
-LDFLAGS="${SLKLDFLAGS}" \
-CFLAGS="${SLKCFLAGS} $TQT_INCLUDE_PATH" \
-CXXFLAGS="${SLKCFLAGS}" \
-CC=${COMPILER} \
-CXX=${COMPILER_CXX} \
+LDFLAGS=$SLKLDFLAGS \
+CFLAGS="$SLKCFLAGS $TQT_INCLUDE_PATH" \
+CXXFLAGS=$SLKCFLAGS \
+CC=$COMPILER \
+CXX=$COMPILER_CXX \
 ../configure \
-   --prefix=${INSTALL_TDE} \
+   --prefix=$INSTALL_TDE \
    --disable-debug \
    --build=$ARCH-slackware-linux
 
@@ -58,9 +58,9 @@ installdocs_fn
 strip_fn
 
 # Add desktop file
-mkdir -p $PKG/${INSTALL_TDE}/share/applications
+mkdir -p $PKG/$INSTALL_TDE/share/applications
 cp -a $SRCDIR/kdbusnotification-autostart.desktop \
-$PKG/${INSTALL_TDE}/share/applications/kdbusnotification-autostart.desktop
+$PKG/$INSTALL_TDE/share/applications/kdbusnotification-autostart.desktop
 
 mkdir_install_fn
 
@@ -89,7 +89,7 @@ $PRGNAM: Home: https://www.trinitydesktop.org/index.php
 cat <<EOINS >> $PKG/install/doinst.sh
 # Update the desktop database:
 if [ -x usr/bin/update-desktop-database ]; then
-  chroot . /usr/bin/update-desktop-database ${INSTALL_TDE}/share/applications > /dev/null 2>&1
+  chroot . /usr/bin/update-desktop-database $INSTALL_TDE/share/applications > /dev/null 2>&1
 fi
 EOINS
 

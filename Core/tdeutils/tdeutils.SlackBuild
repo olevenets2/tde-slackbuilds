@@ -33,6 +33,7 @@ getsource_fn
 
 untar_fn
 
+[[ $TDEVERSION == R14.0.4 ]] && {
 ## remove redundant application/x-tbz2 references [line 55] to get rid of ark warning:
 ## tdeio (KMimeType): WARNING: mimetype not valid '' (missing entry in the file ?)
 ## the other removals are a general clear out of the mimetype before they cause problems
@@ -73,8 +74,8 @@ echo $'
 +MimeType=application/x-gzip;application/x-lha;application/x-tar;application/x-tgz;application/x-tbz;application/x-zip;application/x-bzip;application/x-tzo;application/x-lzop;application/x-rar;application/x-zoo;application/x-tarz;application/x-archive;application/x-bzip2;application/x-jar;application/x-deb;application/x-ace;application/x-7z;application/x-arc;application/x-arj;application/x-compress;application/x-cpio;application/x-pak;application/x-lzma;application/x-xz;application/x-tlz;application/x-txz
 ' | while read line
 do
-patch -N -p0
-done || true ## to avoid build failure because patch has skipped already applied patches [cgit]
+patch -p0
+done
 
 ## fix bug 2794 - ark can't open rar files
 echo $'
@@ -98,8 +99,9 @@ echo $'
 +        m_version += versionRegExp.cap(5).toShort();
 ' | while read line
 do
-patch -N -p0
+patch -p0
 done
+}
 
 listdocs_fn
 

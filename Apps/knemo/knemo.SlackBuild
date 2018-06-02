@@ -45,6 +45,7 @@ sed -i 's|Default Gateway" ), LINK_QUALITY|Default Gateway" ), GATEWAY|' src/kne
 langs="";for Lang in $I18N;do [[ -d translations/$Lang ]] && langs="$langs $Lang";done
 sed -i "s|SUBDIRS=.*$|SUBDIRS=$langs|" translations/Makefile.am
 
+[[ $TDEVERSION == R14.0.4 ]] && {
 ## patch for clang
 echo $'
 --- src/knemod/knemodaemon.h
@@ -56,6 +57,7 @@ echo $'
 do
 patch -p0
 done
+}
 
 ltoolupdate_fn
 

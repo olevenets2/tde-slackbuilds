@@ -34,8 +34,8 @@ getsource_fn
 untar_fn
 listdocs_fn
 
-# patch for TDE bug 2043
 [[ $TDEVERSION == R14.0.4 ]] && {
+# patch for TDE bug 2043
 echo $'
 --- konq-plugins/arkplugin/arkplugin.cpp
 +++ konq-plugins/arkplugin/arkplugin.cpp
@@ -73,7 +73,7 @@ echo $'
 do
 patch -p0
 done
-}
+
 ## Set the default compression as tar.xz
 ## enable jar & ar compression in Compress As menu
 ## remove application/x-rar-compressed
@@ -99,6 +99,7 @@ echo $'
 do
 patch -p0
 done
+}
 
 chown_fn
 
@@ -109,7 +110,7 @@ chown_fn
 [[ $(ls /var/log/packages/tdepim-*) ]] && KADDRESSBOOK_PLUGINS="ON"
 
 # Check for tdemultimedia
-[[ $(ls /var/log/packages/tdemultimedia-*) ]] && NOATUN_PLUGINS="ON"
+[[ $(ls $INSTALL_TDE/include/arts/artsmodules.h) ]] && NOATUN_PLUGINS="ON"
 
 cd_builddir_fn
   cmake \
