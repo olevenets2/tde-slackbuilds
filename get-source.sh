@@ -231,10 +231,25 @@ untar_fn ()
 {
 cd $TMP_BUILD/tmp-$PRGNAM
 [[ $TDEVERSION == R14.0.4 || $TDEMIR_SUBDIR == misc ]] && {
+## unpack R14 or misc
 echo -e "\n unpacking $(basename $SOURCE) ... \n"
-tar -xf $SOURCE
-
+tar -xf $SOURCE 
+[[ $TDEMIR_SUBDIR != misc ]] && cd ./$(echo $TDEMIR_SUBDIR | cut -d / -f 2) || true
+            echo "yes15 $PWD" >> $TMPVARS/got-this-far
+} || {
+## copy git repo but don't copy .git directory:
+(cd $BUILD_TDE_ROOT/src/cgit
+            echo "yes16 $PWD" >> $TMPVARS/got-this-far
+cp -a --parents $PRGNAM/* $TMP_BUILD/tmp-$PRGNAM/
+cp -a --parents {admin,cmake}/* $TMP_BUILD/tmp-$PRGNAM/$PRGNAM/
+[[ " arts tdelibs " == *$PRGNAM* ]] && cp -a --parents libltdl/* $TMP_BUILD/tmp-$PRGNAM/$PRGNAM/
+[[ " tdenetwork " == *$PRGNAM* ]] && cp -a --parents libtdevnc/* $TMP_BUILD/tmp-$PRGNAM/$PRGNAM/)
+            echo yes17 >> $TMPVARS/got-this-far
+} && cd $PRGNAM 2>/dev/null || cd $PRGNAM-$VERSION
+            echo yes18 >> $TMPVARS/got-this-far
+[[ $TDEVERSION == R14.0.4 ]] && {
 ## patch to allow automake 1.16.x
+            echo yes19 >> $TMPVARS/got-this-far
 [[ -s admin/cvs.sh ]] && echo $'
 --- admin/cvs.sh
 +++ admin/cvs.sh
@@ -244,19 +259,8 @@ tar -xf $SOURCE
 ' | while read line
 do
 patch -p0
-done || true
-} || {
-## don't copy .git directory:
-(cd $BUILD_TDE_ROOT/src/cgit
-            echo "yes15 $PWD" >> $TMPVARS/got-this-far
-cp -a --parents $PRGNAM/* $TMP_BUILD/tmp-$PRGNAM/
-cp -a --parents {admin,cmake}/* $TMP_BUILD/tmp-$PRGNAM/$PRGNAM/
-[[ " arts tdelibs " == *$PRGNAM* ]] && cp -a --parents libltdl/* $TMP_BUILD/tmp-$PRGNAM/$PRGNAM/
-[[ " tdenetwork " == *$PRGNAM* ]] && cp -a --parents libtdevnc/* $TMP_BUILD/tmp-$PRGNAM/$PRGNAM/)
-            echo yes16 >> $TMPVARS/got-this-far
-} && {
-[[ $TDEVERSION == R14.0.4 && $TDEMIR_SUBDIR != misc ]] && cd ./$(echo $TDEMIR_SUBDIR | cut -d / -f 2) || true
-} && cd $PRGNAM 2>/dev/null || cd $PRGNAM-$VERSION
+done
+} || true # avoid exit 1 if patch n/a
 }
 
 listdocs_fn ()
