@@ -48,7 +48,7 @@ CXX=${COMPILER_CXX} \
 ./autogen.sh \
   --prefix=${INSTALL_TDE} \
   --libdir=${INSTALL_TDE}/lib${LIBDIRSUFFIX} \
-  --sysconfdir="/etc/trinity" \
+  --sysconfdir=$SYS_CNF_DIR \
   --mandir=${INSTALL_TDE}/man \
   --docdir=${INSTALL_TDE}/doc/$PRGNAM-$VERSION \
   --with-distro=slackware \

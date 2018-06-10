@@ -54,6 +54,7 @@ cd $PRGNAM
 } || {
 mkdir -p $PRGNAM # need -p for git builds if more than one lang
 cd $PRGNAM
+echo -e " copying $PRGNAM-$lang source files to build area ... \n"
 cp -a $BUILD_TDE_ROOT/src/cgit/tdei18n/cgit/tde-i18n/plain/tde-i18n-$lang .
 cp -a $BUILD_TDE_ROOT/src/cgit/{admin,cmake} tde-i18n-$lang/
 }
@@ -70,7 +71,7 @@ cd $PRGNAM-$lang/build
     -DCMAKE_CXX_COMPILER=$COMPILER_CXX \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=$INSTALL_TDE \
-    -DSYSCONF_INSTALL_DIR="/etc/trinity" \
+    -DSYSCONF_INSTALL_DIR=$SYS_CNF_DIR \
     -DMAN_INSTALL_DIR=$INSTALL_TDE/man \
     -DLIB_SUFFIX=$LIBDIRSUFFIX \
     -DBUILD_ALL="ON" \
@@ -99,7 +100,7 @@ echo "
 # on the right side marks the last column you can put a character in.  You must
 # make exactly 11 lines for the formatting to be correct.  It's also
 # customary to leave one space after the ':'.
-               |-----handy-ruler------------------------------------------------------|
+             |-----handy-ruler------------------------------------------------------|
 $PRGNAM-$lang:
 $PRGNAM-$lang: $PRGNAM-$lang
 $PRGNAM-$lang:

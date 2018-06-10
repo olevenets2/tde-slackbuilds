@@ -55,7 +55,7 @@ CC="gcc" \
 CXX="g++" \
 ../configure \
    --prefix=$INSTALL_TDE \
-   --sysconfdir="/etc/trinity" \
+   --sysconfdir=$SYS_CNF_DIR \
    --mandir=$INSTALL_TDE/man \
    --disable-rpath \
    --enable-closure

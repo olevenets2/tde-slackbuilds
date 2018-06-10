@@ -27,14 +27,12 @@ For the build, these repositories are copied to the build area where the R14.0.4
 
 This has resulted in most of the modifications being in the main scripts, BUILD-TDE.sh and get-source.sh [in getsource_fn and untar_fn]. tde-i18n.SlackBuild had to be modified because it doesn't use untar_fn. Some other *.SlackBuild modifications are work-arounds to accommodate the patching already included in the git sources.
 
-As this is in beta stage, I've left in the markers I use in get-source.sh to give a better idea of where the build fails. However, all packages in the BUILD-TDE.sh " TDE Packages Selection " have now been tested and build using gcc - except kdbusnotification:
+All packages in the BUILD-TDE.sh " TDE Packages Selection " have now been tested and build using gcc - except for kdbusnotification:
 
 	In file included from daemon.moc.cpp:9:0:
 	../../../src/daemon/daemon.h:25:42: error: expected initializer before ‘:’ token
 	 class TDEUI_EXPORT NotificationContainer : public TDEPassivePopupStackContainer
-                                          ^
-
-which I haven't been able to fix.
+	                                          ^
 
 
 [*] I'm sure that checking timestamps with wget did work when I set it up, but it doesn't now as the server doesn't seem to be delivering that information. The consequence is that if tde-i18n-$lang is a part of the build after its initial download, it will be downloaded again. As the latest update was a year ago, once built, there will probably be no need to do so again and so tde-i18n for a particular language will probably only be run once. On that basis I don't see this being a significant issue.

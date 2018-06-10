@@ -34,12 +34,15 @@ source ../../get-source.sh
 getsource_fn
 
 untar_fn
+
 listdocs_fn
 
 ## patch for gcc7 twin/client.cpp:2978:38: error: ISO C++ forbids comparison between pointer and integer [-fpermissive]
 sed -i 's|data != None|data != 0|' twin/client.cpp
 ## part 1/2 of setting konqueror filemanagement default view mode
 sed -i "s|konq_iconview|$VIEWMODE|" konqueror/profile_filemanagement.desktop
+## allow for configuration files directory != /etc/trinity
+sed -i "s|/etc/trinity/|$SYS_CNF_DIR/|" tdm/kfrontend/gentdmconf.c || true
 
 chown_fn
 
@@ -54,7 +57,7 @@ cd_builddir_fn
     -DCMAKE_CXX_COMPILER=$COMPILER_CXX \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=$INSTALL_TDE \
-    -DSYSCONF_INSTALL_DIR="/etc/trinity" \
+    -DSYSCONF_INSTALL_DIR=$SYS_CNF_DIR \
     -DMAN_INSTALL_DIR=$INSTALL_TDE/man \
     -DLIB_SUFFIX=$LIBDIRSUFFIX \
     -DWITH_OPENEXR="ON" \
@@ -89,25 +92,25 @@ strip_fn
 
 # Add xinitrc:
 mkdir -p $PKG/etc/X11/xinit
-sed "s|\$INSTALL_TDE|$INSTALL_TDE|g" < $SRCDIR/xinitrc.tde > $PKG/etc/X11/xinit/xinitrc.tde
+sed "s|{INSTALL_TDE}|$INSTALL_TDE|g" < $SRCDIR/xinitrc.tde > $PKG/etc/X11/xinit/xinitrc.tde
 chmod 755 $PKG/etc/X11/xinit/xinitrc.tde
 (cd $PKG/etc/X11/xinit/
 ln -sf xinitrc.tde xinitrc)
 
 mkdir -p $PKG/etc/profile.d
-sed "s|\$INSTALL_TDE|$INSTALL_TDE|g" < $SRCDIR/profile.d/tde.sh > $PKG/etc/profile.d/tde.sh
-sed "s|\$INSTALL_TDE|$INSTALL_TDE|g" < $SRCDIR/profile.d/tde.csh > $PKG/etc/profile.d/tde.csh
+sed "s|{SYS_CNF_DIR}|$SYS_CNF_DIR|;s|{INSTALL_TDE}|$INSTALL_TDE|" < $SRCDIR/profile.d/tde.sh > $PKG/etc/profile.d/tde.sh
+sed "s|{SYS_CNF_DIR}|$SYS_CNF_DIR|;s|{INSTALL_TDE}|$INSTALL_TDE|" < $SRCDIR/profile.d/tde.csh > $PKG/etc/profile.d/tde.csh
 chmod 755 $PKG/etc/profile.d/tde.{,c}sh
 
 # Add some configuration files / scripts needed by TDE.
-mkdir -p $PKG/etc/trinity
-mv $PKG$INSTALL_TDE/share/config/tdm $PKG/etc/trinity/tdm
-( cd $PKG$INSTALL_TDE/share/config ; ln -sf /etc/trinity/tdm tdm )
+mkdir -p $PKG$SYS_CNF_DIR
+mv $PKG$INSTALL_TDE/share/config/tdm $PKG$SYS_CNF_DIR/tdm
+( cd $PKG$INSTALL_TDE/share/config ; ln -sf $SYS_CNF_DIR/tdm tdm )
 
 # Add rc.4.local to give TDM priority over rc.4 X11 session manager options
 # Assumes that rc.4.new from sysvinit-scripts still has the rc.4.local option
 mkdir $PKG/etc/rc.d
-sed "s|\$INSTALL_TDE|$INSTALL_TDE|" < $SRCDIR/rc.4.local > $PKG/etc/rc.d/rc.4.local
+sed "s|{INSTALL_TDE}|$INSTALL_TDE|" < $SRCDIR/rc.4.local > $PKG/etc/rc.d/rc.4.local
 chmod 755 $PKG/etc/rc.d/rc.4.local
 
 # Set sane permissions for the include files.
@@ -115,24 +118,20 @@ if [ -d $PKG$INSTALL_TDE/include ]; then
    find $PKG$INSTALL_TDE/include -type f -exec chmod 0644 {} \;
 fi
 
-# Ensure correct login manager session file is available.
-mkdir -p $PKG/usr/share/apps/tdm/sessions
-cp $PKG$INSTALL_TDE/share/apps/tdm/sessions/tde.desktop $PKG/usr/share/apps/tdm/sessions/ || true
-
 # Setup config files for TDM:
-$PKG$INSTALL_TDE/bin/gentdmconf --no-old --no-old-scripts --no-backup --in $PKG/etc/trinity/tdm
+$PKG$INSTALL_TDE/bin/gentdmconf --no-old --no-old-scripts --no-backup --in $PKG$SYS_CNF_DIR/tdm
 ## set correct paths for config files
-sed -i 's|/opt/trinity/share/config/tdm/|/etc/trinity/tdm/|' $PKG/etc/trinity/tdm/tdmrc
+sed -i "s|$INSTALL_TDE/share/config/tdm/|$SYS_CNF_DIR/tdm/|" $PKG$SYS_CNF_DIR/tdm/tdmrc
 # Allow root to login
-sed 's|AllowRootLogin=false|AllowRootLogin=true|' $PKG/etc/trinity/tdm/tdmrc > $PKG/etc/trinity/tdm/tdmrc.new
+sed 's|AllowRootLogin=false|AllowRootLogin=true|' $PKG$SYS_CNF_DIR/tdm/tdmrc > $PKG$SYS_CNF_DIR/tdm/tdmrc.new
 ## Remove tdmrc which has AllowRootLogin=false set and would be used for a new installation
 ## The installed tdmrc will be created by doinst.sh from tdmrc.new if it doesn't exist
-rm $PKG/etc/trinity/tdm/tdmrc
-mv $PKG/etc/trinity/tdm/Xsession $PKG/etc/trinity/tdm/Xsession.orig
-cat $SRCDIR/config/Xsession | sed "s|\$INSTALL_TDE|$INSTALL_TDE|" > $PKG/etc/trinity/tdm/Xsession
-mv $PKG/etc/trinity/tdm/backgroundrc $PKG/etc/trinity/tdm/backgroundrc.new
-if [[ -r $PKG$INSTALL_TDE/etc/trinity/tdm/README ]]; then
- sed -i "s|$TMP/package-tdebase/etc/trinity/tdm|/etc/trinity/tdm|" $PKG$INSTALL_TDE/etc/trinity/tdm/README
+rm $PKG$SYS_CNF_DIR/tdm/tdmrc
+mv $PKG$SYS_CNF_DIR/tdm/Xsession $PKG$SYS_CNF_DIR/tdm/Xsession.orig
+cat $SRCDIR/config/Xsession | sed "s|{INSTALL_TDE}|$INSTALL_TDE|" > $PKG$SYS_CNF_DIR/tdm/Xsession
+mv $PKG$SYS_CNF_DIR/tdm/backgroundrc $PKG$SYS_CNF_DIR/tdm/backgroundrc.new
+if [[ -r $PKG$SYS_CNF_DIR/tdm/README ]]; then
+ sed -i "s|$TMP_BUILD/package-tdebase$SYS_CNF_DIR/tdm|$SYS_CNF_DIR/tdm|" $PKG$SYS_CNF_DIR/tdm/README
 fi
 
 mkdir_install_fn
@@ -159,7 +158,7 @@ $PRGNAM:
 $PRGNAM: Home: https://www.trinitydesktop.org/index.php
 " > $PKG/install/slack-desc
 
-sed -e "s|\$INSTALL_TDE|$INSTALL_TDE|g" -e "s|\$TQTDIR|$TQTDIR|g" < $SRCDIR/doinst.sh > $PKG/install/doinst.sh
+sed "s|{SYS_CNF_DIR}|$SYS_CNF_DIR|;s|{INSTALL_TDE}|$INSTALL_TDE|;s|{TQTDIR}|$TQTDIR|" < $SRCDIR/doinst.sh > $PKG/install/doinst.sh
 [[ $RUNLEVEL == 4 ]] && {
 echo "
 ## set default runlevel to 4 for tdm
@@ -168,10 +167,19 @@ sed -i 's|id:[1-5]|id:4|' etc/inittab
 }
 ## part 2/2 of setting konqueror filemanagement default view mode
 ## add [MainView Settings] ViewMode to konquerorrc
-echo "
-mkdir -p .\$HOME/.trinity/share/config/
+[[ $SYS_CNF_DIR == /etc/tde ]] && TSUFF=tde
+echo "mkdir -p .\$HOME/.${TSUFF:-trinity}/share/config/
 echo '[MainView Settings]
-ViewMode=$VIEWMODE' > .\$HOME/.trinity/share/config/konquerorrc
+ViewMode=$VIEWMODE' >> .\$HOME/.${TSUFF:-trinity}/share/config/konquerorrc
 " >> $PKG/install/doinst.sh
+
+## set TDEHOME and TDEROOTHOME variables - defaults ~/.trinity and /root/.trinity
+[[ $SYS_CNF_DIR == /etc/tde ]] && {
+echo "# upgradepkg runs installpkg twice, so firstly remove any previous TDE*HOME entries
+sed -i '/TDE.*HOME/d' /etc/profile
+echo 'export TDEHOME=~/.tde' >> /etc/profile
+echo 'export TDEROOTHOME=/root/.tde' >> /etc/profile
+" >> $PKG/install/doinst.sh
+}
 
 makepkg_fn

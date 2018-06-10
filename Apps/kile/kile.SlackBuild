@@ -67,7 +67,7 @@ CC=$COMPILER \
 CXX=$COMPILER_CXX \
 ../configure \
    --prefix=$INSTALL_TDE \
-   --sysconfdir="/etc/trinity" \
+   --sysconfdir=$SYS_CNF_DIR \
    --mandir=$INSTALL_TDE/man \
    --disable-rpath \
    --enable-closure

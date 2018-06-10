@@ -1,14 +1,14 @@
 # Save old config files:
 if [ ! -L etc/X11/tdm ]; then
   if [ -d etc/X11/tdm ]; then
-    mkdir -p etc/trinity/tdm
-    cp -a etc/X11/tdm/* etc/trinity/tdm
-    rm -rf etc/X11/tdm
-    ( cd etc/X11 ; ln -sf /etc/trinity/tdm tdm )
+  mkdir -p .{SYS_CNF_DIR}/tdm
+  cp -a etc/X11/tdm/* .{SYS_CNF_DIR}/tdm
+  rm -rf etc/X11/tdm
+  ( cd etc/X11 ; ln -sf ../..{SYS_CNF_DIR}/tdm tdm )
+    elif [ ! -e etc/X11/tdm ]; then
+    mkdir -p etc/X11
+    ( cd etc/X11 ; ln -sf ../..{SYS_CNF_DIR}/tdm tdm )
   fi
-elif [ ! -e etc/X11/tdm ]; then
-  mkdir -p etc/X11
-  ( cd etc/X11 ; ln -sf /etc/trinity/tdm tdm )
 fi
 
 
@@ -23,45 +23,37 @@ config() {
   fi
   # Otherwise, we leave the .new copy for the admin to consider...
 }
-config etc/trinity/tdm/tdmrc.new
-config etc/trinity/tdm/backgroundrc.new
+config .{SYS_CNF_DIR}/tdm/tdmrc.new
+config .{SYS_CNF_DIR}/tdm/backgroundrc.new
 
 # Update the desktop database:
-if [ -x usr/bin/update-desktop-database ]; then
-  chroot . /usr/bin/update-desktop-database $INSTALL_TDE/share/applications > /dev/null 2>&1
-fi
-
-# Update hicolor theme cache:
-if [ -d usr/share/icons/hicolor ]; then
-  if [ -x /usr/bin/gtk-update-icon-cache ]; then
-    chroot . /usr/bin/gtk-update-icon-cache -f -t $INSTALL_TDE/share/icons/hicolor 1> /dev/null 2> /dev/null
-  fi
-fi
+$(which update-desktop-database) {INSTALL_TDE}/share/applications
 
 # Update the mime database:
-if [ -x usr/bin/update-mime-database ]; then
-  chroot . /usr/bin/update-mime-database $INSTALL_TDE/share/mime >/dev/null 2>&1
-fi
+$(which update-mime-database) /usr/share/mime
+
+# Update hicolor theme cache:
+$(which gtk-update-icon-cache) -f -t {INSTALL_TDE}/share/icons/hicolor
 
 
 # update PATH
-# upgradepkg runs this twice, so even though $TQTDIR/bin will be
+# upgradepkg runs this twice, so even though {TQTDIR}/bin will be
 # a new PATH, it needs to be tested for the second run
-if ! grep $INSTALL_TDE/bin /etc/profile
+if ! grep {INSTALL_TDE}/bin /etc/profile
 then
-echo "PATH=\$PATH:$INSTALL_TDE/bin:$TQTDIR/bin" >> /etc/profile
+echo "PATH=\$PATH:{INSTALL_TDE}/bin:{TQTDIR}/bin" >> /etc/profile
 else
-if ! grep $TQTDIR/bin /etc/profile
+if ! grep {TQTDIR}/bin /etc/profile
 then
-echo "PATH=\$PATH:$TQTDIR/bin" >> /etc/profile
+echo "PATH=\$PATH:{TQTDIR}/bin" >> /etc/profile
 fi
 fi
 
 
 # update MANPATH
-if ! grep $INSTALL_TDE/man /etc/profile
+if ! grep {INSTALL_TDE}/man /etc/profile
 then
-echo "export MANPATH=\$MANPATH:$INSTALL_TDE/man" >> /etc/profile
+echo "export MANPATH=\$MANPATH:{INSTALL_TDE}/man" >> /etc/profile
 fi
 
 

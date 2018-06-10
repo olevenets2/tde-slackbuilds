@@ -8,7 +8,6 @@ if [ ! -d $TMPVARS ]; then
   mkdir -p $TMPVARS
 fi
 
-rm $TMPVARS/got-this-far ## testing
 ## remove marker for git admin/cmake to update or clone only once per run of this script
 rm -f $TMPVARS/admin-cmake-done
 
@@ -109,6 +108,21 @@ Any other option will have to be edited into BUILD-TDE.sh
 "/opt/tde" "" \
 "/usr" "" \
 2> $TMPVARS/INSTALL_TDE
+
+
+rm -f $TMPVARS/SYS_CNF_DIR
+dialog --cr-wrap --nocancel --no-shadow --colors --title " TDE System Configuration " --menu \
+"
+Select the directory that the TDE System Configuration files should be installed in.
+
+Selecting '/etc/tde' will also set TDEHOME=~/.tde and TDEROOTHOME=/root/.tde,
+otherwise the defaults of TDEHOME=~/.trinity and TDEROOTHOME=/root/.trinity will apply.
+ 
+" \
+18 75 2 \
+"/etc/trinity" "" \
+"/etc/tde" "" \
+2> $TMPVARS/SYS_CNF_DIR
 
 
 rm -f $TMPVARS/COMPILER
@@ -528,7 +542,7 @@ sed -i 's|Apps/koffice|Misc/libpng &|' $TMPVARS/TDEbuilds
 ## this dialog will only run if any of the selected packages has a README
 rm -f $TMPVARS/READMEs
 ## generate list of READMEs ..
-RM_LIST=$(find . -name "README" | grep -v tdebase | grep -o "[ACDLM][a-z]*/[-_0-z]*")
+RM_LIST=$(find [ACDLM][a-z]* -name "README" | grep -v tdebase)
 for package in $(cat $TMPVARS/TDEbuilds)
 do
 [[ $RM_LIST == *$package* ]] && {
@@ -605,6 +619,7 @@ fi;fi;fi
 
 export TDEVERSION=$(cat $TMPVARS/TDEVERSION)
 export INSTALL_TDE=$(cat $TMPVARS/INSTALL_TDE)
+export SYS_CNF_DIR=$(cat $TMPVARS/SYS_CNF_DIR)
 export COMPILER=$(cat $TMPVARS/COMPILER)
 [[ $COMPILER == gcc ]] && export COMPILER_CXX="g++" || export COMPILER_CXX="clang++"
 export SET_march=$(cat $TMPVARS/SET_MARCH)
@@ -671,6 +686,7 @@ Setup is complete - these are the build options:
 New build list                          \Zb\Z6$NEW_BUILD\Zn
 TDE version                             \Zb\Z6$TDEVERSION\Zn
 TDE installation directory              \Zb\Z6$INSTALL_TDE\Zn
+TDE system configuration directory      \Zb\Z6$SYS_CNF_DIR\Zn
 Compiler                                \Zb\Z6$COMPILER\Zn
 gcc cpu optimization                    \Zb\Z6$SET_march\Zn
 Number of parallel jobs                 \Zb\Z6$(echo $NUMJOBS|sed 's|-j||')\Zn
