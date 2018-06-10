@@ -1,0 +1,22 @@
+--- krusader/VFS/krarchandler.cpp.orig	2018-06-10 19:24:22.951389600 +0300
++++ krusader/VFS/krarchandler.cpp	2018-06-11 01:44:42.197340100 +0300
+@@ -651,7 +651,7 @@
+ 	                                              {"gzip", 0, "\x1f\x8b"},
+ 	                                              {"deb",  0, "!<arch>\ndebian-binary   " },
+ 	                                              {"7z",   0, "7z\xbc\xaf\x27\x1c" },
+-	                                              {"xz",   0, "\xfd7zXZ\x00" } };
++	                                              {"xz",   0, "\xfd" "7zXZ\x00" } };
+ 	static int autoDetectElems = sizeof( autoDetectParams ) / sizeof( AutoDetectParams );
+ 
+ 	encrypted = false;
+--- krArc/krarc.cpp.orig	2018-06-11 01:57:12.410007000 +0300
++++ krArc/krarc.cpp	2018-06-11 01:57:58.677585800 +0300
+@@ -1422,7 +1422,7 @@
+ 	                                              {"gzip", 0, "\x1f\x8b"},
+ 	                                              {"deb",  0, "!<arch>\ndebian-binary   " },
+ 	                                              {"7z",   0, "7z\xbc\xaf\x27\x1c" },
+-	                                              {"xz",   0, "\xfd7zXZ\x00"} };
++	                                              {"xz",   0, "\xfd" "7zXZ\x00"} };
+ 	static int autoDetectElems = sizeof( autoDetectParams ) / sizeof( AutoDetectParams );
+
+ 	encrypted = false;
